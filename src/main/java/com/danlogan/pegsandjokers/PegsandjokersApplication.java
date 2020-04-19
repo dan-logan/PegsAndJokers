@@ -47,8 +47,6 @@ public class PegsandjokersApplication {
 	}
 	private Game findGameById(String id) {
 		for (Game game: games) {
-			System.out.print(String.format("Checking Game with id %s%n", game.getId().toString()));
-			System.out.print(String.format("Comparing to id %s%n", id));
 			if(game.getId().toString().equals(id)) {
 				return game;
 			}
@@ -80,15 +78,8 @@ public class PegsandjokersApplication {
 		}
 
 		if (action.equals("start")) {
-//			try {
-				game.start();	
-//			}
-//			catch(CannotStartGameWithoutPlayersException e) {
-				
-	//			return new ResponseEntity<Game>(HttpStatus.CONFLICT);
-	//			return ResponseEntity.badRequest().body(e.getMessage());
 
-		//	}
+				game.start();	
 		}
 		
 		return new ResponseEntity<Game>(game, HttpStatus.OK);

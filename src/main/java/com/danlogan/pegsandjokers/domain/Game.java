@@ -1,6 +1,7 @@
 package com.danlogan.pegsandjokers.domain;
 import java.util.ArrayList;
 import java.util.UUID;
+import java.util.concurrent.ArrayBlockingQueue;
 
 public class Game {
 	public static final String NOT_STARTED = "NOT_STARTED";
@@ -10,12 +11,14 @@ public class Game {
 	private String status = Game.NOT_STARTED;	
 	private ArrayList<Player> players = new ArrayList<Player>();
 	private DeckOfCards drawPile;
+	private ArrayBlockingQueue<Player> playerQueue;
 
 	
 	public static class Builder{
 	
 		private ArrayList<Player> players;
 		private DeckOfCards drawPile;
+		private ArrayBlockingQueue<Player> playerQueue;
 		
 		public static Builder newInstance() {
 			return new Builder();
@@ -31,6 +34,13 @@ public class Game {
 			//if no players have been provided to the builder use the default
 			if (this.players == null) {
 				this.players = getDefaultPlayers();	
+			}
+			
+			//Build a queue for players to take turns
+			this.playerQueue = new ArrayBlockingQueue<Player>(this.players.size());
+			
+			for(Player p : players) {
+				this.playerQueue.add(p);
 			}
 			
 			//set up draw pile with two decks of cards
@@ -70,12 +80,14 @@ public class Game {
 		//set all properties from the builder
 		players = builder.players;
 		drawPile = builder.drawPile;
+		playerQueue = builder.playerQueue;
 	}
 
 	public String getStatus() {
 		return status;
 	}
 	
+	//TO DO... can probably remove this start method and related exception handling
 	public String start( ) throws CannotStartGameWithoutPlayersException {
 		
 		if (players.size() > 2) {
@@ -98,5 +110,8 @@ public class Game {
 		//TO DO:  put in move logic
 	
 	}
-
+	
+	public Player getCurrentPlayer() {
+			return playerQueue.peek();
+	}
 }

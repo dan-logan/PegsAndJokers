@@ -8,9 +8,13 @@ import com.danlogan.pegsandjokers.domain.Game;
 
 public class GameRepository {
 	
-	private static ConcurrentHashMap<String,Game> games = new ConcurrentHashMap<String,Game>();
+	private ConcurrentHashMap<String,Game> games = new ConcurrentHashMap<String,Game>();
 	
-	public static Game findGameById(String id) throws GameNotFoundException {
+	public GameRepository() {
+		super();
+	}
+	
+	public Game findGameById(String id) throws GameNotFoundException {
 		
 		Game game = games.get(id);
 		if (game == null) {
@@ -20,15 +24,15 @@ public class GameRepository {
 		return game;
 	}
 	
-	public static void addGame(Game game) {
+	public void addGame(Game game) {
 		games.put(game.getId().toString(), game);
 	}
 	
-	public static int getNumberOfGames() {
+	public int getNumberOfGames() {
 		return games.size();
 	}
 	
-	public static ArrayList<Game> getAllGames(){
+	public ArrayList<Game> getAllGames(){
 	
 		Collection<Game> values = games.values();
 		

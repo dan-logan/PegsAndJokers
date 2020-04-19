@@ -20,7 +20,7 @@ import com.danlogan.pegsandjokers.infrastructure.GameRepository;
 @RestController
 public class PegsandjokersApplication {
 
-	private static GameRepository gameRepository;
+	private static GameRepository gameRepository = new GameRepository();
 //	private ArrayList<Game> games = new ArrayList<Game>();
 	
 	public static void main(String[] args) {

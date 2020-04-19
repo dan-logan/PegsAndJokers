@@ -8,19 +8,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.http.converter.HttpMessageNotWritableException;
-import org.springframework.web.HttpMediaTypeNotSupportedException;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.danlogan.pegsandjokers.domain.CannotStartGameWithoutPlayersException;
+import com.danlogan.pegsandjokers.infrastructure.GameNotFoundException;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -49,4 +43,11 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
        return buildResponseEntity(apiError);
    }
 
+   @ExceptionHandler(GameNotFoundException.class)
+   protected ResponseEntity<Object> handleGameNotFoundException(GameNotFoundException ex){
+	   
+	   ApiError apiError = new ApiError(NOT_FOUND);
+	   apiError.setMessage(ex.getMessage());
+	   return buildResponseEntity(apiError);
+   }
 }

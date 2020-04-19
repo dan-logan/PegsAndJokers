@@ -37,7 +37,9 @@ public class PegsandjokersApplication {
 	{
 			return new ResponseEntity<ArrayList<Game>>(games, HttpStatus.OK);
 	}
-		
+	
+	//This get method is just for convenience and should be deprecated in favor
+	//of using the /games::POST  method to create a new game
 	@GetMapping("/games/new")
 	public ResponseEntity<Game> newGame()
 	{

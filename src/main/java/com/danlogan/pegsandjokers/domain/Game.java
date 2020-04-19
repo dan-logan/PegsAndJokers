@@ -11,13 +11,9 @@ public class Game {
 	private ArrayList players = new ArrayList();
 
 	
-	public Game(Builder builder)
-	{
-		//set all properties from the builder
-	}
-	
 	public static class Builder{
-		//instance fields
+	
+		private ArrayList<Player> players;
 		
 		public static Builder newInstance() {
 			return new Builder();
@@ -29,12 +25,44 @@ public class Game {
 		
 		//build method to return a new instance from Builder
 		public Game build() {
+			
+			//if no players have been provided to the builder use the default
+			if (this.players == null) {
+				this.players = getDefaultPlayers();	
+			}
+			
 			return new Game(this);
+		}
+		
+		//default to 3 players
+		private ArrayList<Player> getDefaultPlayers() {
+			
+			ArrayList<Player> defaultPlayers = new ArrayList<Player>();
+			
+			for(int i=1;i<=3;i++) {
+				
+				Player player = Player.Builder.newInstance()
+									.withName("Player " + i)
+									.build();
+				
+				defaultPlayers.add(player);
+				
+			}
+			
+			return defaultPlayers;
+			
 		}
 	}
 
 	public UUID getId() {
 		return id;
+	}
+
+	//Game Class Methods
+	public Game(Builder builder)
+	{
+		//set all properties from the builder
+		players = builder.players;
 	}
 
 	public String getStatus() {
@@ -49,6 +77,10 @@ public class Game {
 		} else {
 			throw new CannotStartGameWithoutPlayersException("No players exist. Add players before starting game");
 		}
+	}
+
+	public ArrayList getPlayers() {
+		return players;
 	}
 
 }

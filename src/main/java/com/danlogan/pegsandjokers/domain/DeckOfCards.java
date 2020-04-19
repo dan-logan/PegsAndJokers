@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class DeckOfCards {
 	
-	ArrayList<Card> cards = new ArrayList<Card>();
+	private ArrayList<Card> cards = new ArrayList<Card>();
 
 	public DeckOfCards() {
 		
@@ -22,6 +22,13 @@ public class DeckOfCards {
 	
 	public int cardsRemaining() {
 		return cards.size();
+	}
+	
+	public DeckOfCards combineDecks(DeckOfCards deck) {
+		
+		this.cards.addAll(deck.cards);
+		return this;
+	
 	}
 
 }

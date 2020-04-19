@@ -33,8 +33,9 @@ public class Game {
 				this.players = getDefaultPlayers();	
 			}
 			
-			//set up draw pile
+			//set up draw pile with two decks of cards
 			this.drawPile = new DeckOfCards();
+			this.drawPile.combineDecks(new DeckOfCards());
 			
 			return new Game(this);
 		}

@@ -5,22 +5,23 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.danlogan.pegsandjokers.domain.CannotStartGameWithoutPlayersException;
 import com.danlogan.pegsandjokers.domain.Game;
-import com.sun.tools.javac.util.List;
-
 import java.util.ArrayList;
+import com.danlogan.pegsandjokers.infrastructure.GameNotFoundException;
+import com.danlogan.pegsandjokers.infrastructure.GameRepository;
 
 
 @SpringBootApplication
 @RestController
 public class PegsandjokersApplication {
 
-	private ArrayList<Game> games = new ArrayList<Game>();
+	private static GameRepository gameRepository;
+//	private ArrayList<Game> games = new ArrayList<Game>();
 	
 	public static void main(String[] args) {
 		SpringApplication.run(PegsandjokersApplication.class, args);
@@ -28,53 +29,48 @@ public class PegsandjokersApplication {
 
 	@GetMapping("/")
 	public String root() {
-		return String.format("Welcome to Pegs and Jokers! %n There are %d Games.",games.size());
+		return String.format("Welcome to Pegs and Jokers! %n There are %d Games.",gameRepository.getNumberOfGames());
 	}
-	
+
 	//Return all Games
 	@GetMapping("/games")
 	public ResponseEntity<ArrayList<Game>> games()
 	{
-			return new ResponseEntity<ArrayList<Game>>(games, HttpStatus.OK);
-	}
-	
-	//This get method is just for convenience and should be deprecated in favor
-	//of using the /games::POST  method to create a new game
-	@GetMapping("/games/new")
-	public ResponseEntity<Game> newGame()
-	{
-		Game game = Game.Builder.newInstance().build();
-		games.add(game);
-		return new ResponseEntity<Game>(game, HttpStatus.OK);
-	}
-	private Game findGameById(String id) {
-		for (Game game: games) {
-			if(game.getId().toString().equals(id)) {
-				return game;
-			}
-		}
+		ArrayList<Game>games = gameRepository.getAllGames();
 		
-		return null;
+		return new ResponseEntity<ArrayList<Game>>(games, HttpStatus.OK);
+	}
+
+
+	@PostMapping("/games")
+	public ResponseEntity<Game> newGame(){
+		
+		Game game = Game.Builder.newInstance().build();
+		gameRepository.addGame(game);
+		return new ResponseEntity<Game>(game, HttpStatus.OK);
 		
 	}
 	
 	@GetMapping(value = "/game/{id}")
-	public ResponseEntity<Game> getGameById(@PathVariable String id)
+	public ResponseEntity<Game> getGameById(@PathVariable String id) throws GameNotFoundException
 	{
-		Game game = findGameById(id);
+		Game game = gameRepository.findGameById(id);
 			
-		if (game == null) {
-			return new ResponseEntity<Game>(HttpStatus.NOT_FOUND);
-		}
-
 		return new ResponseEntity<Game>(game, HttpStatus.OK);
 	}
 	
+	//Post a new move to the current turn
+	@PostMapping("/games/{id}/turns/current/moves")
+	public ResponseEntity<Game> newMove(@PathVariable String id)
+	{
+		return null;
+	}
+
 	//probably should deprecate this action concept as it is not really RESTful
 	@GetMapping(value = "/game/{id}", params = "action")
-	public ResponseEntity<Game> gameAction(@PathVariable String id, @RequestParam String action) throws CannotStartGameWithoutPlayersException {
+	public ResponseEntity<Game> gameAction(@PathVariable String id, @RequestParam String action) throws GameNotFoundException, CannotStartGameWithoutPlayersException {
 		
-		Game game = findGameById(id);
+		Game game = gameRepository.findGameById(id);
 		
 		if (game == null) {
 			return new ResponseEntity<Game>(HttpStatus.NOT_FOUND);

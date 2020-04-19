@@ -8,9 +8,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import com.danlogan.pegsandjokers.domain.CannotStartGameWithoutPlayersException;
 import com.danlogan.pegsandjokers.domain.Game;
+import com.danlogan.pegsandjokers.domain.PlayerMove;
 import java.util.ArrayList;
 import com.danlogan.pegsandjokers.infrastructure.GameNotFoundException;
 import com.danlogan.pegsandjokers.infrastructure.GameRepository;
@@ -60,10 +62,14 @@ public class PegsandjokersApplication {
 	}
 	
 	//Post a new move to the current turn
-	@PostMapping("/games/{id}/turns/current/moves")
-	public ResponseEntity<Game> newMove(@PathVariable String id)
+	@PostMapping("/game/{id}/turns/current/moves")
+	public ResponseEntity<Game> newMove(@PathVariable String id, @RequestBody PlayerMove move) throws GameNotFoundException
 	{
-		return null;
+		Game game = gameRepository.findGameById(id);
+		
+		game.makeMove(move);
+		
+		return  new ResponseEntity<Game>(game, HttpStatus.OK);
 	}
 
 	//probably should deprecate this action concept as it is not really RESTful

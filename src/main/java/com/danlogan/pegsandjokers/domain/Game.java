@@ -93,5 +93,10 @@ public class Game {
 	public int getCardsRemaining() {
 		return drawPile.cardsRemaining();
 	}
+	
+	public void makeMove(PlayerMove move) {
+		//TO DO:  put in move logic
+	
+	}
 
 }

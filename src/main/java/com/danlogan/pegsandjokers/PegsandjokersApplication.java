@@ -70,6 +70,7 @@ public class PegsandjokersApplication {
 		return new ResponseEntity<Game>(game, HttpStatus.OK);
 	}
 	
+	//probably should deprecate this action concept as it is not really RESTful
 	@GetMapping(value = "/game/{id}", params = "action")
 	public ResponseEntity<Game> gameAction(@PathVariable String id, @RequestParam String action) throws CannotStartGameWithoutPlayersException {
 		
@@ -80,7 +81,7 @@ public class PegsandjokersApplication {
 		}
 
 		if (action.equals("start")) {
-
+			
 				game.start();	
 		}
 		

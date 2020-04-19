@@ -8,12 +8,14 @@ public class Game {
 	
 	private final UUID id = java.util.UUID.randomUUID();
 	private String status = Game.NOT_STARTED;	
-	private ArrayList players = new ArrayList();
+	private ArrayList<Player> players = new ArrayList<Player>();
+	private DeckOfCards drawPile;
 
 	
 	public static class Builder{
 	
 		private ArrayList<Player> players;
+		private DeckOfCards drawPile;
 		
 		public static Builder newInstance() {
 			return new Builder();
@@ -30,6 +32,9 @@ public class Game {
 			if (this.players == null) {
 				this.players = getDefaultPlayers();	
 			}
+			
+			//set up draw pile
+			this.drawPile = new DeckOfCards();
 			
 			return new Game(this);
 		}
@@ -63,6 +68,7 @@ public class Game {
 	{
 		//set all properties from the builder
 		players = builder.players;
+		drawPile = builder.drawPile;
 	}
 
 	public String getStatus() {
@@ -71,16 +77,20 @@ public class Game {
 	
 	public String start( ) throws CannotStartGameWithoutPlayersException {
 		
-		if (players.size() > 0) {
+		if (players.size() > 2) {
 			this.status = Game.STARTED;
 			return this.status;
 		} else {
-			throw new CannotStartGameWithoutPlayersException("No players exist. Add players before starting game");
+			throw new CannotStartGameWithoutPlayersException("Game requires at least 3 players. Add players before starting game");
 		}
 	}
 
-	public ArrayList getPlayers() {
+	public ArrayList<Player> getPlayers() {
 		return players;
+	}
+
+	public int getCardsRemaining() {
+		return drawPile.cardsRemaining();
 	}
 
 }

@@ -1,9 +1,5 @@
 package com.danlogan.pegsandjokers.domain;
 
-import java.util.ArrayList;
-
-import com.danlogan.pegsandjokers.domain.Game.Builder;
-
 public class Player {
 
 	//Player properties

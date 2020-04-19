@@ -31,6 +31,7 @@ public class PegsandjokersApplication {
 		return String.format("Welcome to Pegs and Jokers! %n There are %d Games.",games.size());
 	}
 	
+	//Return all Games
 	@GetMapping("/games")
 	public ResponseEntity<ArrayList<Game>> games()
 	{

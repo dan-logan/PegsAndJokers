@@ -62,7 +62,7 @@ public class PegsandjokersApplication {
 	}
 	
 	//Post a new move to the current turn
-	@PostMapping("/game/{id}/turns/current/moves")
+	@PostMapping("/game/{id}/moves")
 	public ResponseEntity<Game> newMove(@PathVariable String id, @RequestBody PlayerMove move) throws GameNotFoundException
 	{
 		Game game = gameRepository.findGameById(id);

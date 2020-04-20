@@ -12,6 +12,7 @@ public class Game {
 	private ArrayList<Player> players = new ArrayList<Player>();
 	private DeckOfCards drawPile;
 	private ArrayBlockingQueue<Player> playerQueue;
+	private ArrayList<PlayerHand> playerHands;
 
 	
 	public static class Builder{
@@ -19,6 +20,7 @@ public class Game {
 		private ArrayList<Player> players;
 		private DeckOfCards drawPile;
 		private ArrayBlockingQueue<Player> playerQueue;
+		private ArrayList<PlayerHand> playerHands;
 		
 		public static Builder newInstance() {
 			return new Builder();
@@ -47,7 +49,11 @@ public class Game {
 			this.drawPile = new DeckOfCards();
 			this.drawPile.combineDecks(new DeckOfCards());
 			
-			return new Game(this);
+			Game game = new Game(this);
+			
+			//TO DO:  deal cards;
+						
+			return game;
 		}
 		
 		//default to 3 players
@@ -81,6 +87,7 @@ public class Game {
 		players = builder.players;
 		drawPile = builder.drawPile;
 		playerQueue = builder.playerQueue;
+		playerHands = builder.playerHands;
 	}
 
 	public String getStatus() {

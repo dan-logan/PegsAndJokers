@@ -12,7 +12,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import com.danlogan.pegsandjokers.domain.CannotStartGameWithoutPlayersException;
 import com.danlogan.pegsandjokers.domain.Game;
+import com.danlogan.pegsandjokers.domain.PlayerHand;
 import com.danlogan.pegsandjokers.domain.PlayerMove;
+import com.danlogan.pegsandjokers.domain.PlayerNotFoundException;
+
 import java.util.ArrayList;
 import com.danlogan.pegsandjokers.infrastructure.GameNotFoundException;
 import com.danlogan.pegsandjokers.infrastructure.GameRepository;
@@ -72,7 +75,20 @@ public class PegsandjokersApplication {
 		
 		return  new ResponseEntity<Game>(game, HttpStatus.OK);
 	}
-
+	
+	//Get Player Hands for a specific player number
+	@GetMapping(value="/game/{id}/playerhand/{playerNumber}")
+	public ResponseEntity<PlayerHand> getPlayerHand(@PathVariable String id, @PathVariable int playerNumber) throws GameNotFoundException, PlayerNotFoundException
+	{
+		  Game game = gameRepository.findGameById(id); 
+		  System.out.println("found game " + game.getId());
+		  
+		  PlayerHand hand = game.getPlayerHand(playerNumber);
+		  
+		  return new ResponseEntity<PlayerHand>(hand,HttpStatus.OK);
+		 	 		
+	}
+	
 	//probably should deprecate this action concept as it is not really RESTful
 	@GetMapping(value = "/game/{id}", params = "action")
 	public ResponseEntity<Game> gameAction(@PathVariable String id, @RequestParam String action) throws GameNotFoundException, CannotStartGameWithoutPlayersException {

@@ -144,4 +144,16 @@ public class Game {
 	public Player getCurrentPlayer() {
 			return playerQueue.peek();
 	}
+	
+	public PlayerHand getPlayerHand(int playerNumber) throws PlayerNotFoundException {
+		
+		int numberPlaying = this.playerHands.size();
+		
+		if( (playerNumber<1) || (playerNumber>numberPlaying) )
+		{
+			throw new PlayerNotFoundException(String.format("Player number %d does not exist. There are %d players in this game.", playerNumber, numberPlaying));
+		}
+
+		return this.playerHands.get(playerNumber-1);
+	}
 }

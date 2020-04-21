@@ -40,4 +40,8 @@ public class PlayerHand {
 		cards.add(deck.draw());
 	}
 
+	public ArrayList<Card> getCards() {
+		return cards;
+	}
+
 }

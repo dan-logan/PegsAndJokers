@@ -9,7 +9,7 @@ public class Game {
 	
 	private final UUID id = java.util.UUID.randomUUID();
 	private String status = Game.NOT_STARTED;	
-	private ArrayList<Player> players = new ArrayList<Player>();
+	private ArrayList<Player> players;
 	private DeckOfCards drawPile;
 	private ArrayBlockingQueue<Player> playerQueue;
 	private ArrayList<PlayerHand> playerHands;
@@ -20,7 +20,7 @@ public class Game {
 		private ArrayList<Player> players;
 		private DeckOfCards drawPile;
 		private ArrayBlockingQueue<Player> playerQueue;
-		private ArrayList<PlayerHand> playerHands;
+		private ArrayList<PlayerHand> playerHands = new ArrayList<PlayerHand>();
 		
 		public static Builder newInstance() {
 			return new Builder();
@@ -41,8 +41,11 @@ public class Game {
 			//Build a queue for players to take turns
 			this.playerQueue = new ArrayBlockingQueue<Player>(this.players.size());
 			
+			//for each player add to player queue and create a Player Hand
+			int playerNumber = 0;
 			for(Player p : players) {
 				this.playerQueue.add(p);
+				this.playerHands.add(PlayerHand.Builder.newInstance(playerNumber++).build());
 			}
 			
 			//set up draw pile with two decks of cards
@@ -51,8 +54,7 @@ public class Game {
 			
 			Game game = new Game(this);
 			
-			//TO DO:  deal cards;
-						
+					
 			return game;
 		}
 		
@@ -120,6 +122,23 @@ public class Game {
 		//At end of move, Players turn is over so move them to the back of the queue
 		Player currentPlayer = playerQueue.remove();
 		playerQueue.add(currentPlayer);
+	}
+	
+	public void deal( )
+	{
+		//Deal 5 cards to each player
+		for(int i=1;i<6;i++)
+		{
+			for (PlayerHand hand : this.playerHands) {
+				hand.drawCard(this.drawPile);
+			}
+		}
+		
+		//If this is the first deal of the game, then the game starts once the dealing is done
+		if (this.status.equals(Game.NOT_STARTED))
+		{
+			this.status = Game.STARTED;
+		}
 	}
 	
 	public Player getCurrentPlayer() {

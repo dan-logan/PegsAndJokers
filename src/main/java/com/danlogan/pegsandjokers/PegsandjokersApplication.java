@@ -49,6 +49,7 @@ public class PegsandjokersApplication {
 		
 		Game game = Game.Builder.newInstance().build();
 		gameRepository.addGame(game);
+		game.deal();
 		return new ResponseEntity<Game>(game, HttpStatus.OK);
 		
 	}

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class PlayerHand {
 
 	private int playerNumber;
-	private ArrayList<Card> cards;
+	private ArrayList<Card> cards = new ArrayList<Card>();
 	
 	//Builder Class
 	public static class Builder {
@@ -13,14 +13,18 @@ public class PlayerHand {
 		private int playerNumber;
 		private ArrayList<Card> cards;
 		
-		public static Builder newInstance(int playerNumber, ArrayList<Card> cards) {
-			return new Builder(playerNumber, cards);
+		public static Builder newInstance(int playerNumber) {
+			return new Builder(playerNumber);
 		}
 		
-		private Builder(int playerNumber, ArrayList<Card> cards) {
+		private Builder(int playerNumber) {
 			
 			this.playerNumber = playerNumber;
-			this.cards = cards;
+		}
+		
+		public PlayerHand build() {
+			
+			return new PlayerHand(this);
 		}
 		
 	}
@@ -29,7 +33,11 @@ public class PlayerHand {
 	public PlayerHand(Builder builder) {
 		
 		this.playerNumber = builder.playerNumber;
-		this.cards = builder.cards;
+	}
+	
+	public void drawCard(DeckOfCards deck)
+	{
+		cards.add(deck.draw());
 	}
 
 }

@@ -30,5 +30,10 @@ public class DeckOfCards {
 		return this;
 	
 	}
+	
+	public Card draw()
+	{
+		return cards.remove(0);
+	}
 
 }

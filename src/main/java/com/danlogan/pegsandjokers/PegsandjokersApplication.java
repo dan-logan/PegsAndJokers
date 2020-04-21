@@ -48,15 +48,16 @@ public class PegsandjokersApplication {
 
 
 	@PostMapping("/games")
-	public ResponseEntity<Game> newGame(){
+	public ResponseEntity<Game> newGame() throws CannotStartGameWithoutPlayersException
+	{
 		
 		Game game = Game.Builder.newInstance().build();
 		gameRepository.addGame(game);
-		game.deal();
+		game.start();
 		return new ResponseEntity<Game>(game, HttpStatus.OK);
 		
 	}
-	
+
 	@GetMapping(value = "/game/{id}")
 	public ResponseEntity<Game> getGameById(@PathVariable String id) throws GameNotFoundException
 	{

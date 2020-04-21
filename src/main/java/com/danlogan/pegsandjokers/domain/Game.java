@@ -96,15 +96,18 @@ public class Game {
 		return status;
 	}
 	
-	//TO DO... can probably remove this start method and related exception handling
 	public String start( ) throws CannotStartGameWithoutPlayersException {
 		
 		if (players.size() > 2) {
 			this.status = Game.STARTED;
-			return this.status;
 		} else {
 			throw new CannotStartGameWithoutPlayersException("Game requires at least 3 players. Add players before starting game");
 		}
+		
+		//after game is started deal the gards
+		this.deal();
+		
+		return this.status;
 	}
 
 	public ArrayList<Player> getPlayers() {
@@ -134,11 +137,6 @@ public class Game {
 			}
 		}
 		
-		//If this is the first deal of the game, then the game starts once the dealing is done
-		if (this.status.equals(Game.NOT_STARTED))
-		{
-			this.status = Game.STARTED;
-		}
 	}
 	
 	public Player getCurrentPlayer() {

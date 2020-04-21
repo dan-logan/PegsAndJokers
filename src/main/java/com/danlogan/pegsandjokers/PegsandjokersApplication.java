@@ -82,7 +82,6 @@ public class PegsandjokersApplication {
 	public ResponseEntity<PlayerHand> getPlayerHand(@PathVariable String id, @PathVariable int playerNumber) throws GameNotFoundException, PlayerNotFoundException
 	{
 		  Game game = gameRepository.findGameById(id); 
-		  System.out.println("found game " + game.getId());
 		  
 		  PlayerHand hand = game.getPlayerHand(playerNumber);
 		  

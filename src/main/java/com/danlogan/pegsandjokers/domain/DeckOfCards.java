@@ -1,6 +1,7 @@
 package com.danlogan.pegsandjokers.domain;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class DeckOfCards {
 	
@@ -34,6 +35,30 @@ public class DeckOfCards {
 	public Card draw()
 	{
 		return cards.remove(0);
+	}
+	
+	//shuffle the deck and return a reference to newly shuffled self
+	public DeckOfCards shuffle()
+	{
+        
+       Random rand = new Random(); 
+       
+       int n = cards.size();
+         
+       for (int i = 0; i < n; i++) 
+       { 
+           // Random for remaining positions. 
+           int r = i + rand.nextInt(n - i); 
+             
+            //swapping the elements 
+            Card temp = cards.get(r); 
+            cards.set(r, cards.get(i)); 
+            cards.set(i,temp); 
+              
+       } 
+       
+       return this;
+ 
 	}
 
 }

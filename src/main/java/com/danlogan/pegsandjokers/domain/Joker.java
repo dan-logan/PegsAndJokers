@@ -11,5 +11,10 @@ public class Joker extends Card {
 	public boolean isJoker() {
 		return true;
 	}
+	
+	public String getName() {
+		
+		return "JOKER";
+	}
 
 }

@@ -104,9 +104,10 @@ public class Game {
 			throw new CannotStartGameWithoutPlayersException("Game requires at least 3 players. Add players before starting game");
 		}
 		
-		//after game is started deal the gards
+		//after game is started shuffle the draw pile and deal the cards
+		this.drawPile.shuffle();
 		this.deal();
-		
+				
 		return this.status;
 	}
 

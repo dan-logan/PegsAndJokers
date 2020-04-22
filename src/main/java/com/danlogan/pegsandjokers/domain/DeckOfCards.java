@@ -41,22 +41,27 @@ public class DeckOfCards {
 	public DeckOfCards shuffle()
 	{
         
-       Random rand = new Random(); 
-       
-       int n = cards.size();
-         
-       for (int i = 0; i < n; i++) 
-       { 
-           // Random for remaining positions. 
-           int r = i + rand.nextInt(n - i); 
-             
-            //swapping the elements 
-            Card temp = cards.get(r); 
-            cards.set(r, cards.get(i)); 
-            cards.set(i,temp); 
-              
-       } 
-       
+        //shuffle through the deck 3 times
+       for(int shuffle=1;shuffle<4;shuffle++)
+       {
+
+    	   Random rand = new Random(); 
+
+    	   int n = cards.size();
+
+    	   for (int i = 0; i < n; i++) 
+    	   { 
+    		   // Random for remaining positions. 
+    		   int r = i + rand.nextInt(n - i); 
+
+    		   //swapping the elements 
+    		   Card temp = cards.get(r); 
+    		   cards.set(r, cards.get(i)); 
+    		   cards.set(i,temp); 
+
+    	   } 
+       }
+
        return this;
  
 	}

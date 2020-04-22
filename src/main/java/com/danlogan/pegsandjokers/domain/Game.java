@@ -51,7 +51,7 @@ public class Game {
 			}
 			
 			//Create the game board
-			this.board = Board.Builder.newInstance().withPlayers(players).build();
+			this.board = Board.Builder.newInstance().withNumberOfPlayers(players.size()).build();
 			
 			//set up draw pile with two decks of cards
 			this.drawPile = new DeckOfCards();

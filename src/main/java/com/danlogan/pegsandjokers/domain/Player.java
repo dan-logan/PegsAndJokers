@@ -1,9 +1,12 @@
 package com.danlogan.pegsandjokers.domain;
 
+import java.util.UUID;
+
 public class Player {
 
 	//Player properties
 	private final String name;
+	private final UUID id = java.util.UUID.randomUUID();
 
 	//Player Class Builder
 	public static class Builder{
@@ -36,6 +39,11 @@ public class Player {
 		this.name = builder.name;
 	}
 
+	public UUID getId()
+	{
+		return id;
+	}
+	
 	public String getName() {
 		return name;
 	}

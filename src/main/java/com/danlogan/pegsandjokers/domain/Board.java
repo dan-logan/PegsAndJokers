@@ -2,11 +2,12 @@ package com.danlogan.pegsandjokers.domain;
 
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.UUID;
 
 public class Board {
 
 	//Board fields
-	private ConcurrentHashMap<Player,Side> playerSides;
+	private ConcurrentHashMap<UUID,Side> playerSides;
 	
 	//Board Builder
 	public static class Builder {
@@ -17,7 +18,7 @@ public class Board {
 		 * private ArrayList<BoardPosition> playerStartPositions; private
 		 * ArrayList<BoardPosition> playerHomePositions;
 		 */		
-		private ConcurrentHashMap<Player,Side> playerSides = new ConcurrentHashMap<Player,Side>();
+		private ConcurrentHashMap<UUID,Side> playerSides = new ConcurrentHashMap<UUID,Side>();
 		
 		static Builder newInstance()
 		{
@@ -36,7 +37,7 @@ public class Board {
 				Color nextColor = Color.values()[nextColorIndex];
 				
 				Side side = Side.Builder.newInstance().withColor(nextColor).build();
-				playerSides.put(player,side);
+				playerSides.put(player.getId(),side);
 				
 				nextColorIndex++;
 						
@@ -59,7 +60,7 @@ public class Board {
 		this.playerSides = builder.playerSides;
 	}
 
-	public ConcurrentHashMap<Player,Side> getPlayerSides()
+	public ConcurrentHashMap<UUID,Side> getPlayerSides()
 	{
 		return this.playerSides;
 	}

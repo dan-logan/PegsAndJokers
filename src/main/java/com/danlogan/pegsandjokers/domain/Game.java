@@ -13,6 +13,7 @@ public class Game {
 	private DeckOfCards drawPile;
 	private ArrayBlockingQueue<Player> playerQueue;
 	private ArrayList<PlayerHand> playerHands;
+	private Board board;
 
 	
 	public static class Builder{
@@ -21,6 +22,7 @@ public class Game {
 		private DeckOfCards drawPile;
 		private ArrayBlockingQueue<Player> playerQueue;
 		private ArrayList<PlayerHand> playerHands = new ArrayList<PlayerHand>();
+		private Board board;
 		
 		public static Builder newInstance() {
 			return new Builder();
@@ -47,6 +49,9 @@ public class Game {
 				this.playerQueue.add(p);
 				this.playerHands.add(PlayerHand.Builder.newInstance(playerNumber++).build());
 			}
+			
+			//Create the game board
+			this.board = Board.Builder.newInstance().withPlayers(players).build();
 			
 			//set up draw pile with two decks of cards
 			this.drawPile = new DeckOfCards();
@@ -90,6 +95,7 @@ public class Game {
 		drawPile = builder.drawPile;
 		playerQueue = builder.playerQueue;
 		playerHands = builder.playerHands;
+		board = builder.board;
 	}
 
 	public String getStatus() {
@@ -154,5 +160,10 @@ public class Game {
 		}
 
 		return this.playerHands.get(playerNumber-1);
+	}
+	
+	public Board getBoard()
+	{
+		return this.board;
 	}
 }

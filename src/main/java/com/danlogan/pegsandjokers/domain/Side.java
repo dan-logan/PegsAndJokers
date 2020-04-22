@@ -101,9 +101,12 @@ public class Side {
 		return this.homePositions;
 	}
 	
-	/*
-	 * public ArrayList<BoardPosition> getStartPositions() { return
-	 * this.startPositions; }
-	 */
+	
+	
+	  public ArrayList<BoardPosition> getStartPositions()
+	  { 
+		  return this.startPositions; 
+	  }
+	 
 
 }

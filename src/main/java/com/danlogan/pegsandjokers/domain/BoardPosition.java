@@ -24,9 +24,7 @@ public class BoardPosition {
 		return true;
 	}
 	
-	public Peg getPeg()
-	{
-		return peg;
-	}
-
+	/*
+	 * public Peg getPeg() { return peg; }
+	 */
 }

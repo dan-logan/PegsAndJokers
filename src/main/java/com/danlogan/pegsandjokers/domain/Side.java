@@ -60,7 +60,7 @@ public class Side {
 				Peg peg = new Peg(this.sideColor, i);
 				this.pegs.add(peg);
 				
-				BoardPosition boardPosition = new BoardPosition();
+				BoardPosition boardPosition = new BoardPosition(peg);
 				startPositions.add(boardPosition);
 			}
 			
@@ -96,6 +96,14 @@ public class Side {
 		return this.color;
 	}
 	
-
+	public ArrayList<BoardPosition> getHomePositions()
+	{
+		return this.homePositions;
+	}
+	
+	/*
+	 * public ArrayList<BoardPosition> getStartPositions() { return
+	 * this.startPositions; }
+	 */
 
 }

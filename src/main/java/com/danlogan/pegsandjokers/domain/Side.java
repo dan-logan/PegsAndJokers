@@ -11,6 +11,7 @@ public class Side {
 	private ArrayList<BoardPosition> mainTrackPositions;
 	private BoardPosition comeOutPosition;
 	private BoardPosition readyToGoHomePosition;
+	private ArrayList<Peg> pegs;
 	
 
 	//Side Builder
@@ -23,7 +24,8 @@ public class Side {
 		private ArrayList<BoardPosition> mainTrackPositions = new ArrayList<BoardPosition>();
 		private BoardPosition comeOutPosition;
 		private BoardPosition readyToGoHomePosition;
-		
+		private ArrayList<Peg> pegs = new ArrayList<Peg>();
+		 
 		public static Builder newInstance()
 		{
 			return new Builder();
@@ -52,11 +54,21 @@ public class Side {
 			}
 			
 			//add 5 start positions per side
+			//each start position will begin with a peg for the player
 			for(int i=1;i<5;i++)
 			{
+				Peg peg = new Peg(this.sideColor, i);
+				this.pegs.add(peg);
+				
 				BoardPosition boardPosition = new BoardPosition();
 				startPositions.add(boardPosition);
 			}
+			
+			//the ready to go home position is the third spot on the track
+			this.readyToGoHomePosition = mainTrackPositions.get(3);
+			
+			//the come out position is the eighth spot on the track
+			this.comeOutPosition = mainTrackPositions.get(8);
 
 			return new Side(this);
 		}
@@ -75,6 +87,7 @@ public class Side {
 		this.mainTrackPositions = builder.mainTrackPositions;
 		this.comeOutPosition = builder.comeOutPosition;
 		this.readyToGoHomePosition = builder.readyToGoHomePosition;
+		this.pegs = builder.pegs;
 	
 	}
 	

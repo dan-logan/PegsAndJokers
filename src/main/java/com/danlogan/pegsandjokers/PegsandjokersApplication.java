@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.danlogan.pegsandjokers.domain.Board;
 import com.danlogan.pegsandjokers.domain.CannotStartGameWithoutPlayersException;
 import com.danlogan.pegsandjokers.domain.Game;
 import com.danlogan.pegsandjokers.domain.PlayerHand;
@@ -87,6 +89,18 @@ public class PegsandjokersApplication {
 		  
 		  return new ResponseEntity<PlayerHand>(hand,HttpStatus.OK);
 		 	 		
+	}
+	
+	//Get current board layout
+	@GetMapping(value="/game/{id}/board")
+	public ResponseEntity<Board> getBoard(@PathVariable String id) throws GameNotFoundException
+	{
+		Game game = gameRepository.findGameById(id);
+		
+		Board board = game.getBoard();
+		
+		return new ResponseEntity<Board>(board, HttpStatus.OK);
+		
 	}
 	
 	//probably should deprecate this action concept as it is not really RESTful

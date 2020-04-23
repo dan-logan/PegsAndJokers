@@ -49,6 +49,7 @@ public class PegsandjokersApplication {
 	}
 
 
+	//New Game API
 	@PostMapping("/games")
 	public ResponseEntity<Game> newGame() throws CannotStartGameWithoutPlayersException
 	{

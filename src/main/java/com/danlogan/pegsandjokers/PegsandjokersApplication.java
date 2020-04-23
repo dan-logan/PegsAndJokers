@@ -61,6 +61,7 @@ public class PegsandjokersApplication {
 		
 	}
 
+	//Get a game by it's id
 	@GetMapping(value = "/game/{id}")
 	public ResponseEntity<Game> getGameById(@PathVariable String id) throws GameNotFoundException
 	{

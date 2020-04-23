@@ -42,25 +42,25 @@ public class Side {
 			//add 18 main track positions per side
 			for(int i=1;i<19;i++)
 			{
-				BoardPosition boardPosition = new BoardPosition();
+				BoardPosition boardPosition = new BoardPosition(this.sideColor.toString()+"-"+i);
 				mainTrackPositions.add(boardPosition);
 			}
 			
 			//add 5 home positions per side
-			for(int i=1;i<5;i++)
+			for(int i=1;i<=5;i++)
 			{
-				BoardPosition boardPosition = new BoardPosition();
+				BoardPosition boardPosition = new BoardPosition(this.sideColor.toString()+"Home-"+i);
 				homePositions.add(boardPosition);
 			}
 			
 			//add 5 start positions per side
 			//each start position will begin with a peg for the player
-			for(int i=1;i<5;i++)
+			for(int i=1;i<=5;i++)
 			{
 				Peg peg = new Peg(this.sideColor, i);
 				this.pegs.add(peg);
 				
-				BoardPosition boardPosition = new BoardPosition(peg);
+				BoardPosition boardPosition = new BoardPosition(peg,this.sideColor.toString()+"Start-"+i);
 				startPositions.add(boardPosition);
 			}
 			
@@ -108,5 +108,8 @@ public class Side {
 		  return this.startPositions; 
 	  }
 	 
-
+	  public ArrayList<BoardPosition> getMainTrackPositions()
+	  {
+		  return this.mainTrackPositions;
+	  }
 }

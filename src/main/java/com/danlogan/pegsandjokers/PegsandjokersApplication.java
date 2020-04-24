@@ -2,6 +2,7 @@ package com.danlogan.pegsandjokers;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.danlogan.pegsandjokers.domain.Board;
 import com.danlogan.pegsandjokers.domain.CannotStartGameWithoutPlayersException;
@@ -18,6 +20,7 @@ import com.danlogan.pegsandjokers.domain.PlayerHand;
 import com.danlogan.pegsandjokers.domain.PlayerMove;
 import com.danlogan.pegsandjokers.domain.PlayerNotFoundException;
 
+import java.net.URI;
 import java.util.ArrayList;
 import com.danlogan.pegsandjokers.infrastructure.GameNotFoundException;
 import com.danlogan.pegsandjokers.infrastructure.GameRepository;
@@ -51,13 +54,23 @@ public class PegsandjokersApplication {
 
 	//New Game API
 	@PostMapping("/games")
-	public ResponseEntity<Game> newGame() throws CannotStartGameWithoutPlayersException
+	public ResponseEntity<Game> newGame(UriComponentsBuilder ucb) throws CannotStartGameWithoutPlayersException
 	{
 		
 		Game game = Game.Builder.newInstance().build();
 		gameRepository.addGame(game);
 		game.start();
-		return new ResponseEntity<Game>(game, HttpStatus.OK);
+		
+		URI locationURI = ucb.path("/game/")
+								.path(String.valueOf(game.getId()))
+								.build()
+								.toUri();
+							
+		HttpHeaders headers = new HttpHeaders();
+		
+		headers.setLocation(locationURI);
+		
+		return new ResponseEntity<Game>(game, headers, HttpStatus.CREATED);
 		
 	}
 

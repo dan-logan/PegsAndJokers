@@ -72,6 +72,7 @@ public class Game {
 				
 				Player player = Player.Builder.newInstance()
 									.withName("Player " + i)
+									.withNumber(i)
 									.build();
 				
 				defaultPlayers.add(player);
@@ -165,5 +166,10 @@ public class Game {
 	public Board getBoard()
 	{
 		return this.board;
+	}
+	
+	public PlayerView getPlayerView(int playerNumber) throws PlayerNotFoundException
+	{
+		return new PlayerView(this, playerNumber);
 	}
 }

@@ -19,6 +19,7 @@ import com.danlogan.pegsandjokers.domain.Game;
 import com.danlogan.pegsandjokers.domain.PlayerHand;
 import com.danlogan.pegsandjokers.domain.PlayerMove;
 import com.danlogan.pegsandjokers.domain.PlayerNotFoundException;
+import com.danlogan.pegsandjokers.domain.PlayerView;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -117,6 +118,18 @@ public class PegsandjokersApplication {
 		return new ResponseEntity<Board>(board, HttpStatus.OK);
 		
 	}
+	
+	//Get view of the game for a specific player
+	@GetMapping(value="/game/{id}/playerView/{playerNumber}")
+	public ResponseEntity<PlayerView> getPlayerView(@PathVariable String id, @PathVariable int playerNumber) throws GameNotFoundException, PlayerNotFoundException
+	{
+		Game game = gameRepository.findGameById(id);
+		
+		PlayerView playerView = game.getPlayerView(playerNumber);
+		
+		return new ResponseEntity<PlayerView>(playerView, HttpStatus.OK);
+	}
+	
 	
 	//probably should deprecate this action concept as it is not really RESTful
 	@GetMapping(value = "/game/{id}", params = "action")

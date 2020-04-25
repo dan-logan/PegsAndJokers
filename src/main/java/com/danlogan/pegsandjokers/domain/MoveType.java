@@ -1,6 +1,6 @@
 package com.danlogan.pegsandjokers.domain;
 
-public enum Moves {
+public enum MoveType {
 	
 	START_GAME,
 	DRAW,

@@ -13,6 +13,7 @@ public class Game {
 	private DeckOfCards drawPile;
 	private ArrayBlockingQueue<Player> playerQueue;
 	private ArrayList<PlayerHand> playerHands;
+	private ArrayList<ArrayList<PlayerPosition>> playerPositions;
 	private Board board;
 
 	
@@ -22,6 +23,7 @@ public class Game {
 		private DeckOfCards drawPile;
 		private ArrayBlockingQueue<Player> playerQueue;
 		private ArrayList<PlayerHand> playerHands = new ArrayList<PlayerHand>();
+		private ArrayList<ArrayList<PlayerPosition>> playerPositions = new ArrayList<ArrayList<PlayerPosition>>();
 		private Board board;
 		
 		public static Builder newInstance() {
@@ -43,15 +45,30 @@ public class Game {
 			//Build a queue for players to take turns
 			this.playerQueue = new ArrayBlockingQueue<Player>(this.players.size());
 			
-			//for each player add to player queue and create a Player Hand
-			int playerNumber = 0;
-			for(Player p : players) {
-				this.playerQueue.add(p);
-				this.playerHands.add(PlayerHand.Builder.newInstance(playerNumber++).build());
-			}
-			
+	
 			//Create the game board
 			this.board = Board.Builder.newInstance().withNumberOfPlayers(players.size()).build();
+			
+			//for each player add to player queue, create a Player Hand and initialize player positions
+			int playerNumber = 0;
+
+			for(Player p : players) {
+				this.playerQueue.add(p);
+				this.playerHands.add(PlayerHand.Builder.newInstance(playerNumber).build());
+				ArrayList<BoardPosition> playerHomePositions = this.board.getPlayerSides().get(playerNumber).getHomePositions();
+
+				ArrayList<PlayerPosition> playerInitialPositions = new ArrayList<PlayerPosition>();
+				
+				for (BoardPosition bp : playerHomePositions)
+				{
+					playerInitialPositions.add(new PlayerPosition(bp));
+				}
+				
+				this.playerPositions.add(playerInitialPositions);
+				
+				playerNumber++;
+			}
+			
 			
 			//set up draw pile with two decks of cards
 			this.drawPile = new DeckOfCards();
@@ -97,6 +114,7 @@ public class Game {
 		playerQueue = builder.playerQueue;
 		playerHands = builder.playerHands;
 		board = builder.board;
+		playerPositions = builder.playerPositions;
 	}
 
 	public String getStatus() {
@@ -170,6 +188,15 @@ public class Game {
 	
 	public PlayerView getPlayerView(int playerNumber) throws PlayerNotFoundException
 	{
+		System.out.println("in game.getPlayerView");
 		return new PlayerView(this, playerNumber);
 	}
+	
+	public ArrayList<PlayerPosition> getPlayerPositions(int playerNumber)
+	{
+		System.out.println("In game.getPlayerPositions");
+		return this.playerPositions.get(playerNumber);
+
+	}
+
 }

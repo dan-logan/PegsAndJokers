@@ -1,5 +1,7 @@
 package com.danlogan.pegsandjokers.domain;
 
+import java.util.ArrayList;
+
 public class PlayerView {
 	
 	private Game game;
@@ -43,6 +45,29 @@ public class PlayerView {
 		}
 		
 		return message;
+	}
+	
+	public ArrayList<PlayerPosition> getPlayerPositions()
+	{
+		return this.game.getPlayerPositions(this.playerNumber);
+	}
+	
+	public ArrayList<Move> getAllowedMoves()
+	{
+		ArrayList<Move> allowedMoves =  new ArrayList<Move>();
+		
+		//for each card in the player's hand, look at each of the player's positions to 
+		//determine which moves would be allowed
+		
+		for (Card card : this.playerHand.getCards())
+		{
+			for (PlayerPosition currentPostion : this.game.getPlayerPositions(this.playerNumber))
+			{
+				//determine the moves this card will allow the player's peg at this position to do
+			}
+		}
+		
+		return allowedMoves;
 	}
 
 }

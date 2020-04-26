@@ -190,14 +190,12 @@ public class Game {
 	
 	public PlayerView getPlayerView(int playerNumber) throws PlayerNotFoundException
 	{
-		System.out.println("in game.getPlayerView");
 		return new PlayerView(this, playerNumber);
 	}
 	
 	public ArrayList<PlayerPosition> getPlayerPositions(int playerNumber)
 	{
-		System.out.println("In game.getPlayerPositions");
-		return this.playerPositions.get(playerNumber);
+		return this.playerPositions.get(playerNumber-1);
 
 	}
 	
@@ -216,36 +214,39 @@ public class Game {
 				for (PlayerPosition currentPosition : this.getPlayerPositions(currentPlayerNumber)) 
 				{ 
 					//determine the moves this card will allow the player's peg at this position to do
-	//				addMovesBasedOnCardAndPosition(allowedMoves,card,currentPosition);
+					addMovesBasedOnCardAndPosition(allowedMoves,card,currentPosition);
 				} 
 			}
 
 		return allowedMoves; 
 	}
 
-	/*
-		 * private void addMovesBasedOnCardAndPosition(ArrayList<Move> allowedMoves,
-		 * Card card, PlayerPosition currentPosition) { switch(card.getRank() ) { case
-		 * ACE:
-		 * 
-		 * addMovesForAce(allowedMoves,currentPosition);
-		 * 
-		 * break; }
-		 * 
-		 * return;
-		 * 
-		 * }
-		 * 
-		 * private void addMovesForAce(ArrayList<Move> allowedMoves, PlayerPosition
-		 * currentPosition) { //If current position is a start position and the
-		 * comeOutPostion is empty then //add a move from currentPostion to
-		 * comeOutPosition
-		 * 
-		 * //TO DO.... currentPosition.getPlayerBoardPosition().isStartPosition();
-		 * 
-		 * return;
-		 * 
-		 * }
-		 */	 
+	
+	private void addMovesBasedOnCardAndPosition(ArrayList<Move> allowedMoves, Card card, PlayerPosition currentPosition) 
+	{
+		System.out.println("Checking a card " + card.getName());
+		
+		switch (card.getRank()) {
+		case ACE:
+			System.out.println("Found an ACE");
+			addMovesForAce(allowedMoves, currentPosition);
+
+			break;
+		}
+
+		return;
+
+	}
+
+	private void addMovesForAce(ArrayList<Move> allowedMoves, PlayerPosition currentPosition) 
+	{ 
+		//If current position is a start position and the comeOutPostion is empty then 
+		//add a move from currentPostion to comeOutPosition
+
+		//TO DO.... currentPosition.getPlayerBoardPosition().isStartPosition();
+
+		return;
+
+	}
 
 }

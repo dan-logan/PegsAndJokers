@@ -23,8 +23,7 @@ public class PlayerView {
 	
 	public Color getPlayerColor()
 	{
-		int playerNumber = this.game.getCurrentPlayer().getNumber();
-		return Color.values()[playerNumber];
+		return Color.values()[this.playerNumber-1];
 	}
 	
 	public Board getBoard()

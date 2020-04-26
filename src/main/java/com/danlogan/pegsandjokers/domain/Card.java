@@ -66,4 +66,13 @@ public class Card {
 		else {return true;}
 	}
 
+	public int getDistanceForMoves() {
+
+		if(this.isJoker())
+		{
+			return 0;
+		}
+		else { return this.rank.ordinal() + 1; }
+	}
+
 }

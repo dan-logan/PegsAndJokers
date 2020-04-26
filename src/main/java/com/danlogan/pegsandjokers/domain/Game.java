@@ -270,6 +270,10 @@ public class Game {
 		{
 			throw new InvalidGameStateException("Pegs in start position cannot move forward.");
 		}
+		
+		//Determine how many spaces forward to move
+		int spacesToMove = cardBeingPlayed.getDistanceForMoves();
+		System.out.println("Going to move this many spaces" + spacesToMove);
 	
 	
 	}

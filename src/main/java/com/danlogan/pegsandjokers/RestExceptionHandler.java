@@ -14,6 +14,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.danlogan.pegsandjokers.domain.CannotStartGameWithoutPlayersException;
+import com.danlogan.pegsandjokers.domain.InvalidGameStateException;
 import com.danlogan.pegsandjokers.infrastructure.GameNotFoundException;
 import com.danlogan.pegsandjokers.domain.PlayerNotFoundException;
 
@@ -58,6 +59,14 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 	   ApiError apiError = new ApiError(NOT_FOUND);
 	   apiError.setMessage(ex.getMessage());
 	   return buildResponseEntity(apiError);
+   }
+   
+   @ExceptionHandler(InvalidGameStateException.class)
+   protected ResponseEntity<Object> handleInvalidGameStateException(InvalidGameStateException ex){
+	   ApiError apiError = new ApiError(BAD_REQUEST);
+	   apiError.setMessage(ex.getMessage());
+	   return buildResponseEntity(apiError);
+	   
    }
 
 }

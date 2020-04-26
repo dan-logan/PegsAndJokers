@@ -16,6 +16,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.danlogan.pegsandjokers.domain.Board;
 import com.danlogan.pegsandjokers.domain.CannotStartGameWithoutPlayersException;
 import com.danlogan.pegsandjokers.domain.Game;
+import com.danlogan.pegsandjokers.domain.InvalidGameStateException;
 import com.danlogan.pegsandjokers.domain.PlayerHand;
 import com.danlogan.pegsandjokers.domain.PlayerTurn;
 import com.danlogan.pegsandjokers.domain.PlayerNotFoundException;
@@ -86,7 +87,7 @@ public class PegsandjokersApplication {
 	
 	//Post a new turn to a game -  this is how players take turns
 	@PostMapping("/game/{id}/turns")
-	public ResponseEntity<Game> takeTurn(@PathVariable String id, @RequestBody PlayerTurn turn) throws GameNotFoundException, PlayerNotFoundException
+	public ResponseEntity<Game> takeTurn(@PathVariable String id, @RequestBody PlayerTurn turn) throws GameNotFoundException, PlayerNotFoundException, InvalidGameStateException
 	{
 		Game game = gameRepository.findGameById(id);
 	

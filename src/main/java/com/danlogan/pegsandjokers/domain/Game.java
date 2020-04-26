@@ -144,11 +144,19 @@ public class Game {
 		return drawPile.cardsRemaining();
 	}
 	
-	public void takeTurn(PlayerTurn turn) throws PlayerNotFoundException {
+	public void takeTurn(PlayerTurn turn) throws PlayerNotFoundException, InvalidGameStateException {
 		//TO DO:  put in move logic]
 		
 		//Get the PlayerHand for the player taking a turn
 		PlayerHand playerHand = this.getPlayerHand(turn.getPlayerNumber());
+		
+		//Make sure player taking turn is the current player
+		int currentPlayerNumber = this.getCurrentPlayer().getNumber();
+		
+		if (currentPlayerNumber != turn.getPlayerNumber())
+		{
+			throw new InvalidGameStateException(String.format("It's not your turn.  It is player %d's turn.", currentPlayerNumber));
+		}
 			
 		//At end of move, Players turn is over so move them to the back of the queue
 		Player tempPlayer = playerQueue.remove();

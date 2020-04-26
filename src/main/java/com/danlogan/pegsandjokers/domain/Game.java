@@ -178,6 +178,10 @@ public class Game {
 				
 				this.handleDiscardRequest(turn, playerHand);
 				break;
+				
+			case MOVE_PEG_FORWARD:
+				this.handleMovePegForwardRequest(turn, playerHand);
+				break;
 					
 		}
 		
@@ -243,6 +247,21 @@ public class Game {
 		
 		playerHand.discardCard(this.discardPile, turn.getCardName());
 		
+	}
+	
+	private void handleMovePegForwardRequest(PlayerTurn turn, PlayerHand playerHand) throws PlayerPositionNotFoundException, InvalidGameStateException
+	{
+		//Make sure a valid position is requested
+		this.validatePosition(turn);
+		
+		//Verify that the card being used for the turn can be used to move forward
+		Card cardBeingPlayed = playerHand.getCard(turn.getCardName());
+		
+		if(!cardBeingPlayed.canBeUsedToMoveForward())
+		{
+			throw new InvalidGameStateException(String.format("Cannot use a %s to move forward.", turn.getCardName()));
+		}
+	
 	}
 	
 	public void deal( )

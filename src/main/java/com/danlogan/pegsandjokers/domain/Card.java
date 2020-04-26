@@ -56,5 +56,14 @@ public class Card {
 		
 		return canBeUsedToStart;
 	}
+	
+	public boolean canBeUsedToMoveForward()
+	{
+		if (this.name.equals("JOKER") || this.rank == CardRank.EIGHT)
+		{
+			return false;
+		}
+		else {return true;}
+	}
 
 }

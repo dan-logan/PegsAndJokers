@@ -146,8 +146,7 @@ public class Game {
 	
 	public void takeTurn(PlayerTurn turn) {
 		//TO DO:  put in move logic
-		
-		
+			
 		//At end of move, Players turn is over so move them to the back of the queue
 		Player currentPlayer = playerQueue.remove();
 		playerQueue.add(currentPlayer);

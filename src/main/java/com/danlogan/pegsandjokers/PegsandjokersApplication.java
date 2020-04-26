@@ -89,7 +89,7 @@ public class PegsandjokersApplication {
 	public ResponseEntity<Game> takeTurn(@PathVariable String id, @RequestBody PlayerTurn turn) throws GameNotFoundException
 	{
 		Game game = gameRepository.findGameById(id);
-		
+	
 		game.takeTurn(turn);
 						
 		return  new ResponseEntity<Game>(game, HttpStatus.OK);

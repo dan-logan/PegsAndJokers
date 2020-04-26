@@ -1,8 +1,8 @@
 package com.danlogan.pegsandjokers.domain;
 
-public class PlayerMove {
+public class PlayerTurn {
 	
-	public PlayerMove() {
+	public PlayerTurn() {
 		super();
 	}
 

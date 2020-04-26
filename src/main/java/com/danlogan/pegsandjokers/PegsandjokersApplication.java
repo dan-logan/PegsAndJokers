@@ -17,7 +17,7 @@ import com.danlogan.pegsandjokers.domain.Board;
 import com.danlogan.pegsandjokers.domain.CannotStartGameWithoutPlayersException;
 import com.danlogan.pegsandjokers.domain.Game;
 import com.danlogan.pegsandjokers.domain.PlayerHand;
-import com.danlogan.pegsandjokers.domain.PlayerMove;
+import com.danlogan.pegsandjokers.domain.PlayerTurn;
 import com.danlogan.pegsandjokers.domain.PlayerNotFoundException;
 import com.danlogan.pegsandjokers.domain.PlayerView;
 
@@ -84,16 +84,14 @@ public class PegsandjokersApplication {
 		return new ResponseEntity<Game>(game, HttpStatus.OK);
 	}
 	
-	//Post a new move to the current turn
-	@PostMapping("/game/{id}/moves")
-	public ResponseEntity<Game> newMove(@PathVariable String id, @RequestBody PlayerMove move) throws GameNotFoundException
+	//Post a new turn to a game -  this is how players take turns
+	@PostMapping("/game/{id}/turns")
+	public ResponseEntity<Game> takeTurn(@PathVariable String id, @RequestBody PlayerTurn turn) throws GameNotFoundException
 	{
 		Game game = gameRepository.findGameById(id);
 		
-		game.makeMove(move);
-		
-//		System.out.println("Made a move.  Current Player: " + game.getCurrentPlayer());
-				
+		game.takeTurn(turn);
+						
 		return  new ResponseEntity<Game>(game, HttpStatus.OK);
 	}
 	

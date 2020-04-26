@@ -144,7 +144,7 @@ public class Game {
 		return drawPile.cardsRemaining();
 	}
 	
-	public void makeMove(PlayerMove move) {
+	public void takeTurn(PlayerTurn turn) {
 		//TO DO:  put in move logic
 		
 		

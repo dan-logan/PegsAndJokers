@@ -66,8 +66,7 @@ public class PlayerView {
 				//determine the moves this card will allow the player's peg at this position to do
 			}
 		}
-		
-		return allowedMoves;
+			return allowedMoves;
 	}
 
 }

@@ -3,6 +3,8 @@ import java.util.ArrayList;
 import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 
+import org.apache.tomcat.util.collections.CaseInsensitiveKeyMap;
+
 public class Game {
 	public static final String NOT_STARTED = "NOT_STARTED";
 	public static final String STARTED = "STARTED";
@@ -55,11 +57,11 @@ public class Game {
 			for(Player p : players) {
 				this.playerQueue.add(p);
 				this.playerHands.add(PlayerHand.Builder.newInstance(playerNumber).build());
-				ArrayList<BoardPosition> playerHomePositions = this.board.getPlayerSides().get(playerNumber).getHomePositions();
+				ArrayList<BoardPosition> playerStartPositions = this.board.getPlayerSides().get(playerNumber).getStartPositions();
 
 				ArrayList<PlayerPosition> playerInitialPositions = new ArrayList<PlayerPosition>();
 				
-				for (BoardPosition bp : playerHomePositions)
+				for (BoardPosition bp : playerStartPositions)
 				{
 					playerInitialPositions.add(new PlayerPosition(bp));
 				}
@@ -198,5 +200,52 @@ public class Game {
 		return this.playerPositions.get(playerNumber);
 
 	}
+	
+	
+	public ArrayList<Move> getAllowedMoves() 
+	{ 
+		ArrayList<Move> allowedMoves = new ArrayList<Move>();
+
+		//for each card in the current player's hand, look at each of the player's positions to 
+		//determine which moves would be allowed
+
+		int currentPlayerNumber = this.getCurrentPlayer().getNumber();
+
+		for (Card card : this.playerHands.get(currentPlayerNumber).getCards()) 
+			{ 
+				for (PlayerPosition currentPosition : this.getPlayerPositions(currentPlayerNumber)) 
+				{ 
+					//determine the moves this card will allow the player's peg at this position to do
+	//				addMovesBasedOnCardAndPosition(allowedMoves,card,currentPosition);
+				} 
+			}
+
+		return allowedMoves; 
+	}
+
+	/*
+		 * private void addMovesBasedOnCardAndPosition(ArrayList<Move> allowedMoves,
+		 * Card card, PlayerPosition currentPosition) { switch(card.getRank() ) { case
+		 * ACE:
+		 * 
+		 * addMovesForAce(allowedMoves,currentPosition);
+		 * 
+		 * break; }
+		 * 
+		 * return;
+		 * 
+		 * }
+		 * 
+		 * private void addMovesForAce(ArrayList<Move> allowedMoves, PlayerPosition
+		 * currentPosition) { //If current position is a start position and the
+		 * comeOutPostion is empty then //add a move from currentPostion to
+		 * comeOutPosition
+		 * 
+		 * //TO DO.... currentPosition.getPlayerBoardPosition().isStartPosition();
+		 * 
+		 * return;
+		 * 
+		 * }
+		 */	 
 
 }

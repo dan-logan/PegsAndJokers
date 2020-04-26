@@ -35,4 +35,9 @@ public class BoardPosition {
 	{
 		return this.id;
 	}
+	
+	public boolean isStartPosition()
+	{
+		return this.id.contains("Start");
+	}
 }

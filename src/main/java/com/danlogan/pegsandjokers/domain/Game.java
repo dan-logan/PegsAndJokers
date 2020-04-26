@@ -11,6 +11,7 @@ public class Game {
 	private String status = Game.NOT_STARTED;	
 	private ArrayList<Player> players;
 	private DeckOfCards drawPile;
+	private ArrayList<Card> discardPile;
 	private ArrayBlockingQueue<Player> playerQueue;
 	private ArrayList<PlayerHand> playerHands;
 	private ArrayList<ArrayList<PlayerPosition>> playerPositions;
@@ -21,6 +22,7 @@ public class Game {
 	
 		private ArrayList<Player> players;
 		private DeckOfCards drawPile;
+		private ArrayList<Card> discardPile = new ArrayList<Card>();
 		private ArrayBlockingQueue<Player> playerQueue;
 		private ArrayList<PlayerHand> playerHands = new ArrayList<PlayerHand>();
 		private ArrayList<ArrayList<PlayerPosition>> playerPositions = new ArrayList<ArrayList<PlayerPosition>>();
@@ -115,6 +117,7 @@ public class Game {
 		playerHands = builder.playerHands;
 		board = builder.board;
 		playerPositions = builder.playerPositions;
+		this.discardPile = builder.discardPile;
 	}
 
 	public String getStatus() {
@@ -165,7 +168,10 @@ public class Game {
 		}
 		
 		
-		//At end of move, Players turn is over so move them to the back of the queue
+		//At end of turn, discard the card played, draw a new card, and move player to back of the queue
+		playerHand.discardCard(this.discardPile, turn.getCardName());
+		playerHand.drawCard(this.drawPile);
+		
 		Player tempPlayer = playerQueue.remove();
 		playerQueue.add(tempPlayer);
 	}

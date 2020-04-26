@@ -11,7 +11,6 @@ public class PlayerHand {
 	public static class Builder {
 		
 		private int playerNumber;
-		private ArrayList<Card> cards;
 		
 		public static Builder newInstance(int playerNumber) {
 			return new Builder(playerNumber);
@@ -57,5 +56,23 @@ public class PlayerHand {
 		return false;
 		
 	}
-
+	
+	public void discardCard(ArrayList<Card> discardPile, String cardName)
+	{
+		Card cardToDiscard=null;
+		
+		for (Card card : this.cards)
+		{
+			if(card.getName().equals(cardName))
+			{
+				cardToDiscard = card;
+			}
+		}
+		
+		if (cardToDiscard != null)
+		{
+			discardPile.add(cardToDiscard);
+			this.cards.remove(cardToDiscard);
+		}
+	}
 }

@@ -261,6 +261,16 @@ public class Game {
 		{
 			throw new InvalidGameStateException(String.format("Cannot use a %s to move forward.", turn.getCardName()));
 		}
+		
+		//Verify that the position referenced in the turn is not a start position
+		int playerPositionNumber = turn.getPlayerPositionNumber();
+		PlayerPosition playerPosition = this.getPlayerPositions(turn.getPlayerNumber()).get(playerPositionNumber-1);
+		
+		if (playerPosition.getPlayerBoardPosition().isStartPosition())
+		{
+			throw new InvalidGameStateException("Pegs in start position cannot move forward.");
+		}
+	
 	
 	}
 	

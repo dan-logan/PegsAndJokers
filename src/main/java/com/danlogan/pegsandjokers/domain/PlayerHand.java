@@ -57,6 +57,22 @@ public class PlayerHand {
 		
 	}
 	
+	public Card getCard(String cardName) {
+		
+		Card resultCard = null;
+		
+		for (Card card : this.cards)
+		{
+			 if(card.getName().equals(cardName))
+			 {
+				 resultCard = card;
+			 }
+		}
+		
+		return resultCard;
+		
+	}
+	
 	public void discardCard(ArrayList<Card> discardPile, String cardName)
 	{
 		Card cardToDiscard=null;

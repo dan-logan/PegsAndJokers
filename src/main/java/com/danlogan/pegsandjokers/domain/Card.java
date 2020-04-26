@@ -26,5 +26,35 @@ public class Card {
 	public boolean isJoker() {
 		return false;
 	}
+	
+	public boolean canBeUsedToStart()
+	{
+		boolean canBeUsedToStart = false;
+		
+		switch(this.rank)
+		{
+		case ACE:
+			canBeUsedToStart = true;
+			break;
+		
+		case JACK:
+			canBeUsedToStart = true;
+			break;
+		
+		case QUEEN:
+			canBeUsedToStart = true;
+			break;
+			
+		case KING:
+			canBeUsedToStart = true;
+			break;
+		
+		default:
+			return false;
+		
+		}
+		
+		return canBeUsedToStart;
+	}
 
 }

@@ -148,8 +148,7 @@ public class Game {
 	}
 	
 	public void takeTurn(PlayerTurn turn) throws PlayerNotFoundException, InvalidGameStateException {
-		//TO DO:  put in move logic]
-		
+
 		//Get the PlayerHand for the player taking a turn
 		PlayerHand playerHand = this.getPlayerHand(turn.getPlayerNumber());
 		
@@ -167,6 +166,18 @@ public class Game {
 			throw new InvalidGameStateException("You cannot play a card that is not in your hand.");
 		}
 		
+		//Make the requested move
+		switch(turn.getMoveType())
+		{
+			case START_A_PEG: 
+				
+				this.handleStartAPegRequest(turn, playerHand);
+				
+				break;
+
+					
+		}
+		
 		
 		//At end of turn, discard the card played, draw a new card, and move player to back of the queue
 		playerHand.discardCard(this.discardPile, turn.getCardName());
@@ -174,6 +185,19 @@ public class Game {
 		
 		Player tempPlayer = playerQueue.remove();
 		playerQueue.add(tempPlayer);
+	}
+	
+	private void handleStartAPegRequest(PlayerTurn turn, PlayerHand playerHand) throws InvalidGameStateException
+	{
+		//First verify that the card being used for the turn can be used to start a peg
+		Card cardBeingPlayed = playerHand.getCard(turn.getCardName());
+		
+		if(!cardBeingPlayed.canBeUsedToStart())
+		{
+			throw new InvalidGameStateException(String.format("Cannot use a %s to start a peg.", turn.getCardName()));
+		}
+		
+		return;
 	}
 	
 	public void deal( )

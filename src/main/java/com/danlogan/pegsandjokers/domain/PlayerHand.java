@@ -43,5 +43,19 @@ public class PlayerHand {
 	public ArrayList<Card> getCards() {
 		return cards;
 	}
+	
+	public boolean hasCard(String cardName) {
+		
+		for (Card card : this.cards)
+		{
+			 if(card.getName().equals(cardName))
+			 {
+				 return true;
+			 }
+		}
+		
+		return false;
+		
+	}
 
 }

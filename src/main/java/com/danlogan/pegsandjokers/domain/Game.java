@@ -158,6 +158,13 @@ public class Game {
 			throw new InvalidGameStateException(String.format("It's not your turn.  It is player %d's turn.", currentPlayerNumber));
 		}
 			
+		//Make sure the current player has the card being played in their hand
+		if (!playerHand.hasCard(turn.getCardName()))
+		{
+			throw new InvalidGameStateException("You cannot play a card that is not in your hand.");
+		}
+		
+		
 		//At end of move, Players turn is over so move them to the back of the queue
 		Player tempPlayer = playerQueue.remove();
 		playerQueue.add(tempPlayer);

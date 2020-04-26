@@ -206,7 +206,7 @@ public class Game {
 		
 		//Then verify that the peg being requested to move is in a start position
 		int playerPositionNumber = turn.getPlayerPositionNumber();
-		PlayerPosition playerPosition = this.getPlayerPositions(turn.getPlayerNumber()).get(playerPositionNumber);
+		PlayerPosition playerPosition = this.getPlayerPositions(turn.getPlayerNumber()).get(playerPositionNumber-1);
 		
 		if (!playerPosition.getPlayerBoardPosition().isStartPosition())
 		{
@@ -214,7 +214,7 @@ public class Game {
 		}
 		
 		//Then update the PlayerPosition to be in the come out position
-		BoardPosition comeOutPosition = this.board.getPlayerSides().get(turn.getPlayerNumber()).getComeOutPosition();
+		BoardPosition comeOutPosition = this.board.getPlayerSides().get(turn.getPlayerNumber()-1).getComeOutPosition();
 		
 		playerPosition.moveTo(comeOutPosition);
 		

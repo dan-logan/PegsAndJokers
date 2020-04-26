@@ -17,7 +17,11 @@ public class PlayerPosition {
 	public void moveTo(BoardPosition newPosition)
 	{
 		Peg peg = boardPosition.removePeg();
+		System.out.println("moving peg from: " + boardPosition.id);
+		
 		newPosition.addPeg(peg);
+		
+		System.out.println("moved pegged to: " + newPosition.id);
 	}
 
 }

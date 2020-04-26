@@ -64,11 +64,11 @@ public class Side {
 				startPositions.add(boardPosition);
 			}
 			
-			//the ready to go home position is the third spot on the track
-			this.readyToGoHomePosition = mainTrackPositions.get(3);
+			//the ready to go home position is the third spot on the track (index of 2 in the array)
+			this.readyToGoHomePosition = mainTrackPositions.get(2);
 			
-			//the come out position is the eighth spot on the track
-			this.comeOutPosition = mainTrackPositions.get(8);
+			//the come out position is the eighth spot on the track (index of 7 in the array)
+			this.comeOutPosition = mainTrackPositions.get(7);
 
 			return new Side(this);
 		}

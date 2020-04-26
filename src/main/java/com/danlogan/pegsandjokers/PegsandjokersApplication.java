@@ -86,7 +86,7 @@ public class PegsandjokersApplication {
 	
 	//Post a new turn to a game -  this is how players take turns
 	@PostMapping("/game/{id}/turns")
-	public ResponseEntity<Game> takeTurn(@PathVariable String id, @RequestBody PlayerTurn turn) throws GameNotFoundException
+	public ResponseEntity<Game> takeTurn(@PathVariable String id, @RequestBody PlayerTurn turn) throws GameNotFoundException, PlayerNotFoundException
 	{
 		Game game = gameRepository.findGameById(id);
 	

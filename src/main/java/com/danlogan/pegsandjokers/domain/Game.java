@@ -144,12 +144,15 @@ public class Game {
 		return drawPile.cardsRemaining();
 	}
 	
-	public void takeTurn(PlayerTurn turn) {
-		//TO DO:  put in move logic
+	public void takeTurn(PlayerTurn turn) throws PlayerNotFoundException {
+		//TO DO:  put in move logic]
+		
+		//Get the PlayerHand for the player taking a turn
+		PlayerHand playerHand = this.getPlayerHand(turn.getPlayerNumber());
 			
 		//At end of move, Players turn is over so move them to the back of the queue
-		Player currentPlayer = playerQueue.remove();
-		playerQueue.add(currentPlayer);
+		Player tempPlayer = playerQueue.remove();
+		playerQueue.add(tempPlayer);
 	}
 	
 	public void deal( )

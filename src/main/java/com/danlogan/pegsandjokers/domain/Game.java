@@ -166,22 +166,18 @@ public class Game {
 			throw new InvalidGameStateException("You cannot play a card that is not in your hand.");
 		}
 		
-		//Make sure they are requesting a valid position number
-		int playerPositionNumber = turn.getPlayerPositionNumber();
-		if (playerPositionNumber <1 || playerPositionNumber > 5)
-		{
-			throw new PlayerPositionNotFoundException(String.format("Position number %d is not a valid position.", playerPositionNumber));
-		}
-		
 		//Make the requested move
 		switch(turn.getMoveType())
 		{
 			case START_A_PEG: 
 				
 				this.handleStartAPegRequest(turn, playerHand);
-				
 				break;
 
+			case DISCARD:
+				
+				this.handleDiscardRequest(turn, playerHand);
+				break;
 					
 		}
 		
@@ -194,8 +190,23 @@ public class Game {
 		playerQueue.add(tempPlayer);
 	}
 	
-	private void handleStartAPegRequest(PlayerTurn turn, PlayerHand playerHand) throws InvalidGameStateException, CannotMoveToAPositionYouOccupyException
+	private void validatePosition(PlayerTurn turn) throws PlayerPositionNotFoundException
 	{
+		//Make sure they are requesting a valid position number
+		int playerPositionNumber = turn.getPlayerPositionNumber();
+		if (playerPositionNumber <1 || playerPositionNumber > 5)
+		{
+			throw new PlayerPositionNotFoundException(String.format("Position number %d is not a valid position.", playerPositionNumber));
+		}
+		
+	}
+	
+	private void handleStartAPegRequest(PlayerTurn turn, PlayerHand playerHand) throws InvalidGameStateException, CannotMoveToAPositionYouOccupyException, PlayerPositionNotFoundException
+
+	{
+		//Make sure a valid position is referenced in the request
+		this.validatePosition(turn);
+
 		//First verify that the card being used for the turn can be used to start a peg
 		Card cardBeingPlayed = playerHand.getCard(turn.getCardName());
 		
@@ -225,6 +236,13 @@ public class Game {
 		playerPosition.moveTo(comeOutPosition);
 		
 		return;
+	}
+	
+	private void handleDiscardRequest(PlayerTurn turn, PlayerHand playerHand)
+	{
+		
+		playerHand.discardCard(this.discardPile, turn.getCardName());
+		
 	}
 	
 	public void deal( )

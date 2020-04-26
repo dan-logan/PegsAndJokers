@@ -28,6 +28,8 @@ public class PlayerPosition {
 		newPosition.addPeg(peg);
 		
 		System.out.println("moved pegged to: " + newPosition.id);
+		
+		this.boardPosition = newPosition;
 	}
 
 }

@@ -92,6 +92,8 @@ public class PegsandjokersApplication {
 		
 		game.makeMove(move);
 		
+//		System.out.println("Made a move.  Current Player: " + game.getCurrentPlayer());
+				
 		return  new ResponseEntity<Game>(game, HttpStatus.OK);
 	}
 	

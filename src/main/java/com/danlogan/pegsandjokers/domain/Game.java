@@ -3,8 +3,6 @@ import java.util.ArrayList;
 import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 
-import org.apache.tomcat.util.collections.CaseInsensitiveKeyMap;
-
 public class Game {
 	public static final String NOT_STARTED = "NOT_STARTED";
 	public static final String STARTED = "STARTED";
@@ -167,8 +165,11 @@ public class Game {
 		
 	}
 	
-	public Player getCurrentPlayer() {
-			return playerQueue.peek();
+	public Player getCurrentPlayer() 
+	{
+			Player currentPlayer=playerQueue.peek();
+
+			return currentPlayer;
 	}
 	
 	public PlayerHand getPlayerHand(int playerNumber) throws PlayerNotFoundException {
@@ -207,9 +208,9 @@ public class Game {
 		//for each card in the current player's hand, look at each of the player's positions to 
 		//determine which moves would be allowed
 
-		int currentPlayerNumber = this.getCurrentPlayer().getNumber();
+/*		int currentPlayerNumber = this.getCurrentPlayer().getNumber();
 
-		for (Card card : this.playerHands.get(currentPlayerNumber).getCards()) 
+		for (Card card : this.playerHands.get(currentPlayerNumber-1).getCards()) 
 			{ 
 				for (PlayerPosition currentPosition : this.getPlayerPositions(currentPlayerNumber)) 
 				{ 
@@ -217,18 +218,18 @@ public class Game {
 					addMovesBasedOnCardAndPosition(allowedMoves,card,currentPosition);
 				} 
 			}
-
+*/
 		return allowedMoves; 
 	}
 
 	
 	private void addMovesBasedOnCardAndPosition(ArrayList<Move> allowedMoves, Card card, PlayerPosition currentPosition) 
 	{
-		System.out.println("Checking a card " + card.getName());
+//		System.out.println("Checking a card " + card.getName());
 		
 		switch (card.getRank()) {
 		case ACE:
-			System.out.println("Found an ACE");
+//			System.out.println("Found an ACE");
 			addMovesForAce(allowedMoves, currentPosition);
 
 			break;

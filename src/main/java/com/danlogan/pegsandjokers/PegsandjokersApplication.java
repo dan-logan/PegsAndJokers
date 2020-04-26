@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.danlogan.pegsandjokers.domain.Board;
+import com.danlogan.pegsandjokers.domain.CannotMoveToAPositionYouOccupyException;
 import com.danlogan.pegsandjokers.domain.CannotStartGameWithoutPlayersException;
 import com.danlogan.pegsandjokers.domain.Game;
 import com.danlogan.pegsandjokers.domain.InvalidGameStateException;
@@ -88,7 +89,9 @@ public class PegsandjokersApplication {
 	
 	//Post a new turn to a game -  this is how players take turns
 	@PostMapping("/game/{id}/turns")
-	public ResponseEntity<Game> takeTurn(@PathVariable String id, @RequestBody PlayerTurn turn) throws GameNotFoundException, PlayerNotFoundException, InvalidGameStateException, PlayerPositionNotFoundException
+	public ResponseEntity<Game> takeTurn(@PathVariable String id, @RequestBody PlayerTurn turn) 
+			throws GameNotFoundException, PlayerNotFoundException, InvalidGameStateException, PlayerPositionNotFoundException,
+				CannotMoveToAPositionYouOccupyException
 	{
 		Game game = gameRepository.findGameById(id);
 	

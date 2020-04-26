@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import com.danlogan.pegsandjokers.domain.CannotMoveToAPositionYouOccupyException;
 import com.danlogan.pegsandjokers.domain.CannotStartGameWithoutPlayersException;
 import com.danlogan.pegsandjokers.domain.InvalidGameStateException;
 import com.danlogan.pegsandjokers.infrastructure.GameNotFoundException;
@@ -70,6 +71,14 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 	   
    }
    
+   @ExceptionHandler(CannotMoveToAPositionYouOccupyException.class)
+   protected ResponseEntity<Object> handleCannotMoveToAPositionYouOccupyException(CannotMoveToAPositionYouOccupyException ex){
+	   ApiError apiError = new ApiError(BAD_REQUEST);
+	   apiError.setMessage(ex.getMessage());
+	   return buildResponseEntity(apiError);
+	   
+   }
+ 
    @ExceptionHandler(PlayerPositionNotFoundException.class)
    protected ResponseEntity<Object> handlePlayerPositionNotFoundException(PlayerNotFoundException ex){
 

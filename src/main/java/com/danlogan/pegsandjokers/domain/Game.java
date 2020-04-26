@@ -147,7 +147,7 @@ public class Game {
 		return drawPile.cardsRemaining();
 	}
 	
-	public void takeTurn(PlayerTurn turn) throws PlayerNotFoundException, InvalidGameStateException, PlayerPositionNotFoundException {
+	public void takeTurn(PlayerTurn turn) throws PlayerNotFoundException, InvalidGameStateException, PlayerPositionNotFoundException, CannotMoveToAPositionYouOccupyException {
 
 		//Get the PlayerHand for the player taking a turn
 		PlayerHand playerHand = this.getPlayerHand(turn.getPlayerNumber());
@@ -194,7 +194,7 @@ public class Game {
 		playerQueue.add(tempPlayer);
 	}
 	
-	private void handleStartAPegRequest(PlayerTurn turn, PlayerHand playerHand) throws InvalidGameStateException
+	private void handleStartAPegRequest(PlayerTurn turn, PlayerHand playerHand) throws InvalidGameStateException, CannotMoveToAPositionYouOccupyException
 	{
 		//First verify that the card being used for the turn can be used to start a peg
 		Card cardBeingPlayed = playerHand.getCard(turn.getCardName());
@@ -211,6 +211,12 @@ public class Game {
 		if (!playerPosition.getPlayerBoardPosition().isStartPosition())
 		{
 			throw new InvalidGameStateException("Can only start pegs that are in the start position.");
+		}
+		
+		//Lastly make sure there is actually a peg in that start position
+		if (!playerPosition.getPlayerBoardPosition().getHasPeg())
+		{
+			throw new InvalidGameStateException(String.format("Player Postion %d does not have a peg in it.", playerPositionNumber));
 		}
 		
 		//Then update the PlayerPosition to be in the come out position

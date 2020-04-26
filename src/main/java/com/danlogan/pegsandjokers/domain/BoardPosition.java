@@ -40,4 +40,16 @@ public class BoardPosition {
 	{
 		return this.id.contains("Start");
 	}
+	
+	public Peg removePeg()
+	{
+		Peg temp = this.peg;
+		this.peg = null;
+		return temp;
+	}
+	
+	public void addPeg(Peg pegToAdd)
+	{
+		this.peg = pegToAdd;
+	}
 }

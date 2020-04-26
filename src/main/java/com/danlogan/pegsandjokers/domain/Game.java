@@ -147,7 +147,7 @@ public class Game {
 		return drawPile.cardsRemaining();
 	}
 	
-	public void takeTurn(PlayerTurn turn) throws PlayerNotFoundException, InvalidGameStateException {
+	public void takeTurn(PlayerTurn turn) throws PlayerNotFoundException, InvalidGameStateException, PlayerPositionNotFoundException {
 
 		//Get the PlayerHand for the player taking a turn
 		PlayerHand playerHand = this.getPlayerHand(turn.getPlayerNumber());
@@ -164,6 +164,13 @@ public class Game {
 		if (!playerHand.hasCard(turn.getCardName()))
 		{
 			throw new InvalidGameStateException("You cannot play a card that is not in your hand.");
+		}
+		
+		//Make sure they are requesting a valid position number
+		int playerPositionNumber = turn.getPlayerPositionNumber();
+		if (playerPositionNumber <1 || playerPositionNumber > 5)
+		{
+			throw new PlayerPositionNotFoundException(String.format("Position number %d is not a valid position.", playerPositionNumber));
 		}
 		
 		//Make the requested move
@@ -196,6 +203,20 @@ public class Game {
 		{
 			throw new InvalidGameStateException(String.format("Cannot use a %s to start a peg.", turn.getCardName()));
 		}
+		
+		//Then verify that the peg being requested to move is in a start position
+		int playerPositionNumber = turn.getPlayerPositionNumber();
+		PlayerPosition playerPosition = this.getPlayerPositions(turn.getPlayerNumber()).get(playerPositionNumber);
+		
+		if (!playerPosition.getPlayerBoardPosition().isStartPosition())
+		{
+			throw new InvalidGameStateException("Can only start pegs that are in the start position.");
+		}
+		
+		//Then update the PlayerPosition to be in the come out position
+		BoardPosition comeOutPosition = this.board.getPlayerSides().get(turn.getPlayerNumber()).getComeOutPosition();
+		
+		playerPosition.moveTo(comeOutPosition);
 		
 		return;
 	}

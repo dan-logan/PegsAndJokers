@@ -113,4 +113,9 @@ public class Side {
 		  return this.mainTrackPositions;
 	  }
 	  
+	  public BoardPosition getComeOutPosition()
+	  {
+		  return this.comeOutPosition;
+	  }
+	  
 }

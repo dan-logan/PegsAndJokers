@@ -13,5 +13,11 @@ public class PlayerPosition {
 	{
 		return  this.boardPosition;
 	}
+	
+	public void moveTo(BoardPosition newPosition)
+	{
+		Peg peg = boardPosition.removePeg();
+		newPosition.addPeg(peg);
+	}
 
 }

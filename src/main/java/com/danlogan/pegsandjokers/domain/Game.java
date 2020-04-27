@@ -290,6 +290,13 @@ public class Game {
 				BoardPosition newBoardPosition = boardPositionSide.getPosition(sidePositionIndex + spacesToMove);
 				playerPosition.moveTo(newBoardPosition);
 			}
+			else
+			{
+				//TO DO... enhance this to wrap around to first side when on the last side
+				Side nextSide = this.board.getPlayerSides().get(board.getSideIndex(boardPositionSide)+1);
+				BoardPosition newBoardPosition = nextSide.getPosition(spacesToMove - (18 - sidePositionIndex));
+				playerPosition.moveTo(newBoardPosition);
+			}
 		}
 	
 	}

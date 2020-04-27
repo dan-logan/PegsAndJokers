@@ -70,5 +70,11 @@ public class Board {
 
 		return returnSide;
 	}
+	
+	public int getSideIndex(Side sideToFind)
+	{
+		return this.playerSides.indexOf(sideToFind);
+
+	}
 
 }

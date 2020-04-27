@@ -249,7 +249,7 @@ public class Game {
 		
 	}
 	
-	private void handleMovePegForwardRequest(PlayerTurn turn, PlayerHand playerHand) throws PlayerPositionNotFoundException, InvalidGameStateException
+	private void handleMovePegForwardRequest(PlayerTurn turn, PlayerHand playerHand) throws PlayerPositionNotFoundException, InvalidGameStateException, CannotMoveToAPositionYouOccupyException
 	{
 		//Make sure a valid position is requested
 		this.validatePosition(turn);
@@ -274,7 +274,23 @@ public class Game {
 		//Determine how many spaces forward to move
 		int spacesToMove = cardBeingPlayed.getDistanceForMoves();
 		System.out.println("Going to move this many spaces" + spacesToMove);
-	
+		
+		//If on main track move forward accounting for 18 spaces per side
+		BoardPosition playerBoardPosition = playerPosition.getPlayerBoardPosition();
+		
+		if (playerBoardPosition.isMainTrackPosition())
+		{
+			Side boardPositionSide = board.getBoardPositionSide(playerBoardPosition);
+			int sidePositionIndex = board.getBoardPositionSideIndex(boardPositionSide, playerBoardPosition);
+			
+			System.out.println("Side position index of playerBoardPostion is " + sidePositionIndex);
+
+			if(sidePositionIndex + spacesToMove < 18)
+			{
+				BoardPosition newBoardPosition = boardPositionSide.getPosition(sidePositionIndex + spacesToMove);
+				playerPosition.moveTo(newBoardPosition);
+			}
+		}
 	
 	}
 	

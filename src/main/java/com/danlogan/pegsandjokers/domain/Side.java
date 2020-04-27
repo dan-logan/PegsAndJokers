@@ -117,5 +117,10 @@ public class Side {
 	  {
 		  return this.comeOutPosition;
 	  }
+
+	public BoardPosition getPosition(int index) {
+
+		return this.getMainTrackPositions().get(index);
+	}
 	  
 }

@@ -52,5 +52,23 @@ public class Board {
 		return this.playerSides;
 	}
 	
+	public int getBoardPositionSideIndex(Side side, BoardPosition boardPosition)
+	{
+		return side.getMainTrackPositions().indexOf(boardPosition);
+	}
+	
+	public Side getBoardPositionSide(BoardPosition boardPosition)
+	{
+		Side returnSide = null;
+		for (Side side : this.playerSides )
+		{
+			if(side.getMainTrackPositions().contains(boardPosition))
+			{
+				returnSide = side;
+			}
+		}
+
+		return returnSide;
+	}
 
 }

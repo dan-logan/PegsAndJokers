@@ -52,4 +52,10 @@ public class BoardPosition {
 	{
 		this.peg = pegToAdd;
 	}
+
+	public boolean isMainTrackPosition() {
+
+		return this.id.contains(this.getPegColor()+"-");
+		
+	}
 }

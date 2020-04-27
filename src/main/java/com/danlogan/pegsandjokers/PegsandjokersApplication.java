@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.context.annotation.Bean;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.danlogan.pegsandjokers.domain.Board;
 import com.danlogan.pegsandjokers.domain.CannotMoveToAPositionYouOccupyException;
@@ -41,9 +44,21 @@ public class PegsandjokersApplication {
 		SpringApplication.run(PegsandjokersApplication.class, args);
 	}
 
+	@Bean
+   	public WebMvcConfigurer corsConfigurer() {
+      return new WebMvcConfigurer() {
+        	@Override
+         	public void addCorsMappings(CorsRegistry registry) {
+				registry.addMapping("/").allowedOrigins("http://localhost:4200");
+				registry.addMapping("/games").allowedOrigins("http://localhost:4200");
+            	registry.addMapping("/game/{id}").allowedOrigins("http://localhost:4200");
+         }
+      };
+   }
+
 	@GetMapping("/")
 	public String root() {
-		return String.format("Welcome to Pegs and Jokers! %n There are %d Games.",gameRepository.getNumberOfGames());
+		return String.format("Welcome to Pegs and Jokers! There are 0 Games.");//,gameRepository.getNumberOfGames());
 	}
 
 	//Return all Games

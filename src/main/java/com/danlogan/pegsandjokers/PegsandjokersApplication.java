@@ -37,6 +37,8 @@ import com.danlogan.pegsandjokers.infrastructure.GameRepository;
 @RestController
 public class PegsandjokersApplication {
 
+	private final String allowedCrossOrigin = "http://localhost:4200";
+
 	private static GameRepository gameRepository = new GameRepository();
 //	private ArrayList<Game> games = new ArrayList<Game>();
 	
@@ -49,9 +51,7 @@ public class PegsandjokersApplication {
       return new WebMvcConfigurer() {
         	@Override
          	public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/").allowedOrigins("http://localhost:4200");
-				registry.addMapping("/games").allowedOrigins("http://localhost:4200");
-            	registry.addMapping("/game/{id}").allowedOrigins("http://localhost:4200");
+				registry.addMapping("/**").allowedOrigins(allowedCrossOrigin);
          }
       };
    }

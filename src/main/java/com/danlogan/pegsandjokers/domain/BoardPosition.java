@@ -41,6 +41,11 @@ public class BoardPosition {
 		return this.id.contains("Start");
 	}
 	
+	public boolean isHomePosition()
+	{
+		return this.id.contains("Home");
+	}
+	
 	public Peg removePeg()
 	{
 		Peg temp = this.peg;
@@ -55,7 +60,11 @@ public class BoardPosition {
 
 	public boolean isMainTrackPosition() {
 
-		return this.id.contains(this.getPegColor()+"-");
+		if (this.isStartPosition() || this.isHomePosition())
+		{
+			return false;
+		}
+		else { return true; }
 		
 	}
 }

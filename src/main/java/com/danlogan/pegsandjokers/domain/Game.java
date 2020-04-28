@@ -293,10 +293,22 @@ public class Game {
 			}
 			else
 			{
-				//TO DO... enhance this to wrap around to first side when on the last side
-				Side nextSide = this.board.getPlayerSides().get(board.getSideIndex(boardPositionSide)+1);
+				//wrap around to first side when on the last side
+				int boardSideIndex = board.getSideIndex(boardPositionSide);
+				Side nextSide = null;
+				
+				if (boardSideIndex < board.getPlayerSides().size()-1)
+				{
+					nextSide = this.board.getPlayerSides().get(board.getSideIndex(boardPositionSide)+1);
+				}
+				else
+				{
+					nextSide = this.board.getPlayerSides().get(0);
+				}
+				
 				BoardPosition newBoardPosition = nextSide.getPosition(spacesToMove - (18 - sidePositionIndex));
 				playerPosition.moveTo(newBoardPosition);
+
 			}
 		}
 	

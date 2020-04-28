@@ -283,6 +283,7 @@ public class Game {
 			Side boardPositionSide = board.getBoardPositionSide(playerBoardPosition);
 			int sidePositionIndex = board.getBoardPositionSideIndex(boardPositionSide, playerBoardPosition);
 			
+			System.out.println("Board position side index is " + board.getSideIndex(boardPositionSide));
 			System.out.println("Side position index of playerBoardPostion is " + sidePositionIndex);
 
 			if(sidePositionIndex + spacesToMove < 18)

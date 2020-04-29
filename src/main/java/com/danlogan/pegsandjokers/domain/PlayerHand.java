@@ -52,6 +52,11 @@ public class PlayerHand {
 		return cards;
 	}
 	
+	public Card getCard(int cardNumber)
+	{
+		return cards.get(cardNumber-1);
+	}
+	
 	public boolean hasCard(String cardName) {
 		
 		for (Card card : this.cards)

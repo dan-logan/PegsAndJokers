@@ -7,8 +7,59 @@ public class PlayerTurn {
 	private MoveType moveType;
 	private int playerPositionNumber;
 	
-	public PlayerTurn() {
-		super();
+	public static class Builder
+	{
+		//Builder fields
+		private int playerNumber;
+		private String cardName;
+		private MoveType moveType;
+		private int playerPositionNumber;
+		
+		public static Builder newInstance()
+		{
+			return new Builder();
+		}
+		
+		private Builder()
+		{
+			
+		}
+		
+		public Builder withPlayerNumber(int number)
+		{
+			this.playerNumber = number;
+			return this;
+		}
+		
+		public Builder withCardName(String cardName)
+		{
+			this.cardName = cardName;
+			return this;
+		}
+		
+		public Builder withMoveType(MoveType moveType)
+		{
+			this.moveType = moveType;
+			return this;
+		}
+		
+		public Builder withPlayerPosition(int playerPositionNumber)
+		{
+			this.playerPositionNumber = playerPositionNumber;
+			return this;
+		}
+		
+		public PlayerTurn build()
+		{
+			return new PlayerTurn(this);
+		}
+	}
+	
+	public PlayerTurn(Builder builder) {
+		this.cardName = builder.cardName;
+		this.moveType = builder.moveType;
+		this.playerNumber = builder.playerNumber;
+		this.playerPositionNumber = builder.playerPositionNumber;
 	}
 
 	public int getPlayerNumber() {

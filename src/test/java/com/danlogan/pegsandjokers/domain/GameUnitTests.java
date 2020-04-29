@@ -68,4 +68,28 @@ public class GameUnitTests {
 		assertThat(game.getPlayerHand(1).getCards().size()).isEqualTo(1);
 		assertThat(game.getPlayerHand(1).getCard("ACE of CLUBS")).isNotNull();
 	}
+	
+	@Test
+	void testDiscardTurn() throws PlayerNotFoundException, InvalidGameStateException, CannotMoveToAPositionYouOccupyException,
+									PlayerPositionNotFoundException
+	{
+		Game game = Game.Builder.newInstance().build();
+		
+		game.deal();
+		int deckSizeBeforeTurn = game.getCardsRemaining();
+		
+		Card cardToDiscard = game.getPlayerHand(1).getCard(1);
+	
+		PlayerTurn turn = PlayerTurn.Builder.newInstance()
+								.withCardName(cardToDiscard.getName())
+								.withMoveType(MoveType.DISCARD)
+								.withPlayerNumber(1)
+								.build();
+
+		game.takeTurn(turn);
+		
+		assertThat(game.getPlayerHand(1).getCard(cardToDiscard.getName())).isNull();
+		assertThat(deckSizeBeforeTurn - game.getCardsRemaining()).isEqualTo(1);
+		
+	}
 }

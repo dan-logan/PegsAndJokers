@@ -5,12 +5,13 @@ import java.util.ArrayList;
 public class PlayerHand {
 
 	private int playerNumber;
-	private ArrayList<Card> cards = new ArrayList<Card>();
+	private ArrayList<Card> cards;
 	
 	//Builder Class
 	public static class Builder {
 		
 		private int playerNumber;
+		private ArrayList<Card> cards = new ArrayList<Card>();
 		
 		public static Builder newInstance(int playerNumber) {
 			return new Builder(playerNumber);
@@ -25,6 +26,13 @@ public class PlayerHand {
 			
 			return new PlayerHand(this);
 		}
+
+		public Builder withCard(Card card) {
+			
+			this.cards.add(card);
+			
+			return this;
+		}
 		
 	}
 	
@@ -32,6 +40,7 @@ public class PlayerHand {
 	public PlayerHand(Builder builder) {
 		
 		this.playerNumber = builder.playerNumber;
+		this.cards = builder.cards;
 	}
 	
 	public void drawCard(DeckOfCards deck)

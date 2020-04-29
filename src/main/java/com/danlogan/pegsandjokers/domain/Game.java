@@ -20,7 +20,7 @@ public class Game {
 	
 	public static class Builder{
 	
-		private ArrayList<Player> players;
+		private ArrayList<Player> players = new ArrayList<Player>();
 		private DeckOfCards drawPile;
 		private ArrayList<Card> discardPile = new ArrayList<Card>();
 		private ArrayBlockingQueue<Player> playerQueue;
@@ -35,13 +35,34 @@ public class Game {
 		private Builder() {}
 		
 		//setter methods to configure builder
+		public Builder withPlayerNamed(String playerName)
+		{
+			int playerNumber = players.size() + 1;
+			Player player = Player.Builder.newInstance()
+					.withName("Player " + playerNumber)
+					.withNumber(playerNumber)
+					.build();
+			
+			players.add(player);
+			
+			return this;
+		}
+		
+		public Builder withPlayerHand(PlayerHand hand)
+		{
+			this.playerHands.add(hand);
+			return this;
+		}
 		
 		//build method to return a new instance from Builder
 		public Game build() {
 			
-			//if no players have been provided to the builder use the default
-			if (this.players == null) {
-				this.players = getDefaultPlayers();	
+			//if less than 3 players have been provided to the builder use default players
+			if (this.players.size() < 3) {
+				for(Player defaultPlayer : getDefaultPlayers())
+				{
+					this.players.add(defaultPlayer);
+				}
 			}
 			
 			//Build a queue for players to take turns
@@ -51,12 +72,17 @@ public class Game {
 			//Create the game board
 			this.board = Board.Builder.newInstance().withNumberOfPlayers(players.size()).build();
 			
-			//for each player add to player queue, create a Player Hand and initialize player positions
+			//for each player add to player queue, create any missing PlayerHands or PlayerPositions as defaults
 			int playerNumber = 0;
 
 			for(Player p : players) {
 				this.playerQueue.add(p);
-				this.playerHands.add(PlayerHand.Builder.newInstance(playerNumber).build());
+
+				if (this.playerHands.size()==playerNumber)
+				{
+					this.playerHands.add(PlayerHand.Builder.newInstance(playerNumber).build());
+				}
+				
 				ArrayList<BoardPosition> playerStartPositions = this.board.getPlayerSides().get(playerNumber).getStartPositions();
 
 				ArrayList<PlayerPosition> playerInitialPositions = new ArrayList<PlayerPosition>();
@@ -87,7 +113,7 @@ public class Game {
 			
 			ArrayList<Player> defaultPlayers = new ArrayList<Player>();
 			
-			for(int i=1;i<=3;i++) {
+			for(int i=players.size()+1;i<=3;i++) {
 				
 				Player player = Player.Builder.newInstance()
 									.withName("Player " + i)

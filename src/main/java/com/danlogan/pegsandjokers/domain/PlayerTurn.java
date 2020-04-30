@@ -53,6 +53,13 @@ public class PlayerTurn {
 		{
 			return new PlayerTurn(this);
 		}
+
+		public Builder withPositionNumber(int positionNumber) {
+
+			this.playerPositionNumber = positionNumber;
+			
+			return this;
+		}
 	}
 	
 	public PlayerTurn(Builder builder) {

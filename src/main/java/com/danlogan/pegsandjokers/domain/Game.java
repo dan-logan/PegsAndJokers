@@ -387,6 +387,11 @@ public class Game {
 
 	}
 	
+	public PlayerPosition getPlayerPosition(int playerNumber, int positionNumber)
+	{
+		return this.playerPositions.get(playerNumber - 1).get(positionNumber -1);
+	}
+	
 	
 	public ArrayList<Move> getAllowedMoves() 
 	{ 

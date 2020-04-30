@@ -92,4 +92,30 @@ public class GameUnitTests {
 		assertThat(deckSizeBeforeTurn - game.getCardsRemaining()).isEqualTo(1);
 		
 	}
+	
+	@Test
+	public void testStartAPegTurn() throws PlayerNotFoundException, InvalidGameStateException, CannotMoveToAPositionYouOccupyException,
+	PlayerPositionNotFoundException
+	{
+		Card cardToPlay = new Card(CardRank.ACE, Suit.CLUBS);
+		
+		PlayerHand playerHand = PlayerHand.Builder.newInstance(1)
+				.withCard(cardToPlay)
+				.build();
+
+		Game game = Game.Builder.newInstance()
+				.withPlayerHand(playerHand)
+				.build();
+
+		PlayerTurn turn = PlayerTurn.Builder.newInstance()
+				.withCardName(cardToPlay.getName())
+				.withMoveType(MoveType.START_A_PEG)
+				.withPlayerNumber(1)
+				.withPositionNumber(1)
+				.build();
+
+		game.takeTurn(turn);
+		
+		assertThat(game.getPlayerPosition(1,1).getPlayerBoardPosition().getId()).isEqualTo("RED-8");
+	}
 }

@@ -76,5 +76,22 @@ public class Board {
 		return this.playerSides.indexOf(sideToFind);
 
 	}
+	
+	public BoardPosition getBoardPositionById(String positionId)
+	{
+		for (Side side : this.getPlayerSides())
+		{
+			for (BoardPosition position : side.getAllPositions())
+			{
+				if (position.getId().equals(positionId))
+				{
+					return position;
+				}
+			}
+			
+		}
+		
+		return null;
+	}
 
 }

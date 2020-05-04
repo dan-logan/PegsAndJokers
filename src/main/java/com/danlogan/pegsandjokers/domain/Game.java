@@ -28,8 +28,25 @@ public class Game {
 		private ArrayList<ArrayList<PlayerPosition>> playerPositions = new ArrayList<ArrayList<PlayerPosition>>();
 		private Board board;
 		
+		private ArrayList<ArrayList<String>> initialPlayerPositionIds = new ArrayList<ArrayList<String>>();
+		
 		public static Builder newInstance() {
-			return new Builder();
+			
+			Builder builder = new Builder();
+			//Intialize initialPlayerPostions to an 8 player by 5 position two-dimensional array list
+			
+			 for (int player=0;player<5;player++)
+			 {
+				 builder.initialPlayerPositionIds.add(new ArrayList<String>());
+				 
+				 for (int pos=0;pos<5;pos++)
+				 {
+					builder.initialPlayerPositionIds.get(player).add(null); 
+				 }
+			 }
+			
+			
+			return builder;
 		}
 		
 		private Builder() {}
@@ -53,6 +70,13 @@ public class Game {
 			this.playerHands.add(hand);
 			return this;
 		}
+		
+		public Builder withPlayerPosition(int playerNumber, int positionNumber, String boardPositionId)
+		{
+			this.initialPlayerPositionIds.get(playerNumber-1).add(positionNumber-1,boardPositionId);
+			return this;
+		}
+
 		
 		//build method to return a new instance from Builder
 		public Game build() {
@@ -93,6 +117,32 @@ public class Game {
 				}
 				
 				this.playerPositions.add(playerInitialPositions);
+				
+				//for any initialized player positions... move update the default start positions
+				ArrayList<String> thisPlayersInitialPositionIds = null;
+				
+				if (this.initialPlayerPositionIds.size() > playerNumber)
+				{
+					thisPlayersInitialPositionIds = this.initialPlayerPositionIds.get(playerNumber);
+				}
+
+				int initialPositionNumber = 0;
+				for(String positionId : thisPlayersInitialPositionIds)
+				{
+					if (positionId != null)
+					{
+						PlayerPosition positionToInitialize = this.playerPositions.get(playerNumber).get(initialPositionNumber);
+
+						try {
+							positionToInitialize.moveTo(this.board.getBoardPositionById(positionId));
+						}catch(CannotMoveToAPositionYouOccupyException ex)
+						{
+							throw new RuntimeException("Cannot intialize with board with given initial postions. Duplicate Position found.");
+						}
+					}
+
+					initialPositionNumber++;
+				}
 				
 				playerNumber++;
 			}

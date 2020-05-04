@@ -101,6 +101,16 @@ public class Side {
 		return this.homePositions;
 	}
 	
+	public ArrayList<BoardPosition> getAllPositions()
+	{
+		ArrayList<BoardPosition> allPositions = new ArrayList<BoardPosition>();
+		
+		allPositions.addAll(getMainTrackPositions());
+		allPositions.addAll(getStartPositions());
+		allPositions.addAll(getHomePositions());
+		
+		return allPositions;
+	}
 	
 	
 	  public ArrayList<BoardPosition> getStartPositions()

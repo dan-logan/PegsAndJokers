@@ -151,4 +151,37 @@ public class GameUnitTests {
 		
 
 	}
+	
+	@Test
+	public void testCantLandOnOwnPeg() throws PlayerNotFoundException, InvalidGameStateException, CannotMoveToAPositionYouOccupyException,
+	PlayerPositionNotFoundException
+	{
+	Card cardToPlay = new Card(CardRank.ACE, Suit.CLUBS);
+		
+		PlayerHand playerHand = PlayerHand.Builder.newInstance(1)
+				.withCard(cardToPlay)
+				.build();
+
+		Game game = Game.Builder.newInstance()
+				.withPlayerHand(playerHand)
+				.withPlayerPosition(1,1,"RED-8")
+				.build();
+
+		PlayerTurn turn = PlayerTurn.Builder.newInstance()
+				.withCardName(cardToPlay.getName())
+				.withMoveType(MoveType.START_A_PEG)
+				.withPlayerNumber(1)
+				.withPositionNumber(2)
+				.build();
+		
+		try {
+			game.takeTurn(turn);
+			assert(false);
+		}
+		catch (CannotMoveToAPositionYouOccupyException e)
+		{
+			assertThat(e.getMessage()).isNotBlank();
+		}
+
+	}
 }

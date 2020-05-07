@@ -77,6 +77,7 @@ public class Board {
 
 	}
 	
+	
 	public BoardPosition getBoardPositionById(String positionId)
 	{
 		for (Side side : this.getPlayerSides())
@@ -92,6 +93,45 @@ public class Board {
 		}
 		
 		return null;
+	}
+
+	public BoardPosition getBoardPositionWithOffset(BoardPosition playerBoardPosition, int step) 
+	{
+
+		BoardPosition newBoardPosition=playerBoardPosition;
+
+		//If on main track move forward accounting for 18 spaces per side
+
+		if (playerBoardPosition.isMainTrackPosition())
+		{
+			Side boardPositionSide = this.getBoardPositionSide(playerBoardPosition);
+			int sidePositionIndex = this.getBoardPositionSideIndex(boardPositionSide, playerBoardPosition);
+	
+			if(sidePositionIndex + step < 18)
+			{
+				newBoardPosition = boardPositionSide.getPosition(sidePositionIndex + step);
+			}
+			else
+			{
+				//wrap around to first side when on the last side
+				int boardSideIndex = this.getSideIndex(boardPositionSide);
+				Side nextSide = null;
+
+				if (boardSideIndex < this.getPlayerSides().size()-1)
+				{
+					nextSide = this.getPlayerSides().get(this.getSideIndex(boardPositionSide)+1);
+				}
+				else
+				{
+					nextSide = this.getPlayerSides().get(0);
+				}
+
+				newBoardPosition = nextSide.getPosition(step - (18 - sidePositionIndex));
+
+			}
+		}
+
+		return newBoardPosition;
 	}
 
 }

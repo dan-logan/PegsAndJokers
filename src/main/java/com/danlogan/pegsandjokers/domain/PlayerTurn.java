@@ -6,6 +6,7 @@ public class PlayerTurn {
 	private String cardName;
 	private MoveType moveType;
 	private int playerPositionNumber;
+	private int moveDistance;
 	
 	public static class Builder
 	{
@@ -14,6 +15,7 @@ public class PlayerTurn {
 		private String cardName;
 		private MoveType moveType;
 		private int playerPositionNumber;
+		private int moveDistance;
 		
 		public static Builder newInstance()
 		{
@@ -49,6 +51,12 @@ public class PlayerTurn {
 			return this;
 		}
 		
+		public Builder withMoveDistance(int moveDistance)
+		{
+			this.moveDistance = moveDistance;
+			return this;
+		}
+		
 		public PlayerTurn build()
 		{
 			return new PlayerTurn(this);
@@ -67,6 +75,7 @@ public class PlayerTurn {
 		this.moveType = builder.moveType;
 		this.playerNumber = builder.playerNumber;
 		this.playerPositionNumber = builder.playerPositionNumber;
+		this.moveDistance = builder.moveDistance;
 	}
 
 	public int getPlayerNumber() {
@@ -83,6 +92,11 @@ public class PlayerTurn {
 
 	public int getPlayerPositionNumber() {
 		return this.playerPositionNumber;
+	}
+	
+	public int getmoveDistance()
+	{
+		return this.moveDistance;
 	}
 
 }

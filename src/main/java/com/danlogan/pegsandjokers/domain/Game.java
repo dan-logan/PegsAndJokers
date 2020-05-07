@@ -255,8 +255,8 @@ public class Game {
 				this.handleDiscardRequest(turn, playerHand);
 				break;
 				
-			case MOVE_PEG_FORWARD:
-				this.handleMovePegForwardRequest(turn, playerHand);
+			case MOVE_PEG:
+				this.handleMovePegRequest(turn, playerHand);
 				break;
 					
 		}
@@ -325,19 +325,11 @@ public class Game {
 		
 	}
 	
-	private void handleMovePegForwardRequest(PlayerTurn turn, PlayerHand playerHand) throws PlayerPositionNotFoundException, InvalidGameStateException, CannotMoveToAPositionYouOccupyException
+	private void handleMovePegRequest(PlayerTurn turn, PlayerHand playerHand) throws PlayerPositionNotFoundException, InvalidGameStateException, CannotMoveToAPositionYouOccupyException
 	{
 		//Make sure a valid position is requested
 		this.validatePosition(turn);
-		
-		//Verify that the card being used for the turn can be used to move forward
-		Card cardBeingPlayed = playerHand.getCard(turn.getCardName());
-		
-		if(!cardBeingPlayed.canBeUsedToMoveForward())
-		{
-			throw new InvalidGameStateException(String.format("Cannot use a %s to move forward.", turn.getCardName()));
-		}
-		
+				
 		//Verify that the position referenced in the turn is not a start position
 		int playerPositionNumber = turn.getPlayerPositionNumber();
 		PlayerPosition playerPosition = this.getPlayerPositions(turn.getPlayerNumber()).get(playerPositionNumber-1);
@@ -347,12 +339,48 @@ public class Game {
 			throw new InvalidGameStateException("Pegs in start position cannot move forward.");
 		}
 		
-		//Determine how many spaces forward to move
-		int spacesToMove = cardBeingPlayed.getDistanceForMoves();
-		System.out.println("Going to move this many spaces" + spacesToMove);
+		//Determine how many spaces to move  (positive distance is forward, negative distance is backwards)
+		int spacesToMove = turn.getmoveDistance();
+		int stepDistance;
 		
-		//If on main track move forward accounting for 18 spaces per side
+		//Verify that the card being used for the turn can be used to move forward when distance is positive number
+		Card cardBeingPlayed = playerHand.getCard(turn.getCardName());
+		
+		if (spacesToMove > 0)
+		{
+			stepDistance = 1;
+			if(!cardBeingPlayed.canBeUsedToMoveForward())
+			{
+				throw new InvalidGameStateException(String.format("Cannot use a %s to move forward.", turn.getCardName()));
+			}
+		}
+		else {stepDistance = -1;}
+		
+		
+		//Verify that the player does not pass one of his/her own pegs along the way
 		BoardPosition playerBoardPosition = playerPosition.getPlayerBoardPosition();
+				
+		for(int step=1;step != spacesToMove;step=step+stepDistance)
+		{
+			//check the BoardPosition at this step against other PlayerPositions
+			BoardPosition stepPosition = board.getBoardPositionWithOffset(playerBoardPosition, step);
+			for (PlayerPosition otherPosition : this.getPlayerPositions(turn.getPlayerNumber()))
+			{		
+				if (playerPosition.equals(otherPosition))
+				{
+					//skip over the current player position
+				}
+				else
+				{
+					if (otherPosition.getPlayerBoardPosition().getPegColor().equals(stepPosition.getPegColor()))
+					{
+						throw new CannotMoveToAPositionYouOccupyException("You cannot move over a position with one of your own pegs in it.");
+					}
+				}
+			}
+		}
+
+		//If on main track move forward accounting for 18 spaces per side
 		
 		if (playerBoardPosition.isMainTrackPosition())
 		{

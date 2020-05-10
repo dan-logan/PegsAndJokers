@@ -301,4 +301,35 @@ public class GameUnitTests {
 
 	}
 
+	@Test
+	public void testMoveEightBackwards() throws PlayerNotFoundException, InvalidMoveException, InvalidGameStateException, CannotMoveToAPositionYouOccupyException,
+	PlayerPositionNotFoundException
+	{
+		Card cardToPlay = new Card(CardRank.EIGHT, Suit.CLUBS);
+
+		PlayerHand playerHand = PlayerHand.Builder.newInstance(1)
+				.withCard(cardToPlay)
+				.build();
+
+		Game game = Game.Builder.newInstance()
+				.withPlayerHand(playerHand)
+				.withPlayerPosition(1,1,"RED-8")
+				.build();
+
+		PlayerTurn turn = PlayerTurn.Builder.newInstance()
+				.withCardName(cardToPlay.getName())
+				.withMoveType(MoveType.MOVE_PEG)
+				.withPlayerNumber(1)
+				.withPositionNumber(1)
+				.withMoveDistance(-8)
+				.build();
+
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("RED-8");
+
+		game.takeTurn(turn);
+
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("WHITE-18");
+
+	}
+
 }

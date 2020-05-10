@@ -370,8 +370,9 @@ public class Game {
 		
 		//Verify that the player does not pass one of his/her own pegs along the way
 		BoardPosition playerBoardPosition = playerPosition.getPlayerBoardPosition();
+		int startStep = 0 + stepDistance;
 				
-		for(int step=1;step != spacesToMove;step=step+stepDistance)
+		for(int step=startStep;step != spacesToMove;step=step+stepDistance)
 		{
 			//check the BoardPosition at this step against other PlayerPositions
 			BoardPosition stepPosition = board.getBoardPositionWithOffset(playerBoardPosition, step);
@@ -396,35 +397,29 @@ public class Game {
 		if (playerBoardPosition.isMainTrackPosition())
 		{
 			Side boardPositionSide = board.getBoardPositionSide(playerBoardPosition);
+			int boardSideIndex = board.getSideIndex(boardPositionSide);
 			int sidePositionIndex = board.getBoardPositionSideIndex(boardPositionSide, playerBoardPosition);
 			
-			System.out.println("Board position side index is " + board.getSideIndex(boardPositionSide));
+			System.out.println("Board position side index is " + boardSideIndex);
 			System.out.println("Side position index of playerBoardPostion is " + sidePositionIndex);
+			System.out.println("Step distance is " + stepDistance);
+			System.out.println("Board size is "+ board.getPlayerSides().size());
 
-			if(sidePositionIndex + spacesToMove < 18)
+			int numberOfSides = board.getPlayerSides().size();
+			Side nextSide = boardPositionSide;
+			
+			//Change Board position side if move wraps around to a different side
+			if (sidePositionIndex+spacesToMove > 17 || sidePositionIndex+spacesToMove < 0)
 			{
-				BoardPosition newBoardPosition = boardPositionSide.getPosition(sidePositionIndex + spacesToMove);
-				playerPosition.moveTo(newBoardPosition);
+				nextSide = board.getPlayerSides().get((numberOfSides + stepDistance + boardSideIndex)%numberOfSides);
 			}
-			else
-			{
-				//wrap around to first side when on the last side
-				int boardSideIndex = board.getSideIndex(boardPositionSide);
-				Side nextSide = null;
-				
-				if (boardSideIndex < board.getPlayerSides().size()-1)
-				{
-					nextSide = this.board.getPlayerSides().get(board.getSideIndex(boardPositionSide)+1);
-				}
-				else
-				{
-					nextSide = this.board.getPlayerSides().get(0);
-				}
-				
-				BoardPosition newBoardPosition = nextSide.getPosition(spacesToMove - (18 - sidePositionIndex));
-				playerPosition.moveTo(newBoardPosition);
+			
+			BoardPosition newBoardPosition = nextSide.getPosition((18+spacesToMove+sidePositionIndex)%18);
 
-			}
+			System.out.println("new side index is " + (numberOfSides + stepDistance + boardSideIndex)%numberOfSides);
+			System.out.println("new board position index is " + (18+spacesToMove+sidePositionIndex)%18);
+
+			playerPosition.moveTo(newBoardPosition);
 		}
 	
 	}

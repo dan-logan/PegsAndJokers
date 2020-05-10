@@ -133,5 +133,13 @@ public class Board {
 
 		return newBoardPosition;
 	}
+	
+	public ArrayList<BoardPosition> getStartPositionsForPlayerNumber(int playerNumber)
+	{
+		Side playerSide = this.playerSides.get(playerNumber -1);
+		
+		return playerSide.getStartPositions();
+		
+	}
 
 }

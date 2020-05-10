@@ -113,7 +113,7 @@ public class Game {
 				
 				for (BoardPosition bp : playerStartPositions)
 				{
-					playerInitialPositions.add(new PlayerPosition(bp));
+					playerInitialPositions.add(new PlayerPosition(playerNumber+1,bp));
 				}
 				
 				this.playerPositions.add(playerInitialPositions);
@@ -313,9 +313,39 @@ public class Game {
 		//Then update the PlayerPosition to be in the come out position
 		BoardPosition comeOutPosition = this.board.getPlayerSides().get(turn.getPlayerNumber()-1).getComeOutPosition();
 		
-		playerPosition.moveTo(comeOutPosition);
+		this.movePeg(playerPosition, comeOutPosition);
 		
 		return;
+	}
+	
+	private void movePeg(PlayerPosition fromPlayerPosition, BoardPosition toBoardPosition) throws CannotMoveToAPositionYouOccupyException
+	{
+		//If to position being moved to is occupied by another player, that other players peg will be sent back to start
+		if(toBoardPosition.getHasPeg() && !toBoardPosition.getPegColor().equals(fromPlayerPosition.getPegColor()))
+		{
+			
+			//get the player position that corresponds to the target position
+			PlayerPosition otherPlayerPosition = this.getPlayerPositionForBoardPosition(toBoardPosition);
+			
+			//find an available start position for the other player
+			BoardPosition availableStartPosition = null;
+			ArrayList<BoardPosition> otherPlayerStartPositions = board.getStartPositionsForPlayerNumber(otherPlayerPosition.getPlayerNumber());
+
+			for (BoardPosition boardPosition : otherPlayerStartPositions)
+			{
+					if (!boardPosition.getHasPeg())
+					{
+						availableStartPosition = boardPosition;
+					}
+				
+			}
+
+			otherPlayerPosition.moveTo(availableStartPosition);
+			
+		}
+		
+		//Make the requested move once the other player has been moved
+		fromPlayerPosition.moveTo(toBoardPosition);
 	}
 	
 	private void handleDiscardRequest(PlayerTurn turn, PlayerHand playerHand)
@@ -405,11 +435,6 @@ public class Game {
 			int boardSideIndex = board.getSideIndex(boardPositionSide);
 			int sidePositionIndex = board.getBoardPositionSideIndex(boardPositionSide, playerBoardPosition);
 			
-			System.out.println("Board position side index is " + boardSideIndex);
-			System.out.println("Side position index of playerBoardPostion is " + sidePositionIndex);
-			System.out.println("Step distance is " + stepDistance);
-			System.out.println("Board size is "+ board.getPlayerSides().size());
-
 			int numberOfSides = board.getPlayerSides().size();
 			Side nextSide = boardPositionSide;
 			
@@ -421,10 +446,7 @@ public class Game {
 			
 			BoardPosition newBoardPosition = nextSide.getPosition((18+spacesToMove+sidePositionIndex)%18);
 
-			System.out.println("new side index is " + (numberOfSides + stepDistance + boardSideIndex)%numberOfSides);
-			System.out.println("new board position index is " + (18+spacesToMove+sidePositionIndex)%18);
-
-			playerPosition.moveTo(newBoardPosition);
+			this.movePeg(playerPosition, newBoardPosition);
 		}
 	
 	}
@@ -481,6 +503,23 @@ public class Game {
 		return this.playerPositions.get(playerNumber - 1).get(positionNumber -1);
 	}
 	
+	public PlayerPosition getPlayerPositionForBoardPosition(BoardPosition boardPosition)
+	{
+		PlayerPosition  positionToReturn = null;
+		
+		for(int p = 1; p<=this.playerPositions.size();p++)
+		{
+			for (PlayerPosition playerPosition : this.playerPositions.get(p))
+			{
+				if (playerPosition.getPlayerBoardPosition().equals(boardPosition))
+				{
+					return playerPosition;
+				}
+			}
+		}
+		
+		return positionToReturn;
+	}
 	
 	public ArrayList<Move> getAllowedMoves() 
 	{ 
@@ -504,31 +543,6 @@ public class Game {
 	}
 
 	
-	private void addMovesBasedOnCardAndPosition(ArrayList<Move> allowedMoves, Card card, PlayerPosition currentPosition) 
-	{
-//		System.out.println("Checking a card " + card.getName());
-		
-		switch (card.getRank()) {
-		case ACE:
-//			System.out.println("Found an ACE");
-			addMovesForAce(allowedMoves, currentPosition);
 
-			break;
-		}
-
-		return;
-
-	}
-
-	private void addMovesForAce(ArrayList<Move> allowedMoves, PlayerPosition currentPosition) 
-	{ 
-		//If current position is a start position and the comeOutPostion is empty then 
-		//add a move from currentPostion to comeOutPosition
-
-		//TO DO.... currentPosition.getPlayerBoardPosition().isStartPosition();
-
-		return;
-
-	}
 
 }

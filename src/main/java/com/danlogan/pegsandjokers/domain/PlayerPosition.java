@@ -3,10 +3,17 @@ package com.danlogan.pegsandjokers.domain;
 public class PlayerPosition {
 	
 	private BoardPosition boardPosition;
+	private int playerNumber;
 	
-	public PlayerPosition(BoardPosition bp)
+	public PlayerPosition(int playerNumber, BoardPosition bp)
 	{
+		this.playerNumber = playerNumber;
 		this.boardPosition = bp;
+	}
+	
+	public int getPlayerNumber()
+	{
+		return this.playerNumber;
 	}
 	
 	public BoardPosition getPlayerBoardPosition()
@@ -30,6 +37,11 @@ public class PlayerPosition {
 		System.out.println("moved pegged to: " + newPosition.id);
 		
 		this.boardPosition = newPosition;
+	}
+	
+	public Color getPegColor()
+	{
+		return this.boardPosition.getPegColor();
 	}
 
 }

@@ -331,6 +331,7 @@ public class GameUnitTests {
 		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("WHITE-18");
 
 	}
+
 	@Test
 	public void testCannotMoveWrongDistance() throws PlayerNotFoundException, InvalidGameStateException, CannotMoveToAPositionYouOccupyException,
 	PlayerPositionNotFoundException
@@ -368,5 +369,36 @@ public class GameUnitTests {
 		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("RED-8");
 
 	}
+	
+	@Test
+	public void testSendOpponentBackToStart() throws PlayerNotFoundException, InvalidMoveException, InvalidGameStateException, CannotMoveToAPositionYouOccupyException,
+	PlayerPositionNotFoundException
+	{
+	Card cardToPlay = new Card(CardRank.QUEEN, Suit.CLUBS);
+		
+		PlayerHand playerHand = PlayerHand.Builder.newInstance(1)
+				.withCard(cardToPlay)
+				.build();
+
+		Game game = Game.Builder.newInstance()
+				.withPlayerHand(playerHand)
+				.withPlayerPosition(2,1,"RED-8")
+				.build();
+
+		PlayerTurn turn = PlayerTurn.Builder.newInstance()
+				.withCardName(cardToPlay.getName())
+				.withMoveType(MoveType.START_A_PEG)
+				.withPlayerNumber(1)
+				.withPositionNumber(1)
+				.build();
+		
+		assertThat(game.getPlayerPosition(2, 1).getPlayerBoardPosition().getId()).isEqualTo("RED-8");
+
+		game.takeTurn(turn);
+
+		assertThat(game.getPlayerPosition(2, 1).getPlayerBoardPosition().isStartPosition()).isTrue();
+		
+	}
+
 
 }

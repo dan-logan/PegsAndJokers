@@ -70,7 +70,7 @@ public class GameUnitTests {
 	}
 	
 	@Test
-	void testDiscardTurn() throws PlayerNotFoundException, InvalidGameStateException, CannotMoveToAPositionYouOccupyException,
+	void testDiscardTurn() throws PlayerNotFoundException, InvalidMoveException, InvalidGameStateException, CannotMoveToAPositionYouOccupyException,
 									PlayerPositionNotFoundException
 	{
 		Game game = Game.Builder.newInstance().build();
@@ -94,7 +94,7 @@ public class GameUnitTests {
 	}
 	
 	@Test
-	public void testStartAPegTurn() throws PlayerNotFoundException, InvalidGameStateException, CannotMoveToAPositionYouOccupyException,
+	public void testStartAPegTurn() throws PlayerNotFoundException, InvalidMoveException, InvalidGameStateException, CannotMoveToAPositionYouOccupyException,
 	PlayerPositionNotFoundException
 	{
 		Card cardToPlay = new Card(CardRank.ACE, Suit.CLUBS);
@@ -120,7 +120,7 @@ public class GameUnitTests {
 	}
 	
 	@Test
-	public void testMovePegForwardTurn() throws PlayerNotFoundException, InvalidGameStateException, CannotMoveToAPositionYouOccupyException,
+	public void testMovePegForwardTurn() throws PlayerNotFoundException, InvalidMoveException, InvalidGameStateException, CannotMoveToAPositionYouOccupyException,
 	PlayerPositionNotFoundException
 	{
 	Card cardToPlay = new Card(CardRank.THREE, Suit.CLUBS);
@@ -154,7 +154,7 @@ public class GameUnitTests {
 	}
 	
 	@Test
-	public void testCannotMovePastYourOwnPeg() throws PlayerNotFoundException, InvalidGameStateException, CannotMoveToAPositionYouOccupyException,
+	public void testCannotMovePastYourOwnPeg() throws PlayerNotFoundException, InvalidMoveException, InvalidGameStateException, CannotMoveToAPositionYouOccupyException,
 	PlayerPositionNotFoundException
 	{
 	Card cardToPlay = new Card(CardRank.THREE, Suit.CLUBS);
@@ -193,7 +193,7 @@ public class GameUnitTests {
 	}
 
 	@Test
-	public void testCantLandOnOwnPeg() throws PlayerNotFoundException, InvalidGameStateException, CannotMoveToAPositionYouOccupyException,
+	public void testCantLandOnOwnPeg() throws PlayerNotFoundException, InvalidMoveException, InvalidMoveException, InvalidGameStateException, CannotMoveToAPositionYouOccupyException,
 	PlayerPositionNotFoundException
 	{
 	Card cardToPlay = new Card(CardRank.ACE, Suit.CLUBS);
@@ -224,4 +224,81 @@ public class GameUnitTests {
 		}
 
 	}
+	
+	@Test
+	public void testCannotMoveBackward() throws PlayerNotFoundException, InvalidGameStateException, CannotMoveToAPositionYouOccupyException,
+	PlayerPositionNotFoundException
+	{
+		Card cardToPlay = new Card(CardRank.THREE, Suit.CLUBS);
+
+		PlayerHand playerHand = PlayerHand.Builder.newInstance(1)
+				.withCard(cardToPlay)
+				.build();
+
+		Game game = Game.Builder.newInstance()
+				.withPlayerHand(playerHand)
+				.withPlayerPosition(1,1,"RED-8")
+				.build();
+
+		PlayerTurn turn = PlayerTurn.Builder.newInstance()
+				.withCardName(cardToPlay.getName())
+				.withMoveType(MoveType.MOVE_PEG)
+				.withPlayerNumber(1)
+				.withPositionNumber(1)
+				.withMoveDistance(-3)
+				.build();
+
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("RED-8");
+
+		try {
+			game.takeTurn(turn);
+			assert(false);
+		}
+		catch (InvalidMoveException e)
+		{
+			assertThat(e.getMessage()).contains("backward");
+		}
+
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("RED-8");
+
+	}
+
+	@Test
+	public void testCannotMoveForward() throws PlayerNotFoundException, InvalidGameStateException, CannotMoveToAPositionYouOccupyException,
+	PlayerPositionNotFoundException
+	{
+		Card cardToPlay = new Card(CardRank.EIGHT, Suit.CLUBS);
+
+		PlayerHand playerHand = PlayerHand.Builder.newInstance(1)
+				.withCard(cardToPlay)
+				.build();
+
+		Game game = Game.Builder.newInstance()
+				.withPlayerHand(playerHand)
+				.withPlayerPosition(1,1,"RED-8")
+				.build();
+
+		PlayerTurn turn = PlayerTurn.Builder.newInstance()
+				.withCardName(cardToPlay.getName())
+				.withMoveType(MoveType.MOVE_PEG)
+				.withPlayerNumber(1)
+				.withPositionNumber(1)
+				.withMoveDistance(8)
+				.build();
+
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("RED-8");
+
+		try {
+			game.takeTurn(turn);
+			assert(false);
+		}
+		catch (InvalidMoveException e)
+		{
+			assertThat(e.getMessage()).contains("forward");
+		}
+
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("RED-8");
+
+	}
+
 }

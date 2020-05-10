@@ -25,6 +25,7 @@ import com.danlogan.pegsandjokers.domain.PlayerHand;
 import com.danlogan.pegsandjokers.domain.PlayerTurn;
 import com.danlogan.pegsandjokers.domain.PlayerNotFoundException;
 import com.danlogan.pegsandjokers.domain.PlayerPositionNotFoundException;
+import com.danlogan.pegsandjokers.domain.InvalidMoveException;
 import com.danlogan.pegsandjokers.domain.PlayerView;
 
 import java.net.URI;
@@ -105,7 +106,7 @@ public class PegsandjokersApplication {
 	//Post a new turn to a game -  this is how players take turns
 	@PostMapping("/game/{id}/turns")
 	public ResponseEntity<Game> takeTurn(@PathVariable String id, @RequestBody PlayerTurn turn) 
-			throws GameNotFoundException, PlayerNotFoundException, InvalidGameStateException, PlayerPositionNotFoundException,
+			throws GameNotFoundException, PlayerNotFoundException, InvalidMoveException, InvalidGameStateException, PlayerPositionNotFoundException,
 				CannotMoveToAPositionYouOccupyException
 	{
 		Game game = gameRepository.findGameById(id);

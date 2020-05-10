@@ -65,6 +65,18 @@ public class Card {
 		}
 		else {return true;}
 	}
+	
+	public boolean canBeUsedToMoveBackward()
+	{
+		if (this.rank.equals(CardRank.EIGHT) || this.rank.equals(CardRank.NINE))
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 
 	public int getDistanceForMoves() {
 

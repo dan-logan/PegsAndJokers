@@ -19,6 +19,7 @@ import com.danlogan.pegsandjokers.domain.InvalidGameStateException;
 import com.danlogan.pegsandjokers.infrastructure.GameNotFoundException;
 import com.danlogan.pegsandjokers.domain.PlayerNotFoundException;
 import com.danlogan.pegsandjokers.domain.PlayerPositionNotFoundException;
+import com.danlogan.pegsandjokers.domain.InvalidMoveException;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -78,7 +79,14 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 	   return buildResponseEntity(apiError);
 	   
    }
- 
+
+   @ExceptionHandler(InvalidMoveException.class)
+   protected ResponseEntity<Object> handleInvalidMoveException(InvalidMoveException ex){
+	   ApiError apiError = new ApiError(BAD_REQUEST);
+	   apiError.setMessage(ex.getMessage());
+	   return buildResponseEntity(apiError);
+	   
+   }
    @ExceptionHandler(PlayerPositionNotFoundException.class)
    protected ResponseEntity<Object> handlePlayerPositionNotFoundException(PlayerNotFoundException ex){
 

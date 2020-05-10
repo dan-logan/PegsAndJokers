@@ -223,7 +223,7 @@ public class Game {
 		return drawPile.cardsRemaining();
 	}
 	
-	public void takeTurn(PlayerTurn turn) throws PlayerNotFoundException, InvalidGameStateException, PlayerPositionNotFoundException, CannotMoveToAPositionYouOccupyException {
+	public void takeTurn(PlayerTurn turn) throws PlayerNotFoundException, InvalidGameStateException, InvalidMoveException, PlayerPositionNotFoundException, CannotMoveToAPositionYouOccupyException {
 
 		//Get the PlayerHand for the player taking a turn
 		PlayerHand playerHand = this.getPlayerHand(turn.getPlayerNumber());
@@ -325,7 +325,7 @@ public class Game {
 		
 	}
 	
-	private void handleMovePegRequest(PlayerTurn turn, PlayerHand playerHand) throws PlayerPositionNotFoundException, InvalidGameStateException, CannotMoveToAPositionYouOccupyException
+	private void handleMovePegRequest(PlayerTurn turn, PlayerHand playerHand) throws PlayerPositionNotFoundException, InvalidMoveException, InvalidGameStateException, CannotMoveToAPositionYouOccupyException
 	{
 		//Make sure a valid position is requested
 		this.validatePosition(turn);
@@ -351,10 +351,21 @@ public class Game {
 			stepDistance = 1;
 			if(!cardBeingPlayed.canBeUsedToMoveForward())
 			{
-				throw new InvalidGameStateException(String.format("Cannot use a %s to move forward.", turn.getCardName()));
+				throw new InvalidMoveException(String.format("Cannot use a %s to move forward.", turn.getCardName()));
 			}
 		}
-		else {stepDistance = -1;}
+		else if (spacesToMove < 0) 
+		{
+			stepDistance = -1;
+			if(!cardBeingPlayed.canBeUsedToMoveBackward())
+			{
+				throw new InvalidMoveException(String.format("Cannot use a %s to move backward.", turn.getCardName()));
+			}
+		}
+		else
+		{
+			throw new InvalidMoveException("Cannot move 0 spaces.");
+		}
 		
 		
 		//Verify that the player does not pass one of his/her own pegs along the way

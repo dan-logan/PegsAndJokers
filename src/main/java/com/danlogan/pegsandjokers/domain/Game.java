@@ -354,7 +354,7 @@ public class Game {
 				throw new InvalidMoveException(String.format("Cannot use a %s to move forward.", turn.getCardName()));
 			}
 		}
-		else if (spacesToMove < 0) 
+		else if (spacesToMove < 0) //Ensure that the card being played can move backwards when distance is negative number
 		{
 			stepDistance = -1;
 			if(!cardBeingPlayed.canBeUsedToMoveBackward())
@@ -367,6 +367,11 @@ public class Game {
 			throw new InvalidMoveException("Cannot move 0 spaces.");
 		}
 		
+		//Verify that the card can move the requested distance
+		if (!cardBeingPlayed.canMoveDistanceOf(spacesToMove))
+		{
+			throw new InvalidMoveException(String.format("%d is an invalid distance for a %s to move.", spacesToMove, turn.getCardName()));
+		}
 		
 		//Verify that the player does not pass one of his/her own pegs along the way
 		BoardPosition playerBoardPosition = playerPosition.getPlayerBoardPosition();

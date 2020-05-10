@@ -78,13 +78,41 @@ public class Card {
 		}
 	}
 
-	public int getDistanceForMoves() {
-
+	public boolean canMoveDistanceOf(int spacesToMove) {
+		
+		//Jokers can move any distance
 		if(this.isJoker())
 		{
-			return 0;
+			return true;
 		}
-		else { return this.rank.ordinal() + 1; }
+		
+		//Eights can only move backwards 8 spaces
+		if(this.rank.equals(CardRank.EIGHT))
+		{
+			if (spacesToMove != -8)
+			{
+				return false;
+			}
+			else {return true;}
+		}
+		
+		//Nines must be split forwards and backwards and so can move between -8 and 8 spaces
+		if(this.rank.equals(CardRank.NINE))
+		{
+			if (java.lang.Math.abs(spacesToMove) > 8)
+			{
+				return false;
+			}
+			else {return true;}
+		}
+		
+		//All other cards move according to their rank
+		if((this.rank.ordinal() +1) != spacesToMove)
+		{
+			return false;
+		}
+		
+		return true;
 	}
 
 }

@@ -258,6 +258,10 @@ public class Game {
 			case MOVE_PEG:
 				this.handleMovePegRequest(turn, playerHand);
 				break;
+				
+			case SPLIT_MOVE:
+				this.handleSplitMoveRequest(turn, playerHand);
+				break;
 					
 		}
 		
@@ -270,10 +274,9 @@ public class Game {
 		playerQueue.add(tempPlayer);
 	}
 	
-	private void validatePosition(PlayerTurn turn) throws PlayerPositionNotFoundException
+	private void validatePosition(int playerPositionNumber) throws PlayerPositionNotFoundException
 	{
 		//Make sure they are requesting a valid position number
-		int playerPositionNumber = turn.getPlayerPositionNumber();
 		if (playerPositionNumber <1 || playerPositionNumber > 5)
 		{
 			throw new PlayerPositionNotFoundException(String.format("Position number %d is not a valid position.", playerPositionNumber));
@@ -285,7 +288,7 @@ public class Game {
 
 	{
 		//Make sure a valid position is referenced in the request
-		this.validatePosition(turn);
+		this.validatePosition(turn.getPlayerPositionNumber());
 
 		//First verify that the card being used for the turn can be used to start a peg
 		Card cardBeingPlayed = playerHand.getCard(turn.getCardName());
@@ -357,12 +360,19 @@ public class Game {
 	
 	private void handleMovePegRequest(PlayerTurn turn, PlayerHand playerHand) throws PlayerPositionNotFoundException, InvalidMoveException, InvalidGameStateException, CannotMoveToAPositionYouOccupyException
 	{
+		int playerPositionNumber = turn.getPlayerPositionNumber();
+		int moveDistance = turn.getmoveDistance();
+		
+		handleMoveASinglePeg(turn.getPlayerNumber(), playerPositionNumber, moveDistance, turn.getCardName(), playerHand);
+	}
+	
+	private void handleMoveASinglePeg(int playerNumber, int playerPositionNumber, int spacesToMove, String cardName, PlayerHand playerHand) throws PlayerPositionNotFoundException, InvalidMoveException, InvalidGameStateException, CannotMoveToAPositionYouOccupyException
+	{
 		//Make sure a valid position is requested
-		this.validatePosition(turn);
+		this.validatePosition(playerPositionNumber);
 				
 		//Verify that the position referenced in the turn is not a start position
-		int playerPositionNumber = turn.getPlayerPositionNumber();
-		PlayerPosition playerPosition = this.getPlayerPositions(turn.getPlayerNumber()).get(playerPositionNumber-1);
+		PlayerPosition playerPosition = this.getPlayerPositions(playerNumber).get(playerPositionNumber-1);
 		
 		if (playerPosition.getPlayerBoardPosition().isStartPosition())
 		{
@@ -370,18 +380,17 @@ public class Game {
 		}
 		
 		//Determine how many spaces to move  (positive distance is forward, negative distance is backwards)
-		int spacesToMove = turn.getmoveDistance();
 		int stepDistance;
 		
 		//Verify that the card being used for the turn can be used to move forward when distance is positive number
-		Card cardBeingPlayed = playerHand.getCard(turn.getCardName());
+		Card cardBeingPlayed = playerHand.getCard(cardName);
 		
 		if (spacesToMove > 0)
 		{
 			stepDistance = 1;
 			if(!cardBeingPlayed.canBeUsedToMoveForward())
 			{
-				throw new InvalidMoveException(String.format("Cannot use a %s to move forward.", turn.getCardName()));
+				throw new InvalidMoveException(String.format("Cannot use a %s to move forward.", cardName));
 			}
 		}
 		else if (spacesToMove < 0) //Ensure that the card being played can move backwards when distance is negative number
@@ -389,7 +398,7 @@ public class Game {
 			stepDistance = -1;
 			if(!cardBeingPlayed.canBeUsedToMoveBackward())
 			{
-				throw new InvalidMoveException(String.format("Cannot use a %s to move backward.", turn.getCardName()));
+				throw new InvalidMoveException(String.format("Cannot use a %s to move backward.", cardName));
 			}
 		}
 		else
@@ -400,7 +409,7 @@ public class Game {
 		//Verify that the card can move the requested distance
 		if (!cardBeingPlayed.canMoveDistanceOf(spacesToMove))
 		{
-			throw new InvalidMoveException(String.format("%d is an invalid distance for a %s to move.", spacesToMove, turn.getCardName()));
+			throw new InvalidMoveException(String.format("%d is an invalid distance for a %s to move.", spacesToMove, cardName));
 		}
 		
 		//Verify that the player does not pass one of his/her own pegs along the way
@@ -411,7 +420,7 @@ public class Game {
 		{
 			//check the BoardPosition at this step against other PlayerPositions
 			BoardPosition stepPosition = board.getBoardPositionWithOffset(playerBoardPosition, step);
-			for (PlayerPosition otherPosition : this.getPlayerPositions(turn.getPlayerNumber()))
+			for (PlayerPosition otherPosition : this.getPlayerPositions(playerNumber))
 			{		
 				if (playerPosition.equals(otherPosition))
 				{
@@ -450,6 +459,26 @@ public class Game {
 		}
 	
 	}
+	
+	public void handleSplitMoveRequest(PlayerTurn turn, PlayerHand playerHand) throws PlayerPositionNotFoundException, InvalidMoveException, InvalidGameStateException, CannotMoveToAPositionYouOccupyException
+	{
+		int movePositionNumber1 = turn.getSplitMovePosition1();
+		int movePositionNumber2 = turn.getSplitMovePosition2();
+		int moveDistance1 = turn.getSplitMoveDistance1();
+		int moveDistance2 = turn.getSplitMoveDistance2();
+		
+		PlayerPosition originalPosition1 = this.getPlayerPosition(turn.getPlayerNumber(),movePositionNumber1);
+		String originalPosition1ID = originalPosition1.getPlayerBoardPosition().getId();
+		
+		//handle moving the first peg
+		this.handleMoveASinglePeg(turn.getPlayerNumber(), movePositionNumber1, moveDistance1, turn.getCardName(), playerHand); 
+		
+		//handle moving the second peg
+		this.handleMoveASinglePeg(turn.getPlayerNumber(), movePositionNumber2, moveDistance2, turn.getCardName(), playerHand);
+		
+		//TO DO... if something goes wrong moving the second peg.. put the first peg back to original position
+	}
+	
 	
 	public void deal( )
 	{

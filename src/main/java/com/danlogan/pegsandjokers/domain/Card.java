@@ -106,6 +106,17 @@ public class Card {
 			else {return true;}
 		}
 		
+		//Sevens can be split into two smaller moves
+		if(this.rank.equals(CardRank.SEVEN))
+		{
+			if ((spacesToMove < 1) || (spacesToMove > 7))
+			{
+				return false;
+			}
+			else {return true;}
+		}
+	
+		
 		//All other cards move according to their rank
 		if((this.rank.ordinal() +1) != spacesToMove)
 		{

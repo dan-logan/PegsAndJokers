@@ -7,6 +7,8 @@ public class PlayerTurn {
 	private MoveType moveType;
 	private int playerPositionNumber;
 	private int moveDistance;
+	//split move array if it is used will be of format [playerPos1, distance1, playerPos2, distance2]
+	private int[] splitMoveArray;
 	
 	public static class Builder
 	{
@@ -16,6 +18,7 @@ public class PlayerTurn {
 		private MoveType moveType;
 		private int playerPositionNumber;
 		private int moveDistance;
+		private int[] splitMoveArray;
 		
 		public static Builder newInstance()
 		{
@@ -30,6 +33,12 @@ public class PlayerTurn {
 		public Builder withPlayerNumber(int number)
 		{
 			this.playerNumber = number;
+			return this;
+		}
+		
+		public Builder withSplitMoveArray(int[] splitMoveArray)
+		{
+			this.splitMoveArray = splitMoveArray;
 			return this;
 		}
 		
@@ -76,10 +85,31 @@ public class PlayerTurn {
 		this.playerNumber = builder.playerNumber;
 		this.playerPositionNumber = builder.playerPositionNumber;
 		this.moveDistance = builder.moveDistance;
+		this.splitMoveArray = builder.splitMoveArray;
 	}
 
 	public int getPlayerNumber() {
 		return this.playerNumber;
+	}
+	
+	public int getSplitMovePosition1()
+	{	
+		return splitMoveArray[0];
+	}
+	
+	public int getSplitMovePosition2()
+	{
+		return splitMoveArray[2];
+	}
+	
+	public int getSplitMoveDistance1()
+	{
+		return splitMoveArray[1];
+	}
+	
+	public int getSplitMoveDistance2()
+	{
+		return splitMoveArray[3];
 	}
 
 	public String getCardName() {

@@ -477,7 +477,49 @@ public class GameUnitTests {
 
 	}
 	
+
 	@Test
+	public void testRollbackSplitMoveOnSecondPegError() throws PlayerNotFoundException, InvalidMoveException, InvalidGameStateException, CannotMoveToAPositionYouOccupyException,
+	PlayerPositionNotFoundException
+	{
+		Card cardToPlay = new Card(CardRank.SEVEN, Suit.CLUBS);
+
+		PlayerHand playerHand = PlayerHand.Builder.newInstance(1)
+				.withCard(cardToPlay)
+				.build();
+
+		Game game = Game.Builder.newInstance()
+				.withPlayerHand(playerHand)
+				.withPlayerPosition(1,1,"RED-9")
+				.withPlayerPosition(1,2,"RED-8")
+				.build();
+
+		int[] splitMoveArray = {1,3,2,4};
+		
+		PlayerTurn turn = PlayerTurn.Builder.newInstance()
+				.withCardName(cardToPlay.getName())
+				.withMoveType(MoveType.SPLIT_MOVE)
+				.withPlayerNumber(1)
+				.withSplitMoveArray(splitMoveArray)
+				.build();
+
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("RED-9");
+		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPosition().getId()).isEqualTo("RED-8");
+
+		try {
+			game.takeTurn(turn);
+			assert(false);
+		}
+		catch (CannotMoveToAPositionYouOccupyException e)
+		{
+			assertThat(e.getMessage()).contains("cannot move to a position with one of your own pegs in it");
+		}
+
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("RED-9");
+		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPosition().getId()).isEqualTo("RED-8");
+
+	}
+
 	public void testCannotSplitAnEight() throws PlayerNotFoundException, InvalidMoveException, InvalidGameStateException, CannotMoveToAPositionYouOccupyException,
 	PlayerPositionNotFoundException
 	{

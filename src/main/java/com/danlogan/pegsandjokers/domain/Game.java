@@ -486,7 +486,16 @@ public class Game {
 		this.handleMoveASinglePeg(turn.getPlayerNumber(), movePositionNumber1, moveDistance1, turn.getCardName(), playerHand); 
 		
 		//handle moving the second peg
-		this.handleMoveASinglePeg(turn.getPlayerNumber(), movePositionNumber2, moveDistance2, turn.getCardName(), playerHand);
+		try 
+		{
+			this.handleMoveASinglePeg(turn.getPlayerNumber(), movePositionNumber2, moveDistance2, turn.getCardName(), playerHand);
+		}
+		catch (Throwable t)
+		{
+			//move the first peg back where it came from
+			originalPosition1.moveTo(this.board.getBoardPositionById(originalPosition1ID));
+			throw t;
+		}
 		
 		//TO DO... if something goes wrong moving the second peg.. put the first peg back to original position
 	}

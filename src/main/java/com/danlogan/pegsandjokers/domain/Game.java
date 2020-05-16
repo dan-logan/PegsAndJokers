@@ -462,10 +462,22 @@ public class Game {
 	
 	public void handleSplitMoveRequest(PlayerTurn turn, PlayerHand playerHand) throws PlayerPositionNotFoundException, InvalidMoveException, InvalidGameStateException, CannotMoveToAPositionYouOccupyException
 	{
+		//Make sure card can be split
+		if (!playerHand.getCard(turn.getCardName()).canBeSplit())
+		{
+			throw new InvalidMoveException(String.format("You cannot split a %s", turn.getCardName())); 
+		}
+				
 		int movePositionNumber1 = turn.getSplitMovePosition1();
 		int movePositionNumber2 = turn.getSplitMovePosition2();
 		int moveDistance1 = turn.getSplitMoveDistance1();
 		int moveDistance2 = turn.getSplitMoveDistance2();
+		
+		//Make sure the split distances are valid
+		if (!playerHand.getCard(turn.getCardName()).isValidSplit(moveDistance1, moveDistance2))
+		{
+			throw new InvalidMoveException(String.format("You cannot split a %s into moves distances of: %d and %d", turn.getCardName(), moveDistance1, moveDistance2));
+		}
 		
 		PlayerPosition originalPosition1 = this.getPlayerPosition(turn.getPlayerNumber(),movePositionNumber1);
 		String originalPosition1ID = originalPosition1.getPlayerBoardPosition().getId();

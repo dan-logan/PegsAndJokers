@@ -77,6 +77,49 @@ public class Card {
 			return false;
 		}
 	}
+	
+	public boolean canBeSplit()
+	{
+		if (this.rank.equals(CardRank.SEVEN) || this.rank.equals(CardRank.NINE))
+		{
+			return true;
+		}
+		
+		return false;
+	}
+	
+	public boolean isValidSplit(int moveDistance1, int moveDistance2)
+	{
+		if (!this.canBeSplit()) {return false;}
+		
+		switch(this.rank)
+		{
+		case SEVEN:
+			if (moveDistance1 + moveDistance2 != 7)
+			{
+				return false;
+			}
+			break;
+		
+		case NINE:
+			if ( Math.abs(moveDistance1) + Math.abs(moveDistance2) != 9)
+			{
+				return false;
+			}
+			else
+			{
+				if (moveDistance1 * moveDistance2 > 0)
+				{
+					return false;
+				}
+			}
+			break;
+			
+		default: return false;
+		}
+		
+		return true;
+	}
 
 	public boolean canMoveDistanceOf(int spacesToMove) {
 		

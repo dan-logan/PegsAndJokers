@@ -600,6 +600,82 @@ public class GameUnitTests {
 		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("RED-8");
 
 	}
+	
+	@Test
+	public void testNineMustMoveOneForwardOneBackward() throws PlayerNotFoundException, InvalidMoveException, InvalidGameStateException, CannotMoveToAPositionYouOccupyException,
+	PlayerPositionNotFoundException
+	{
+		Card cardToPlay = new Card(CardRank.NINE, Suit.CLUBS);
 
+		PlayerHand playerHand = PlayerHand.Builder.newInstance(1)
+				.withCard(cardToPlay)
+				.build();
+
+		Game game = Game.Builder.newInstance()
+				.withPlayerHand(playerHand)
+				.withPlayerPosition(1,1,"RED-8")
+				.withPlayerPosition(1,2,"RED-9")
+				.build();
+
+		int[] splitMoveArray = {2,6,1,3};
+		
+		PlayerTurn turn = PlayerTurn.Builder.newInstance()
+				.withCardName(cardToPlay.getName())
+				.withMoveType(MoveType.SPLIT_MOVE)
+				.withPlayerNumber(1)
+				.withSplitMoveArray(splitMoveArray)
+				.build();
+
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("RED-8");
+		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPosition().getId()).isEqualTo("RED-9");
+	
+		try {
+			game.takeTurn(turn);
+			assert(false);
+		}
+		catch (InvalidMoveException e)
+		{
+			assertThat(e.getMessage()).contains("cannot split");
+		}
+
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("RED-8");
+		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPosition().getId()).isEqualTo("RED-9");
+
+	}
+
+	@Test
+	public void testSplitNineForwardOneBackward() throws PlayerNotFoundException, InvalidMoveException, InvalidGameStateException, CannotMoveToAPositionYouOccupyException,
+	PlayerPositionNotFoundException
+	{
+		Card cardToPlay = new Card(CardRank.NINE, Suit.CLUBS);
+
+		PlayerHand playerHand = PlayerHand.Builder.newInstance(1)
+				.withCard(cardToPlay)
+				.build();
+
+		Game game = Game.Builder.newInstance()
+				.withPlayerHand(playerHand)
+				.withPlayerPosition(1,1,"RED-8")
+				.withPlayerPosition(1,2,"RED-9")
+				.build();
+
+		int[] splitMoveArray = {2,3,1,-6};
+		
+		PlayerTurn turn = PlayerTurn.Builder.newInstance()
+				.withCardName(cardToPlay.getName())
+				.withMoveType(MoveType.SPLIT_MOVE)
+				.withPlayerNumber(1)
+				.withSplitMoveArray(splitMoveArray)
+				.build();
+
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("RED-8");
+		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPosition().getId()).isEqualTo("RED-9");
+	
+		game.takeTurn(turn);
+
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("RED-2");
+		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPosition().getId()).isEqualTo("RED-12");
+
+	}
 
 }

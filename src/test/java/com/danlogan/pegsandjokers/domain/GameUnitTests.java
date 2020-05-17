@@ -678,4 +678,37 @@ public class GameUnitTests {
 
 	}
 
+	@Test
+	public void testUseJokerToReplaceOpponentPeg() throws PlayerNotFoundException, InvalidMoveException, InvalidGameStateException, CannotMoveToAPositionYouOccupyException,
+	PlayerPositionNotFoundException
+	{
+		Card cardToPlay = new Joker();
+
+		PlayerHand playerHand = PlayerHand.Builder.newInstance(1)
+				.withCard(cardToPlay)
+				.build();
+
+		Game game = Game.Builder.newInstance()
+				.withPlayerHand(playerHand)
+				.withPlayerPosition(2,1,"BLUE-9")
+				.build();
+
+		PlayerTurn turn = PlayerTurn.Builder.newInstance()
+				.withCardName(cardToPlay.getName())
+				.withMoveType(MoveType.USE_JOKER)
+				.withPlayerNumber(1)
+				.withPositionNumber(1)
+				.withTargetBoardPositionId("BLUE-9")
+				.build();
+
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("REDStart-1");
+		assertThat(game.getPlayerPosition(2, 1).getPlayerBoardPosition().getId()).isEqualTo("BLUE-9");
+	
+		game.takeTurn(turn);
+
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("BLUE-9");
+		assertThat(game.getPlayerPosition(2, 1).getPlayerBoardPosition().getId()).isEqualTo("BLUEStart-1");
+
+	}
+
 }

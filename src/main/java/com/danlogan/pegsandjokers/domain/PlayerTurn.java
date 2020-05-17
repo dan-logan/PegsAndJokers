@@ -9,6 +9,7 @@ public class PlayerTurn {
 	private int moveDistance;
 	//split move array if it is used will be of format [playerPos1, distance1, playerPos2, distance2]
 	private int[] splitMoveArray;
+	private String targetBoardPositionId;
 	
 	public static class Builder
 	{
@@ -19,6 +20,7 @@ public class PlayerTurn {
 		private int playerPositionNumber;
 		private int moveDistance;
 		private int[] splitMoveArray;
+		private String targetBoardPositionId;
 		
 		public static Builder newInstance()
 		{
@@ -54,11 +56,6 @@ public class PlayerTurn {
 			return this;
 		}
 		
-		public Builder withPlayerPosition(int playerPositionNumber)
-		{
-			this.playerPositionNumber = playerPositionNumber;
-			return this;
-		}
 		
 		public Builder withMoveDistance(int moveDistance)
 		{
@@ -77,6 +74,13 @@ public class PlayerTurn {
 			
 			return this;
 		}
+		
+		public Builder withTargetBoardPositionId(String targetBoardPositionId)
+		{
+			this.targetBoardPositionId = targetBoardPositionId;
+			
+			return this;
+		}
 	}
 	
 	public PlayerTurn(Builder builder) {
@@ -86,6 +90,7 @@ public class PlayerTurn {
 		this.playerPositionNumber = builder.playerPositionNumber;
 		this.moveDistance = builder.moveDistance;
 		this.splitMoveArray = builder.splitMoveArray;
+		this.targetBoardPositionId = builder.targetBoardPositionId;
 	}
 
 	public int getPlayerNumber() {
@@ -127,6 +132,11 @@ public class PlayerTurn {
 	public int getmoveDistance()
 	{
 		return this.moveDistance;
+	}
+	
+	public String getTargetBoardPositionId()
+	{
+		return this.targetBoardPositionId;
 	}
 
 }

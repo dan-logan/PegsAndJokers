@@ -262,6 +262,10 @@ public class Game {
 			case SPLIT_MOVE:
 				this.handleSplitMoveRequest(turn, playerHand);
 				break;
+				
+			case USE_JOKER:
+				this.handleUseJokerRequest(turn, playerHand);
+				break;
 					
 		}
 		
@@ -282,6 +286,45 @@ public class Game {
 			throw new PlayerPositionNotFoundException(String.format("Position number %d is not a valid position.", playerPositionNumber));
 		}
 		
+	}
+
+	private void handleUseJokerRequest(PlayerTurn turn, PlayerHand playerHand) throws InvalidGameStateException, CannotMoveToAPositionYouOccupyException, PlayerPositionNotFoundException, InvalidMoveException
+	{
+		//Make sure a valid position is referenced in the request
+		this.validatePosition(turn.getPlayerPositionNumber());
+		
+		//Validate that a Joker is being played
+		Card cardBeingPlayed = playerHand.getCard(turn.getCardName());
+		
+		if(!cardBeingPlayed.isJoker())
+		{
+			throw new InvalidMoveException(String.format("%s is not a joker.", turn.getCardName()));
+		}
+		
+		//verify that targetBoardPosition is legitimate
+		BoardPosition targetBoardPosition = this.board.getBoardPositionById(turn.getTargetBoardPositionId());
+		if (targetBoardPosition == null)
+		{
+			throw new InvalidMoveException(String.format("%s is an invalid targetBoardPositionID", turn.getTargetBoardPositionId()));
+		}
+		
+		//Verify that position is occupied by opponent
+		if (!targetBoardPosition.getHasPeg())
+		{
+			throw new InvalidMoveException(String.format("There is not peg in position %s", turn.getTargetBoardPositionId()));
+		}
+		else
+		{
+			Color pegColor = targetBoardPosition.getPegColor();
+			if (pegColor.ordinal() == turn.getPlayerNumber() -1 )
+			{
+				throw new InvalidMoveException("Cannot use joker to replace your own peg");
+			}
+		}
+		
+		PlayerPosition fromPlayerPosition = this.getPlayerPositions(turn.getPlayerNumber()).get(turn.getPlayerPositionNumber()-1);
+		this.movePeg(fromPlayerPosition, targetBoardPosition);
+
 	}
 	
 	private void handleStartAPegRequest(PlayerTurn turn, PlayerHand playerHand) throws InvalidGameStateException, CannotMoveToAPositionYouOccupyException, PlayerPositionNotFoundException

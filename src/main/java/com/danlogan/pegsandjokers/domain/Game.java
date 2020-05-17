@@ -311,7 +311,7 @@ public class Game {
 		//Verify that position is occupied by opponent
 		if (!targetBoardPosition.getHasPeg())
 		{
-			throw new InvalidMoveException(String.format("There is not peg in position %s", turn.getTargetBoardPositionId()));
+			throw new InvalidMoveException(String.format("There is not a peg in position %s", turn.getTargetBoardPositionId()));
 		}
 		else
 		{

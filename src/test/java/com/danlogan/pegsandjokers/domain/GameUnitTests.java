@@ -711,4 +711,122 @@ public class GameUnitTests {
 
 	}
 
+	@Test
+	public void testCannotUseAnotherCardAsJoker() throws PlayerNotFoundException, InvalidMoveException, InvalidGameStateException, CannotMoveToAPositionYouOccupyException,
+	PlayerPositionNotFoundException
+	{
+		Card cardToPlay = new Card(CardRank.NINE, Suit.CLUBS);
+
+		PlayerHand playerHand = PlayerHand.Builder.newInstance(1)
+				.withCard(cardToPlay)
+				.build();
+
+		Game game = Game.Builder.newInstance()
+				.withPlayerHand(playerHand)
+				.withPlayerPosition(2,1,"BLUE-9")
+				.build();
+
+		PlayerTurn turn = PlayerTurn.Builder.newInstance()
+				.withCardName(cardToPlay.getName())
+				.withMoveType(MoveType.USE_JOKER)
+				.withPlayerNumber(1)
+				.withPositionNumber(1)
+				.withTargetBoardPositionId("BLUE-9")
+				.build();
+
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("REDStart-1");
+		assertThat(game.getPlayerPosition(2, 1).getPlayerBoardPosition().getId()).isEqualTo("BLUE-9");
+	
+		try {
+			game.takeTurn(turn);
+			assert(false);
+		}
+		catch (InvalidMoveException e)
+		{
+			assertThat(e.getMessage()).contains("is not a joker");
+		}
+
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("REDStart-1");
+		assertThat(game.getPlayerPosition(2, 1).getPlayerBoardPosition().getId()).isEqualTo("BLUE-9");
+
+	}
+
+	@Test
+	public void testCannotMoveJokerToEmptyPosition() throws PlayerNotFoundException, InvalidMoveException, InvalidGameStateException, CannotMoveToAPositionYouOccupyException,
+	PlayerPositionNotFoundException
+	{
+		Card cardToPlay = new Joker();
+
+		PlayerHand playerHand = PlayerHand.Builder.newInstance(1)
+				.withCard(cardToPlay)
+				.build();
+
+		Game game = Game.Builder.newInstance()
+				.withPlayerHand(playerHand)
+				.build();
+
+		PlayerTurn turn = PlayerTurn.Builder.newInstance()
+				.withCardName(cardToPlay.getName())
+				.withMoveType(MoveType.USE_JOKER)
+				.withPlayerNumber(1)
+				.withPositionNumber(1)
+				.withTargetBoardPositionId("BLUE-9")
+				.build();
+
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("REDStart-1");
+	
+		try {
+			game.takeTurn(turn);
+			assert(false);
+		}
+		catch (InvalidMoveException e)
+		{
+			assertThat(e.getMessage()).contains("There is not a peg in position");
+		}
+
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("REDStart-1");
+	
+	}
+
+	@Test
+	public void testCannotUseJokerToReplaceYourOwnPeg() throws PlayerNotFoundException, InvalidMoveException, InvalidGameStateException, CannotMoveToAPositionYouOccupyException,
+	PlayerPositionNotFoundException
+	{
+		Card cardToPlay = new Joker();
+
+		PlayerHand playerHand = PlayerHand.Builder.newInstance(1)
+				.withCard(cardToPlay)
+				.build();
+
+		Game game = Game.Builder.newInstance()
+				.withPlayerHand(playerHand)
+				.withPlayerPosition(1,2,"BLUE-9")
+				.build();
+
+		PlayerTurn turn = PlayerTurn.Builder.newInstance()
+				.withCardName(cardToPlay.getName())
+				.withMoveType(MoveType.USE_JOKER)
+				.withPlayerNumber(1)
+				.withPositionNumber(1)
+				.withTargetBoardPositionId("BLUE-9")
+				.build();
+
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("REDStart-1");
+		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPosition().getId()).isEqualTo("BLUE-9");
+	
+		try {
+			game.takeTurn(turn);
+			assert(false);
+		}
+		catch (InvalidMoveException e)
+		{
+			assertThat(e.getMessage()).contains("replace your own peg");
+		}
+
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("REDStart-1");
+		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPosition().getId()).isEqualTo("BLUE-9");
+
+	}
+
+
 }

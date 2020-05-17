@@ -413,21 +413,21 @@ public class Game {
 	{
 		//Make sure a valid position is requested
 		this.validatePosition(playerPositionNumber);
-				
+
 		//Verify that the position referenced in the turn is not a start position
 		PlayerPosition playerPosition = this.getPlayerPositions(playerNumber).get(playerPositionNumber-1);
-		
+
 		if (playerPosition.getPlayerBoardPosition().isStartPosition())
 		{
 			throw new InvalidGameStateException("Pegs in start position cannot move forward.");
 		}
-		
+
 		//Determine how many spaces to move  (positive distance is forward, negative distance is backwards)
 		int stepDistance;
-		
+
 		//Verify that the card being used for the turn can be used to move forward when distance is positive number
 		Card cardBeingPlayed = playerHand.getCard(cardName);
-		
+
 		if (spacesToMove > 0)
 		{
 			stepDistance = 1;
@@ -448,41 +448,44 @@ public class Game {
 		{
 			throw new InvalidMoveException("Cannot move 0 spaces.");
 		}
-		
+
 		//Verify that the card can move the requested distance
 		if (!cardBeingPlayed.canMoveDistanceOf(spacesToMove))
 		{
 			throw new InvalidMoveException(String.format("%d is an invalid distance for a %s to move.", spacesToMove, cardName));
 		}
-		
+
 		//Verify that the player does not pass one of his/her own pegs along the way
 		BoardPosition playerBoardPosition = playerPosition.getPlayerBoardPosition();
 		int startStep = 0 + stepDistance;
-		
+
 		//Keep track if player passes over the readyToGoHomePosition which step is it
 		int readyToGoHomeStep = -1;
 		int stepsToEndOfHome = -1;
+		int currentHomePositionNumber = 0;
 		String playersReadyToGoHomePositionId = this.board.getReadyToGoHomePositionIdForPlayerNumber(playerNumber);
-		
+
 		if (playersReadyToGoHomePositionId.equals(playerBoardPosition.getId()))
 		{
 			//player is on the ready to go home spot so set step number to 0 and stepsToEndOfHome = 5
 			readyToGoHomeStep = 0;
 			stepsToEndOfHome = 5;
 		}
-		
+
 		if (playerBoardPosition.isHomePosition())
 		{
 			//player is already in home track so set step number to 0 and calculated stepsToEndOfHome
-		//	readyToGoHomeStep=0 - playerBoardPosition.getHomePositionNumber();
+			//	readyToGoHomeStep=0 - playerBoardPosition.getHomePositionNumber();
 			readyToGoHomeStep=0;
-			stepsToEndOfHome = 5 - playerBoardPosition.getHomePositionNumber();
+			currentHomePositionNumber = playerBoardPosition.getHomePositionNumber();
+			stepsToEndOfHome = 5 - currentHomePositionNumber;
 		}
-				
+
 		for(int step=startStep;step != spacesToMove;step=step+stepDistance)
 		{
+			System.out.println(String.format("Taking step %d of %d with %d stepsToEndOfHome", step, spacesToMove, stepsToEndOfHome));
 			BoardPosition stepPosition = null;
-			
+
 			if (readyToGoHomeStep < 0)
 			{//get the next main track position
 				stepPosition = board.getBoardPositionWithOffset(playerBoardPosition, step);
@@ -491,25 +494,37 @@ public class Game {
 			{//get the next home position unless it is going past the end of home
 				if (step  <= stepsToEndOfHome)
 				{
-					stepPosition = board.getPlayerSides().get(playerNumber-1).getHomePositionByNumber(step-readyToGoHomeStep);
-					stepsToEndOfHome--;
+					stepPosition = board.getPlayerSides().get(playerNumber-1).getHomePositionByNumber(currentHomePositionNumber+1);
+//					stepsToEndOfHome--;
+					System.out.println(String.format("Stepping forward into %s ", stepPosition.getId()));
+					currentHomePositionNumber++;
 				}		
 				else
-				{//if go past the end of home, then continue on the main track
-					stepPosition = board.getBoardPositionWithOffset(playerBoardPosition, step);
+				{
+					//if go past the end of home, then continue on the main track
+					if (playerBoardPosition.isMainTrackPosition())
+					{
+						stepPosition = board.getBoardPositionWithOffset(playerBoardPosition, step);
+					}
+					else
+					{
+						//trying to move past the end of home is not allowed
+						throw new InvalidMoveException("Cannot move past end of home track");
+					}
 				}
 			}
-			
+
 			//if moving forward and stepping on the readyToGoHome position, keep track of step number
 			if (stepDistance > 0 && stepPosition.getId().equals(playersReadyToGoHomePositionId) )
 			{
 				readyToGoHomeStep = step;
 				stepsToEndOfHome = 5;
 			}
-	
+
 			//check the BoardPosition at this step against other PlayerPositions
 			for (PlayerPosition otherPosition : this.getPlayerPositions(playerNumber))
-			{		
+			{
+				System.out.println(String.format("Comparing %s against %s", otherPosition.getPlayerBoardPosition().getId(), stepPosition.getId()));
 				if (playerPosition.equals(otherPosition))
 				{
 					//skip over the current player position
@@ -518,15 +533,16 @@ public class Game {
 				{
 					if (otherPosition.getPlayerBoardPosition().getPegColor().equals(stepPosition.getPegColor()))
 					{
+						System.out.println(String.format("This is the step it blows up on %s", stepPosition.getId()));
 						throw new CannotMoveToAPositionYouOccupyException("You cannot move over a position with one of your own pegs in it.");
 					}
 				}
 			}
-			
-			}
+
+		}
 
 		//If on main track move forward accounting for 18 spaces per side
-		
+
 		if (playerBoardPosition.isMainTrackPosition())
 		{
 			//if passing over readyToGoHome spot move into the home track
@@ -561,7 +577,7 @@ public class Game {
 			BoardPosition newBoardPosition = board.getPlayerSides().get(playerNumber-1).getHomePositionByNumber(playerPosition.getPlayerBoardPosition().getHomePositionNumber() + spacesToMove);			
 			this.movePeg(playerPosition, newBoardPosition);
 		}
-	
+
 	}
 	
 	public void handleSplitMoveRequest(PlayerTurn turn, PlayerHand playerHand) throws PlayerPositionNotFoundException, InvalidMoveException, InvalidGameStateException, CannotMoveToAPositionYouOccupyException

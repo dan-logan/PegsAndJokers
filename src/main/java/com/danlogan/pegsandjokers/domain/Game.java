@@ -458,6 +458,15 @@ public class Game {
 		//Verify that the player does not pass one of his/her own pegs along the way
 		BoardPosition playerBoardPosition = playerPosition.getPlayerBoardPosition();
 		int startStep = 0 + stepDistance;
+		
+		//Keep track if player passes over the readyToGoHomePosition which step is it
+		int readyToGoHomeStep = -1;
+		String playersReadyToGoHomePositionId = this.board.getReadyToGoHomePositionIdForPlayerNumber(playerNumber);
+		if (playersReadyToGoHomePositionId.equals(playerBoardPosition.getId()))
+		{
+			//player is on the ready to go home spot so set step number to 0
+			readyToGoHomeStep = 0;
+		}
 				
 		for(int step=startStep;step != spacesToMove;step=step+stepDistance)
 		{
@@ -477,28 +486,44 @@ public class Game {
 					}
 				}
 			}
+			
+			//if moving forward and stepping on the readyToGoHome position, keep track of step number
+			if (stepDistance > 0 && stepPosition.getId().equals(playersReadyToGoHomePositionId) )
+			{
+				readyToGoHomeStep = step;
+			}
 		}
 
 		//If on main track move forward accounting for 18 spaces per side
 		
 		if (playerBoardPosition.isMainTrackPosition())
 		{
-			Side boardPositionSide = board.getBoardPositionSide(playerBoardPosition);
-			int boardSideIndex = board.getSideIndex(boardPositionSide);
-			int sidePositionIndex = board.getBoardPositionSideIndex(boardPositionSide, playerBoardPosition);
-			
-			int numberOfSides = board.getPlayerSides().size();
-			Side nextSide = boardPositionSide;
-			
-			//Change Board position side if move wraps around to a different side
-			if (sidePositionIndex+spacesToMove > 17 || sidePositionIndex+spacesToMove < 0)
+			//if passing over readyToGoHome spot move into the home track
+			if (readyToGoHomeStep > -1)
 			{
-				nextSide = board.getPlayerSides().get((numberOfSides + stepDistance + boardSideIndex)%numberOfSides);
+				int homeSpace = spacesToMove - readyToGoHomeStep;
+				BoardPosition newBoardPosition = board.getPlayerSides().get(playerNumber-1).getHomePositionByNumber(homeSpace);
+				this.movePeg(playerPosition, newBoardPosition);
 			}
-			
-			BoardPosition newBoardPosition = nextSide.getPosition((18+spacesToMove+sidePositionIndex)%18);
+			else
+			{  //not moving past home so keep going
+				Side boardPositionSide = board.getBoardPositionSide(playerBoardPosition);
+				int boardSideIndex = board.getSideIndex(boardPositionSide);
+				int sidePositionIndex = board.getBoardPositionSideIndex(boardPositionSide, playerBoardPosition);
 
-			this.movePeg(playerPosition, newBoardPosition);
+				int numberOfSides = board.getPlayerSides().size();
+				Side nextSide = boardPositionSide;
+
+				//Change Board position side if move wraps around to a different side
+				if (sidePositionIndex+spacesToMove > 17 || sidePositionIndex+spacesToMove < 0)
+				{
+					nextSide = board.getPlayerSides().get((numberOfSides + stepDistance + boardSideIndex)%numberOfSides);
+				}
+
+				BoardPosition newBoardPosition = nextSide.getPosition((18+spacesToMove+sidePositionIndex)%18);
+
+				this.movePeg(playerPosition, newBoardPosition);
+			}
 		}
 	
 	}

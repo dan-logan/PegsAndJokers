@@ -111,26 +111,36 @@ public class Side {
 		
 		return allPositions;
 	}
-	
-	
-	  public ArrayList<BoardPosition> getStartPositions()
-	  { 
-		  return this.startPositions; 
-	  }
-	 
-	  public ArrayList<BoardPosition> getMainTrackPositions()
-	  {
-		  return this.mainTrackPositions;
-	  }
-	  
-	  public BoardPosition getComeOutPosition()
-	  {
-		  return this.comeOutPosition;
-	  }
+
+
+	public ArrayList<BoardPosition> getStartPositions()
+	{ 
+		return this.startPositions; 
+	}
+
+	public ArrayList<BoardPosition> getMainTrackPositions()
+	{
+		return this.mainTrackPositions;
+	}
+
+	public BoardPosition getComeOutPosition()
+	{
+		return this.comeOutPosition;
+	}
+
+	public BoardPosition getReadyToGoHomePosition()
+	{
+		return this.readyToGoHomePosition;
+	}
 
 	public BoardPosition getPosition(int index) {
 
 		return this.getMainTrackPositions().get(index);
+	}
+	
+	public BoardPosition getHomePositionByNumber(int homePositionNumber)
+	{
+		return this.homePositions.get(homePositionNumber-1);
 	}
 	  
 }

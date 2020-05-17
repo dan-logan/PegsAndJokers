@@ -141,5 +141,12 @@ public class Board {
 		return playerSide.getStartPositions();
 		
 	}
+	
+	public String getReadyToGoHomePositionIdForPlayerNumber(int playerNumber)
+	{
+		Side playerSide = this.playerSides.get(playerNumber - 1);
+		
+		return playerSide.getReadyToGoHomePosition().getId();
+	}
 
 }

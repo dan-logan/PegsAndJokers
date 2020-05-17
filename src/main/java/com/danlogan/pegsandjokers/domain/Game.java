@@ -470,8 +470,33 @@ public class Game {
 				
 		for(int step=startStep;step != spacesToMove;step=step+stepDistance)
 		{
+			BoardPosition stepPosition = null;
+			
+			if (readyToGoHomeStep < 0)
+			{//get the next main track position
+				stepPosition = board.getBoardPositionWithOffset(playerBoardPosition, step);
+				System.out.println(String.format("Stepping forward to %s",stepPosition.getId()));
+			}
+			else
+			{//get the next home position if unless it is going past the end of home
+				if (step-readyToGoHomeStep <= 5)
+				{
+					stepPosition = board.getPlayerSides().get(playerNumber-1).getHomePositionByNumber(step-readyToGoHomeStep);
+					System.out.println(String.format("Stepping forward to into home %s",stepPosition.getId()));
+				}		
+				else
+				{//if go past the end of home, then continue on the main track
+					stepPosition = board.getBoardPositionWithOffset(playerBoardPosition, step);
+				}
+			}
+			
+			//if moving forward and stepping on the readyToGoHome position, keep track of step number
+			if (stepDistance > 0 && stepPosition.getId().equals(playersReadyToGoHomePositionId) )
+			{
+				readyToGoHomeStep = step;
+			}
+	
 			//check the BoardPosition at this step against other PlayerPositions
-			BoardPosition stepPosition = board.getBoardPositionWithOffset(playerBoardPosition, step);
 			for (PlayerPosition otherPosition : this.getPlayerPositions(playerNumber))
 			{		
 				if (playerPosition.equals(otherPosition))
@@ -487,19 +512,14 @@ public class Game {
 				}
 			}
 			
-			//if moving forward and stepping on the readyToGoHome position, keep track of step number
-			if (stepDistance > 0 && stepPosition.getId().equals(playersReadyToGoHomePositionId) )
-			{
-				readyToGoHomeStep = step;
 			}
-		}
 
 		//If on main track move forward accounting for 18 spaces per side
 		
 		if (playerBoardPosition.isMainTrackPosition())
 		{
 			//if passing over readyToGoHome spot move into the home track
-			if (readyToGoHomeStep > -1)
+			if (readyToGoHomeStep > -1 && spacesToMove-readyToGoHomeStep <=5)
 			{
 				int homeSpace = spacesToMove - readyToGoHomeStep;
 				BoardPosition newBoardPosition = board.getPlayerSides().get(playerNumber-1).getHomePositionByNumber(homeSpace);

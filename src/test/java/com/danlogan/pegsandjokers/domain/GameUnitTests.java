@@ -860,5 +860,78 @@ public class GameUnitTests {
 		
 	}
 
+	
+	@Test
+	public void testMovePastHomeWhenMovingToFar() throws PlayerNotFoundException, InvalidMoveException, InvalidGameStateException, CannotMoveToAPositionYouOccupyException,
+	PlayerPositionNotFoundException
+	{
+	Card cardToPlay = new Card(CardRank.TEN, Suit.CLUBS);
+		
+		PlayerHand playerHand = PlayerHand.Builder.newInstance(1)
+				.withCard(cardToPlay)
+				.build();
+
+		Game game = Game.Builder.newInstance()
+				.withPlayerHand(playerHand)
+				.withPlayerPosition(1,1,"RED-2")
+				.build();
+
+		PlayerTurn turn = PlayerTurn.Builder.newInstance()
+				.withCardName(cardToPlay.getName())
+				.withMoveType(MoveType.MOVE_PEG)
+				.withPlayerNumber(1)
+				.withPositionNumber(1)
+				.withMoveDistance(10)
+				.build();
+		
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("RED-2");
+	
+		game.takeTurn(turn);
+
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("RED-12");
+		
+	}
+
+	
+	@Test
+	public void testCannotPassYourselfInHome() throws PlayerNotFoundException, InvalidMoveException, InvalidGameStateException, CannotMoveToAPositionYouOccupyException,
+	PlayerPositionNotFoundException
+	{
+	Card cardToPlay = new Card(CardRank.THREE, Suit.CLUBS);
+		
+		PlayerHand playerHand = PlayerHand.Builder.newInstance(1)
+				.withCard(cardToPlay)
+				.build();
+
+		Game game = Game.Builder.newInstance()
+				.withPlayerHand(playerHand)
+				.withPlayerPosition(1,1,"RED-3")
+				.withPlayerPosition(1, 2, "REDHome-1")
+				.build();
+
+		PlayerTurn turn = PlayerTurn.Builder.newInstance()
+				.withCardName(cardToPlay.getName())
+				.withMoveType(MoveType.MOVE_PEG)
+				.withPlayerNumber(1)
+				.withPositionNumber(1)
+				.withMoveDistance(3)
+				.build();
+		
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("RED-3");
+	
+		try
+		{
+			game.takeTurn(turn);
+			assert(false);
+		}
+		catch (CannotMoveToAPositionYouOccupyException ex)
+		{
+			assert(ex.getMessage()).contains("cannot move over a position with one of your own");
+		}
+
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("RED-3");
+			
+	}
+
 
 }

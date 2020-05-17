@@ -461,11 +461,22 @@ public class Game {
 		
 		//Keep track if player passes over the readyToGoHomePosition which step is it
 		int readyToGoHomeStep = -1;
+		int stepsToEndOfHome = -1;
 		String playersReadyToGoHomePositionId = this.board.getReadyToGoHomePositionIdForPlayerNumber(playerNumber);
+		
 		if (playersReadyToGoHomePositionId.equals(playerBoardPosition.getId()))
 		{
-			//player is on the ready to go home spot so set step number to 0
+			//player is on the ready to go home spot so set step number to 0 and stepsToEndOfHome = 5
 			readyToGoHomeStep = 0;
+			stepsToEndOfHome = 5;
+		}
+		
+		if (playerBoardPosition.isHomePosition())
+		{
+			//player is already in home track so set step number to 0 and calculated stepsToEndOfHome
+		//	readyToGoHomeStep=0 - playerBoardPosition.getHomePositionNumber();
+			readyToGoHomeStep=0;
+			stepsToEndOfHome = 5 - playerBoardPosition.getHomePositionNumber();
 		}
 				
 		for(int step=startStep;step != spacesToMove;step=step+stepDistance)
@@ -475,14 +486,13 @@ public class Game {
 			if (readyToGoHomeStep < 0)
 			{//get the next main track position
 				stepPosition = board.getBoardPositionWithOffset(playerBoardPosition, step);
-				System.out.println(String.format("Stepping forward to %s",stepPosition.getId()));
 			}
 			else
-			{//get the next home position if unless it is going past the end of home
-				if (step-readyToGoHomeStep <= 5)
+			{//get the next home position unless it is going past the end of home
+				if (step  <= stepsToEndOfHome)
 				{
 					stepPosition = board.getPlayerSides().get(playerNumber-1).getHomePositionByNumber(step-readyToGoHomeStep);
-					System.out.println(String.format("Stepping forward to into home %s",stepPosition.getId()));
+					stepsToEndOfHome--;
 				}		
 				else
 				{//if go past the end of home, then continue on the main track
@@ -494,6 +504,7 @@ public class Game {
 			if (stepDistance > 0 && stepPosition.getId().equals(playersReadyToGoHomePositionId) )
 			{
 				readyToGoHomeStep = step;
+				stepsToEndOfHome = 5;
 			}
 	
 			//check the BoardPosition at this step against other PlayerPositions
@@ -544,6 +555,11 @@ public class Game {
 
 				this.movePeg(playerPosition, newBoardPosition);
 			}
+		}
+		else
+		{//player is moving in home track
+			BoardPosition newBoardPosition = board.getPlayerSides().get(playerNumber-1).getHomePositionByNumber(playerPosition.getPlayerBoardPosition().getHomePositionNumber() + spacesToMove);			
+			this.movePeg(playerPosition, newBoardPosition);
 		}
 	
 	}

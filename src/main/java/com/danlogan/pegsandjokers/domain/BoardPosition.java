@@ -46,6 +46,19 @@ public class BoardPosition {
 		return this.id.contains("Home");
 	}
 	
+	public int getHomePositionNumber()
+	{
+		if (isHomePosition())
+		{
+			System.out.println(String.format("Index of - in %s is %d", this.id, this.id.indexOf("-")));
+			return Integer.parseInt(this.id.substring(this.id.indexOf("-")+1));	
+		}
+		else
+		{
+			return -1;
+		}
+	}
+	
 	public Peg removePeg()
 	{
 		Peg temp = this.peg;

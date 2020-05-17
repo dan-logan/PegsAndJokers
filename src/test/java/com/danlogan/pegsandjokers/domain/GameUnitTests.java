@@ -892,6 +892,36 @@ public class GameUnitTests {
 		
 	}
 
+	@Test
+	public void testMoveWithinHomeTrack() throws PlayerNotFoundException, InvalidMoveException, InvalidGameStateException, CannotMoveToAPositionYouOccupyException,
+	PlayerPositionNotFoundException
+	{
+	Card cardToPlay = new Card(CardRank.TWO, Suit.CLUBS);
+		
+		PlayerHand playerHand = PlayerHand.Builder.newInstance(1)
+				.withCard(cardToPlay)
+				.build();
+
+		Game game = Game.Builder.newInstance()
+				.withPlayerHand(playerHand)
+				.withPlayerPosition(1,1,"REDHome-2")
+				.build();
+
+		PlayerTurn turn = PlayerTurn.Builder.newInstance()
+				.withCardName(cardToPlay.getName())
+				.withMoveType(MoveType.MOVE_PEG)
+				.withPlayerNumber(1)
+				.withPositionNumber(1)
+				.withMoveDistance(2)
+				.build();
+		
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("REDHome-2");
+	
+		game.takeTurn(turn);
+
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("REDHome-4");
+		
+	}
 	
 	@Test
 	public void testCannotPassYourselfInHome() throws PlayerNotFoundException, InvalidMoveException, InvalidGameStateException, CannotMoveToAPositionYouOccupyException,

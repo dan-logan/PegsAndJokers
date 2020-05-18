@@ -92,6 +92,11 @@ public class PlayerTurn {
 		this.splitMoveArray = builder.splitMoveArray;
 		this.targetBoardPositionId = builder.targetBoardPositionId;
 	}
+	
+	public PlayerTurn()
+	{
+		
+	}
 
 	public int getPlayerNumber() {
 		return this.playerNumber;

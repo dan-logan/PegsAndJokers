@@ -27,6 +27,7 @@ public class Game {
 		private ArrayList<PlayerHand> playerHands = new ArrayList<PlayerHand>();
 		private ArrayList<ArrayList<PlayerPosition>> playerPositions = new ArrayList<ArrayList<PlayerPosition>>();
 		private Board board;
+		private int defaultNumberOfPlayers=4;
 		
 		private ArrayList<ArrayList<String>> initialPlayerPositionIds = new ArrayList<ArrayList<String>>();
 		
@@ -82,7 +83,7 @@ public class Game {
 		public Game build() {
 			
 			//if less than 3 players have been provided to the builder use default players
-			if (this.players.size() < 3) {
+			if (this.players.size() < this.defaultNumberOfPlayers) {
 				for(Player defaultPlayer : getDefaultPlayers())
 				{
 					this.players.add(defaultPlayer);
@@ -163,7 +164,7 @@ public class Game {
 			
 			ArrayList<Player> defaultPlayers = new ArrayList<Player>();
 			
-			for(int i=players.size()+1;i<=3;i++) {
+			for(int i=players.size()+1;i<=this.defaultNumberOfPlayers;i++) {
 				
 				Player player = Player.Builder.newInstance()
 									.withName("Player " + i)

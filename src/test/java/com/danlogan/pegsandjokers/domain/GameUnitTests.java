@@ -20,12 +20,13 @@ public class GameUnitTests {
 	{
 		Game game = Game.Builder.newInstance().build();
 		
-		assertThat(game.getPlayers().size()).isEqualTo(3);
+		assertThat(game.getPlayers().size()).isEqualTo(4);
 		assertThat(game.getPlayers().get(0).getName()).isEqualTo("Player 1");
 		assertThat(game.getPlayers().get(1).getName()).isEqualTo("Player 2");
 		assertThat(game.getPlayers().get(2).getName()).isEqualTo("Player 3");
+		assertThat(game.getPlayers().get(3).getName()).isEqualTo("Player 4");
 		
-		assertThat(game.getBoard().getPlayerSides().size()).isEqualTo(3);
+		assertThat(game.getBoard().getPlayerSides().size()).isEqualTo(4);
 		
 		assertThat(game.getPlayerPositions(1).size()).isEqualTo(5);
 		assertThat(game.getPlayerPositions(1).get(0).getPlayerBoardPosition().isStartPosition());
@@ -328,7 +329,7 @@ public class GameUnitTests {
 
 		game.takeTurn(turn);
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("WHITE-18");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("PINK-18");
 
 	}
 

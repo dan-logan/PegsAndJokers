@@ -1,0 +1,25 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Pegs and Jokers</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+    
+<h1>Games</h1>
+
+<table>
+	<tr>
+		<th>GameID</th>
+		<th>Status</th>
+		<th>View the Game</th>
+	</tr>
+	<tr th:each="game : ${games}">
+		<td th:text="${game.id}">placeholder game id</td>
+		<td th:text="${game.status}">placeholder game status</td>
+		<td> <a th:href="@{/mvc/game/{id}(id=${game.id})}">View the Game</a> </td>
+	</tr>
+</table>
+         	
+    
+</body>
+</html>

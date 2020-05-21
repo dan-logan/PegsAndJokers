@@ -5,11 +5,15 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.springframework.context.annotation.Bean;
@@ -35,7 +39,7 @@ import com.danlogan.pegsandjokers.infrastructure.GameRepository;
 
 
 @SpringBootApplication
-@RestController
+@Controller
 public class PegsandjokersApplication {
 
 	private final String allowedCrossOrigin = "http://localhost:4200";
@@ -44,6 +48,7 @@ public class PegsandjokersApplication {
 //	private ArrayList<Game> games = new ArrayList<Game>();
 	
 	public static void main(String[] args) {
+		
 		SpringApplication.run(PegsandjokersApplication.class, args);
 	}
 
@@ -58,12 +63,14 @@ public class PegsandjokersApplication {
    }
 
 	@GetMapping("/")
+	@ResponseBody
 	public String root() {
 		return String.format("Welcome to Pegs and Jokers! There are 0 Games.");//,gameRepository.getNumberOfGames());
 	}
 
 	//Return all Games
 	@GetMapping("/games")
+	@ResponseBody
 	public ResponseEntity<ArrayList<Game>> games()
 	{
 		ArrayList<Game>games = gameRepository.getAllGames();
@@ -74,6 +81,7 @@ public class PegsandjokersApplication {
 
 	//New Game API
 	@PostMapping("/games")
+	@ResponseBody
 	public ResponseEntity<Game> newGame(UriComponentsBuilder ucb) throws CannotStartGameWithoutPlayersException
 	{
 		
@@ -96,6 +104,7 @@ public class PegsandjokersApplication {
 
 	//Get a game by it's id
 	@GetMapping(value = "/game/{id}")
+	@ResponseBody
 	public ResponseEntity<Game> getGameById(@PathVariable String id) throws GameNotFoundException
 	{
 		Game game = gameRepository.findGameById(id);
@@ -105,6 +114,7 @@ public class PegsandjokersApplication {
 	
 	//Post a new turn to a game -  this is how players take turns
 	@PostMapping("/game/{id}/turns")
+	@ResponseBody
 	public ResponseEntity<Game> takeTurn(@PathVariable String id, @RequestBody PlayerTurn turn) 
 			throws GameNotFoundException, PlayerNotFoundException, InvalidMoveException, InvalidGameStateException, PlayerPositionNotFoundException,
 				CannotMoveToAPositionYouOccupyException
@@ -118,6 +128,7 @@ public class PegsandjokersApplication {
 	
 	//Get Player Hands for a specific player number
 	@GetMapping(value="/game/{id}/playerhand/{playerNumber}")
+	@ResponseBody
 	public ResponseEntity<PlayerHand> getPlayerHand(@PathVariable String id, @PathVariable int playerNumber) throws GameNotFoundException, PlayerNotFoundException
 	{
 		  Game game = gameRepository.findGameById(id); 
@@ -130,6 +141,7 @@ public class PegsandjokersApplication {
 	
 	//Get current board layout
 	@GetMapping(value="/game/{id}/board")
+	@ResponseBody
 	public ResponseEntity<Board> getBoard(@PathVariable String id) throws GameNotFoundException
 	{
 		Game game = gameRepository.findGameById(id);
@@ -142,6 +154,7 @@ public class PegsandjokersApplication {
 	
 	//Get view of the game for a specific player
 	@GetMapping(value="/game/{id}/playerView/{playerNumber}")
+	@ResponseBody
 	public ResponseEntity<PlayerView> getPlayerView(@PathVariable String id, @PathVariable int playerNumber) throws GameNotFoundException, PlayerNotFoundException
 	{
 		Game game = gameRepository.findGameById(id);
@@ -154,6 +167,7 @@ public class PegsandjokersApplication {
 	
 	//probably should deprecate this action concept as it is not really RESTful
 	@GetMapping(value = "/game/{id}", params = "action")
+	@ResponseBody
 	public ResponseEntity<Game> gameAction(@PathVariable String id, @RequestParam String action) throws GameNotFoundException, CannotStartGameWithoutPlayersException {
 		
 		Game game = gameRepository.findGameById(id);
@@ -171,4 +185,21 @@ public class PegsandjokersApplication {
 		
 		
 	}
+
+	@RequestMapping("/mvc/games")
+	public String getGames(Model model)
+	{
+		System.out.println("in the /mvc/games  request handler");
+		model.addAttribute("games", gameRepository.getAllGames());
+		
+		return "games";
+	}
+	
+	@RequestMapping("/mvc/game/{id}")
+	public String getGameById(String id, Model model)
+	{
+		
+		return "game";
+	}
+
 }

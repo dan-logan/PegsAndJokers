@@ -189,7 +189,6 @@ public class PegsandjokersApplication {
 	@RequestMapping("/mvc/games")
 	public String getGames(Model model)
 	{
-		System.out.println("in the /mvc/games  request handler");
 		model.addAttribute("games", gameRepository.getAllGames());
 		
 		return "games";
@@ -200,6 +199,18 @@ public class PegsandjokersApplication {
 	{
 		
 		return "game";
+	}
+	
+	@RequestMapping("/mvc/game/{id}/playerView/{playerNumber}")
+	public String getPlayerViewByGameAndPlayerNumber(@PathVariable String id, @PathVariable int playerNumber, Model model) throws GameNotFoundException, PlayerNotFoundException 
+	{
+		Game game = gameRepository.findGameById(id);
+		
+		PlayerView playerView = game.getPlayerView(playerNumber);
+		model.addAttribute("playerView",playerView);
+
+		System.out.println("in mvc player view request");
+		return "playerView";
 	}
 
 }

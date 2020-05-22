@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -191,14 +192,14 @@ public class PegsandjokersApplication {
 	{
 		model.addAttribute("games", gameRepository.getAllGames());
 		
-		return "games";
+		return "mvc/games";
 	}
 	
 	@RequestMapping("/mvc/game/{id}")
 	public String getGameById(String id, Model model)
 	{
 		
-		return "game";
+		return "mvc/game";
 	}
 	
 	@RequestMapping("/mvc/game/{id}/playerView/{playerNumber}")
@@ -208,9 +209,39 @@ public class PegsandjokersApplication {
 		
 		PlayerView playerView = game.getPlayerView(playerNumber);
 		model.addAttribute("playerView",playerView);
+		
+		TurnRequest turnRequest = new TurnRequest();
+		turnRequest.setPlayerNumber(100);
+		model.addAttribute("turnRequest",turnRequest);
 
 		System.out.println("in mvc player view request");
-		return "playerView";
+		return "mvc/playerView";
 	}
 
+	@PostMapping("/mvc/taketurn")
+	public String takeTurn(@ModelAttribute TurnRequest turnRequest)
+	{
+		System.out.println("got turn request: " + turnRequest);
+		return "mvc/games";
+	}
+
+	//Data Transfer Objects
+	class TurnRequest
+	{
+		private int playerNumber;
+		private int cardName;
+	
+		public int getPlayerNumber() {
+			return playerNumber;
+		}
+		public void setPlayerNumber(int playerNumber) {
+			this.playerNumber = playerNumber;
+		}
+		public int getCardName() {
+			return cardName;
+		}
+		public void setCardName(int cardName) {
+			this.cardName = cardName;
+		}
+	}
 }

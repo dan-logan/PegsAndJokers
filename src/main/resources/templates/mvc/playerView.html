@@ -1,0 +1,49 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Pegs and Jokers</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<div> 
+<h1>Player View </h1>
+Player color is: <span th:text="${playerView.playerColor}">player color</span><br/>
+Player message: <span th:text="${playerView.playerMessage}">current player's name</span>
+
+<h2>Player Hand</h2>
+
+<table>
+	<tr><th>Card Name</th></tr>
+	<tr th:each="card : ${playerView.playerHand.cards}">
+		<td th:text="${card.name}">Card Name</td>
+	</tr>
+</table>
+
+<h2>Player Positions</h2>
+
+<table>
+	<tr><th>Player Position</th></tr>
+	<tr th:each="position : ${playerView.playerPositions}">
+		<td th:text="${position.playerBoardPosition.id}">Board Position Id</td>
+	</tr>
+</table>
+
+<!-- 
+<br/>turn player number:<span th:text="${turnRequest.playerNumber}">player number</span><br/> 
+ -->
+ 
+<h2>Take a turn</h2>
+<!--  <form action="#" th:action="@{/mvc/taketurn" th:object="${turnRequest}" method="post">
+    	<p>Player Number: <input type="text" th:field="*{playerNumber}" /></p>
+        <p>Card Name: <input type="text" th:field="*{cardName}" /></p>
+        <p><input type="submit" value="Submit" /> <input type="reset" value="Reset" /></p>
+   </form>
+  -->   
+  
+     <form action="#" th:action="@{/greeting}" th:object="${turnRequest}" method="post">
+    	<p>Player Number: <input type="text" th:field="*{playerNumber}" /></p>
+        <p>Card Name: <input type="text" th:field="*{cardName}" /></p>
+        <p><input type="submit" value="Submit" /> <input type="reset" value="Reset" /></p>
+    </form>
+ </div>      
+</body>
+</html>

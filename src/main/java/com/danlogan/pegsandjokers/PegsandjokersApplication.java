@@ -211,7 +211,8 @@ public class PegsandjokersApplication {
 		model.addAttribute("playerView",playerView);
 		
 		TurnRequest turnRequest = new TurnRequest();
-		turnRequest.setPlayerNumber(100);
+		turnRequest.setPlayerNumber(playerNumber);
+		turnRequest.setCardName("please choose a card");
 		model.addAttribute("turnRequest",turnRequest);
 
 		System.out.println("in mvc player view request");
@@ -219,28 +220,36 @@ public class PegsandjokersApplication {
 	}
 
 	@PostMapping("/mvc/taketurn")
-	public String takeTurn(@ModelAttribute TurnRequest turnRequest)
+	public String takeTurn(@ModelAttribute("turnRequest") TurnRequest turnRequest)
 	{
-		System.out.println("got turn request: " + turnRequest);
+		System.out.println("got turn request: " + turnRequest.toString());
 		return "mvc/games";
 	}
 
 	//Data Transfer Objects
-	class TurnRequest
+	public class TurnRequest
 	{
 		private int playerNumber;
-		private int cardName;
+		private String cardName;
 	
+		public TurnRequest()
+		{
+			
+		}
 		public int getPlayerNumber() {
 			return playerNumber;
+		}
+		@Override
+		public String toString() {
+			return "TurnRequest [playerNumber=" + playerNumber + ", cardName=" + cardName + "]";
 		}
 		public void setPlayerNumber(int playerNumber) {
 			this.playerNumber = playerNumber;
 		}
-		public int getCardName() {
+		public String getCardName() {
 			return cardName;
 		}
-		public void setCardName(int cardName) {
+		public void setCardName(String cardName) {
 			this.cardName = cardName;
 		}
 	}

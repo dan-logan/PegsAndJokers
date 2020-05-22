@@ -6,9 +6,17 @@
 <body>
 <div> 
 <h1>Player View </h1>
-Player Color is: <span th:text="${playerView.playerColor}">player color</span>
+Player color is: <span th:text="${playerView.playerColor}">player color</span><br/>
+Player message: <span th:text="${playerView.playerMessage}">current player's name</span>
 
-<p>Put Player View Here </p>
+<p>Player Hand</p>
+
+<table>
+	<tr th:each="card : ${playerView.playerHand.cards}">
+		<th th:text="${card.name}">Card Name</th>
+	</tr>
+</table>
+
  </div>      
 </body>
 </html>

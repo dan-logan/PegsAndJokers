@@ -31,6 +31,7 @@ import com.danlogan.pegsandjokers.domain.PlayerTurn;
 import com.danlogan.pegsandjokers.domain.PlayerNotFoundException;
 import com.danlogan.pegsandjokers.domain.PlayerPositionNotFoundException;
 import com.danlogan.pegsandjokers.domain.InvalidMoveException;
+import com.danlogan.pegsandjokers.domain.MoveType;
 import com.danlogan.pegsandjokers.domain.PlayerView;
 
 import java.net.URI;
@@ -211,8 +212,11 @@ public class PegsandjokersApplication {
 		model.addAttribute("playerView",playerView);
 		
 		TurnRequest turnRequest = new TurnRequest();
+		turnRequest.setGameId(id);
 		turnRequest.setPlayerNumber(playerNumber);
 		turnRequest.setCardName("please choose a card");
+		turnRequest.setMoveDistance(0);
+		turnRequest.setPlayerPositionNumber(1);
 		model.addAttribute("turnRequest",turnRequest);
 
 		System.out.println("in mvc player view request");
@@ -220,10 +224,25 @@ public class PegsandjokersApplication {
 	}
 
 	@PostMapping("/mvc/taketurn")
-	public String takeTurn(@ModelAttribute("turnRequest") TurnRequest turnRequest)
+	public String takeTurn(@ModelAttribute("turnRequest") TurnRequest turnRequest) throws GameNotFoundException, PlayerNotFoundException, InvalidGameStateException, InvalidMoveException, PlayerPositionNotFoundException, CannotMoveToAPositionYouOccupyException
 	{
 		System.out.println("got turn request: " + turnRequest.toString());
-		return "mvc/games";
+		
+		String gameId = turnRequest.getGameId();
+		
+		Game game = gameRepository.findGameById(gameId);
+		
+		PlayerTurn turn = PlayerTurn.Builder.newInstance()
+			.withCardName(turnRequest.getCardName())
+			.withMoveType(turnRequest.getMoveType())
+			.withMoveDistance(turnRequest.getMoveDistance())
+			.withPlayerNumber(turnRequest.getPlayerNumber())
+			.withPositionNumber(turnRequest.getPlayerPositionNumber())
+			.build();
+		
+		game.takeTurn(turn);
+		
+		return "redirect:/mvc/game/"+gameId+"/playerView/"+turnRequest.getPlayerNumber();
 	}
 
 	//Data Transfer Objects
@@ -231,7 +250,36 @@ public class PegsandjokersApplication {
 	{
 		private int playerNumber;
 		private String cardName;
+		private MoveType moveType;
+		private int moveDistance;
+		private String gameId;
+		private int playerPositionNumber;
 	
+	
+		public int getPlayerPositionNumber() {
+			return playerPositionNumber;
+		}
+		public void setPlayerPositionNumber(int playerPositionNumber) {
+			this.playerPositionNumber = playerPositionNumber;
+		}
+		public String getGameId() {
+			return gameId;
+		}
+		public void setGameId(String gameId) {
+			this.gameId = gameId;
+		}
+		public MoveType getMoveType() {
+			return moveType;
+		}
+		public void setMoveType(MoveType moveType) {
+			this.moveType = moveType;
+		}
+		public int getMoveDistance() {
+			return moveDistance;
+		}
+		public void setMoveDistance(int moveDistance) {
+			this.moveDistance = moveDistance;
+		}
 		public TurnRequest()
 		{
 			
@@ -241,7 +289,9 @@ public class PegsandjokersApplication {
 		}
 		@Override
 		public String toString() {
-			return "TurnRequest [playerNumber=" + playerNumber + ", cardName=" + cardName + "]";
+			return "TurnRequest [playerNumber=" + playerNumber + ", cardName=" + cardName + ", moveType=" + moveType
+					+ ", moveDistance=" + moveDistance + ", gameId=" + gameId + ", playerPositionNumber="
+					+ playerPositionNumber + "]";
 		}
 		public void setPlayerNumber(int playerNumber) {
 			this.playerNumber = playerNumber;

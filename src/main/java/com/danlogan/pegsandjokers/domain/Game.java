@@ -678,7 +678,7 @@ public class Game {
 	{
 		PlayerPosition  positionToReturn = null;
 		
-		for(int p = 1; p<=this.playerPositions.size();p++)
+		for(int p = 0; p<this.playerPositions.size();p++)
 		{
 			for (PlayerPosition playerPosition : this.playerPositions.get(p))
 			{

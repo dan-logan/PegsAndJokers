@@ -53,15 +53,26 @@ Player message: <span th:text="${playerView.playerMessage}">current player's nam
 		<label for="START_A_PEG">Start a Peg</label><br>
  	    <input type="radio" th:field="*{moveType}" th:value="MOVE_PEG" />
 		<label for="MOVE_PEG">Move Peg</label><br>
+ 	    <input type="radio" th:field="*{moveType}" th:value="SPLIT_MOVE" />
+		<label for="SPLIT_MOVE">Split Move Between Two Pegs</label><br>
+		<input type="radio" th:field="*{moveType}" th:value="USE_JOKER" />
+		<label for="USE_JOKER">Use A Joker</label><br>
+		
 		<p>Player Position Number: <input type="number" min="1" max="5" th:field="*{playerPositionNumber}" /> </p>
         <p>Move Distance: <input type="number" min="-8" max="13" th:field="*{moveDistance}" /> </p>
-        <p><input type="submit" value="Submit" /> <input type="reset" value="Reset" /></p>
+        <p>----FOR SPLIT MOVES ONLY----</p>
+		<p>Player Position Number 2: <input type="number" min="1" max="5" th:field="*{playerPositionNumber2}" /> </p>
+        <p>Move Distance 2: <input type="number" min="-8" max="13" th:field="*{moveDistance2}" /> </p>
+        <p>----FOR JOKER MOVES ONLY----</p>
+        <p>Opponent Peg Board Position: <input type="text" th:field="*{targetBoardPosition}" /> </p>
+        
+        <input type="submit" value="Submit" /> <input type="reset" value="Reset" />
     </form>
     
  <h2>Current Board</h2>
  <table>
  	<tr> 
- 	<th>Side Color</th><th>Start1</th><th>Start2</th><th>Start3</th><th>Start4</th><th>Start5</th><th>Home1</th><th>Home2</th><th>Home3</th><th>Home4</th><th>Home5</th><th>Space1</th><th>Space2</th><th>Space3</th><th>Space4</th><th>Space5</th><th>Space6</th><th>Space7</th><th>Space8</th><th>Space9</th><th>Space10</th><th>Space11</th><th>Space12</th><th>Space13</th><th>Space14</th><th>Space15</th><th>Space16</th><th>Space17</th><th>Space18</th>
+ 	<th>Side Color</th><th>Start1</th><th>Start2</th><th>Start3</th><th>Start4</th><th>Start5</th><th>Home1</th><th>Home2</th><th>Home3</th><th>Home4</th><th>Home5</th><th>Space1</th><th>Space2</th><th>ReadyToGoHome</th><th>Space4</th><th>Space5</th><th>Space6</th><th>Space7</th><th>ComeOut</th><th>Space9</th><th>Space10</th><th>Space11</th><th>Space12</th><th>Space13</th><th>Space14</th><th>Space15</th><th>Space16</th><th>Space17</th><th>Space18</th>
  	</tr> 
  	<tr th:each="side : ${playerView.board.playerSides}">
  		<td th:bgcolor="${side.color}" th:text="${side.color}">color</td>

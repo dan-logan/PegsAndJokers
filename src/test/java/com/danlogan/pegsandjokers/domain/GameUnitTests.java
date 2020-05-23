@@ -691,7 +691,7 @@ public class GameUnitTests {
 
 		Game game = Game.Builder.newInstance()
 				.withPlayerHand(playerHand)
-				.withPlayerPosition(2,1,"BLUE-9")
+				.withPlayerPosition(2,1,"RED-8")
 				.build();
 
 		PlayerTurn turn = PlayerTurn.Builder.newInstance()
@@ -699,15 +699,15 @@ public class GameUnitTests {
 				.withMoveType(MoveType.USE_JOKER)
 				.withPlayerNumber(1)
 				.withPositionNumber(1)
-				.withTargetBoardPositionId("BLUE-9")
+				.withTargetBoardPositionId("RED-8")
 				.build();
 
 		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("REDStart-1");
-		assertThat(game.getPlayerPosition(2, 1).getPlayerBoardPosition().getId()).isEqualTo("BLUE-9");
+		assertThat(game.getPlayerPosition(2, 1).getPlayerBoardPosition().getId()).isEqualTo("RED-8");
 	
 		game.takeTurn(turn);
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("BLUE-9");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("RED-8");
 		assertThat(game.getPlayerPosition(2, 1).getPlayerBoardPosition().getId()).isEqualTo("BLUEStart-1");
 
 	}

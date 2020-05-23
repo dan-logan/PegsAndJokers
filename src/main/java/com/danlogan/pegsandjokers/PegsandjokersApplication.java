@@ -217,6 +217,9 @@ public class PegsandjokersApplication {
 		turnRequest.setCardName("please choose a card");
 		turnRequest.setMoveDistance(0);
 		turnRequest.setPlayerPositionNumber(1);
+		turnRequest.setPlayerPositionNumber2(1);
+		turnRequest.setMoveDistance2(0);
+		turnRequest.setTargetBoardPosition("");
 		model.addAttribute("turnRequest",turnRequest);
 
 		System.out.println("in mvc player view request");
@@ -232,13 +235,49 @@ public class PegsandjokersApplication {
 		
 		Game game = gameRepository.findGameById(gameId);
 		
-		PlayerTurn turn = PlayerTurn.Builder.newInstance()
+		PlayerTurn turn;
+		
+		switch(turnRequest.getMoveType())
+		{
+		
+		case SPLIT_MOVE:
+			
+			int[] splitMoveArray = {turnRequest.getPlayerPositionNumber(), turnRequest.getMoveDistance(), turnRequest.getPlayerPositionNumber2(), turnRequest.getMoveDistance2()};
+			
+			turn = PlayerTurn.Builder.newInstance()
 			.withCardName(turnRequest.getCardName())
 			.withMoveType(turnRequest.getMoveType())
-			.withMoveDistance(turnRequest.getMoveDistance())
+			.withPlayerNumber(turnRequest.getPlayerNumber())
+			.withSplitMoveArray(splitMoveArray)
+			.build();
+			
+			break;
+		
+		case USE_JOKER:
+			
+			turn = PlayerTurn.Builder.newInstance()
+			.withCardName(turnRequest.getCardName())
+			.withMoveType(turnRequest.getMoveType())
 			.withPlayerNumber(turnRequest.getPlayerNumber())
 			.withPositionNumber(turnRequest.getPlayerPositionNumber())
+			.withTargetBoardPositionId(turnRequest.getTargetBoardPosition())
 			.build();
+			
+			break;
+			
+		default:
+			
+			turn = PlayerTurn.Builder.newInstance()
+			.withCardName(turnRequest.getCardName())
+			.withMoveType(turnRequest.getMoveType())
+			.withPlayerNumber(turnRequest.getPlayerNumber())
+			.withPositionNumber(turnRequest.getPlayerPositionNumber())
+			.withMoveDistance(turnRequest.getMoveDistance())
+			.build();
+			
+			break;
+		
+		}
 		
 		game.takeTurn(turn);
 		
@@ -254,8 +293,29 @@ public class PegsandjokersApplication {
 		private int moveDistance;
 		private String gameId;
 		private int playerPositionNumber;
+		private int moveDistance2;
+		private int playerPositionNumber2;
+		private String targetBoardPosition;
 	
 	
+		public int getMoveDistance2() {
+			return moveDistance2;
+		}
+		public void setMoveDistance2(int moveDistance2) {
+			this.moveDistance2 = moveDistance2;
+		}
+		public int getPlayerPositionNumber2() {
+			return playerPositionNumber2;
+		}
+		public void setPlayerPositionNumber2(int playerPositionNumber2) {
+			this.playerPositionNumber2 = playerPositionNumber2;
+		}
+		public String getTargetBoardPosition() {
+			return targetBoardPosition;
+		}
+		public void setTargetBoardPosition(String targetBoardPosition) {
+			this.targetBoardPosition = targetBoardPosition;
+		}
 		public int getPlayerPositionNumber() {
 			return playerPositionNumber;
 		}
@@ -291,7 +351,8 @@ public class PegsandjokersApplication {
 		public String toString() {
 			return "TurnRequest [playerNumber=" + playerNumber + ", cardName=" + cardName + ", moveType=" + moveType
 					+ ", moveDistance=" + moveDistance + ", gameId=" + gameId + ", playerPositionNumber="
-					+ playerPositionNumber + "]";
+					+ playerPositionNumber + ", moveDistance2=" + moveDistance2 + ", playerPositionNumber2="
+					+ playerPositionNumber2 + ", targetBoardPosition=" + targetBoardPosition + "]";
 		}
 		public void setPlayerNumber(int playerNumber) {
 			this.playerNumber = playerNumber;

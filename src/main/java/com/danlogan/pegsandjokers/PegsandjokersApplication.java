@@ -192,6 +192,7 @@ public class PegsandjokersApplication {
 	public String getGames(Model model)
 	{
 		model.addAttribute("games", gameRepository.getAllGames());
+		model.addAttribute("gameRequest", new GameRequest());
 		
 		return "mvc/games";
 	}
@@ -202,7 +203,15 @@ public class PegsandjokersApplication {
 		
 		return "mvc/game";
 	}
-	
+	@PostMapping("/mvc/newGame")
+	public String newGame(@ModelAttribute("gameRequest") GameRequest gameRequest) throws CannotStartGameWithoutPlayersException 
+	{
+		Game game = Game.Builder.newInstance().build();
+		gameRepository.addGame(game);
+		game.start();
+
+		return "redirect:/mvc/games";
+	}
 	@RequestMapping("/mvc/game/{id}/playerView/{playerNumber}")
 	public String getPlayerViewByGameAndPlayerNumber(@PathVariable String id, @PathVariable int playerNumber, Model model) throws GameNotFoundException, PlayerNotFoundException 
 	{
@@ -285,6 +294,15 @@ public class PegsandjokersApplication {
 	}
 
 	//Data Transfer Objects
+	public class GameRequest
+	{
+		public GameRequest()
+		{
+			
+		}
+	}
+	
+	
 	public class TurnRequest
 	{
 		private int playerNumber;

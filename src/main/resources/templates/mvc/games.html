@@ -28,7 +28,13 @@
 		<td> <a th:href="@{/mvc/game/{id}/playerView/4(id=${game.id})}">Player 4 View</a> </td>
 	</tr>
 </table>
-         	
-    
+ 
+ <h2>Start A New Game</h2>        	
+ 
+ <form action="#" th:action="@{/mvc/newGame}" th:object="${gameRequest}" method="post">
+        <input type="submit" value="Submit" /> 
+ </form>
+ 
+  
 </body>
 </html>

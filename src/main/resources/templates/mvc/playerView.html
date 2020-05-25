@@ -17,12 +17,9 @@ Player message: <span th:text="${playerView.playerMessage}">current player's nam
 
 <h2>Player Hand</h2>
 
-<table>
-	<tr><th>Card Name</th></tr>
-	<tr th:each="card : ${playerView.playerHand.cards}">
-		<td th:text="${card.name}">Card Name</td>
-	</tr>
-</table>
+	<th:block th:each="card : ${playerView.playerHand.cards}">
+		<td><img th:src="@{'/cards/Playing_card_'+${card.name}+'.svg'}" alt="${card.name}" height="120" width="80" /></td>
+	</th:block>
 
 <!-- 
 <h2>Player Peg Positions</h2>

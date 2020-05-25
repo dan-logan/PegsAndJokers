@@ -53,8 +53,8 @@ public class PegsandjokersApplication {
 		
 		SpringApplication.run(PegsandjokersApplication.class, args);
 	}
-
-/*	@Bean
+/*
+	@Bean
    	public WebMvcConfigurer corsConfigurer() {
       return new WebMvcConfigurer() {
         	@Override
@@ -64,12 +64,6 @@ public class PegsandjokersApplication {
       };
    }
 */
-	@GetMapping("/")
-	@ResponseBody
-	public String root() {
-		return String.format("Welcome to Pegs and Jokers! There are 0 Games.");//,gameRepository.getNumberOfGames());
-	}
-
 	//Return all Games
 	@GetMapping("/games")
 	@ResponseBody

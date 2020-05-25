@@ -104,12 +104,12 @@ Player message: <span th:text="${playerView.playerMessage}">current player's nam
          	</option>
          </th:block>
 
-		</select>
+		</select> </p>
 <!--        <input type="text" th:field="*{targetBoardPosition}" /> </p>  -->
-        
+
         <input type="submit" value="Submit" />
     </form>
-    
+ <!--    
  <h2>Current Board</h2>
  <table>
  	<tr> 
@@ -127,6 +127,39 @@ Player message: <span th:text="${playerView.playerMessage}">current player's nam
  				<span th:text="${mp.pegNumber}">peg color</span>
 		</td>
 	</tr>
+ 	
+ </table>
+ -->
+ <h2>Current Board</h2>
+  <table>
+ 	<tr> 
+ 	<th>Side Color</th><th>Space 1</th><th>Space 2</th><th>Space 3<br/>ReadyToGoHome</th><th>Space 4</th><th>Space 5</th><th>Space 6</th><th>Space 7</th><th>Space 8<br/>Come Out</th><th>Space 9</th><th>Space 10</th><th>Space 11</th><th>Space 12</th><th>Space 13</th><th>Space 14</th><th>Space 15</th><th>Space 16</th><th>Space 17</th><th>Space 18</th>
+ 	</tr> 
+ 	<th:block th:each="side : ${playerView.board.playerSides}">
+ 	<tr>
+ 		<td th:bgcolor="${side.color}" th:text="${side.color} + ' Start Track'">color<br/>Home Track</td>
+		<td style="border: none"></td>
+		<td style="border: none"></td>
+		<td style="border: none"></td>
+		<td th:each="hp : ${side.startPositions}" th:bgcolor="${hp.pegColor}">
+ 				<span th:text="${hp.pegNumber}">peg color</span>
+		</td>
+ 	</tr>
+ 	<tr>
+ 		<td th:bgcolor="${side.color}" th:text="${side.color}">color</td>
+   		<td th:each="mp : ${side.mainTrackPositions}" th:bgcolor="${mp.pegColor}">
+ 				<span th:text="${mp.pegNumber}">peg color</span>
+		</td>
+	</tr>
+	<tr>
+		<td th:bgcolor="${side.color}" th:text="${side.color} + ' Home Track'">color<br/>Home Track</td>
+		<td style="border: none"></td>
+		<td style="border: none"></td>
+		<td th:each="hp : ${side.homePositions}" th:bgcolor="${hp.pegColor}">
+ 				<span th:text="${hp.pegNumber}">peg color</span>
+		</td>
+	</tr>
+	</th:block>
  	
  </table>
      

@@ -5,6 +5,7 @@
 <style>
 table, th, td {
   border: 1px solid black;
+  text-align: center;
 }
 </style>
 </head>
@@ -23,11 +24,12 @@ Player message: <span th:text="${playerView.playerMessage}">current player's nam
 	</tr>
 </table>
 
-<h2>Player Positions</h2>
+<h2>Player Peg Positions</h2>
 
 <table>
-	<tr><th>Player Position</th></tr>
-	<tr th:each="position : ${playerView.playerPositions}">
+	<tr><th>Peg Number</th><th><span th:text="${playerView.playerColor}">color</span> Player's Peg Position</th></tr>
+	<tr th:each="position,iterStat : ${playerView.playerPositions}">
+		<td th:text=${iterStat.count}>count</td>
 		<td th:text="${position.playerBoardPosition.id}">Board Position Id</td>
 	</tr>
 </table>
@@ -42,48 +44,65 @@ Player message: <span th:text="${playerView.playerMessage}">current player's nam
     	<input type="hidden" th:field="*{playerNumber}" />
     	<input type="hidden" th:field="*{gameId}" />
  <!--        <p>Card Name: <input type="text" th:field="*{cardName}" />  -->
- 		<select th:field="*{cardName}">
+ 		<label for="cardName">Which card do you want to play? </label><select th:field="*{cardName}">
  		 <option th:each="card : ${playerView.playerHand.cards}" 
           th:value="${card.name}" 
           th:text="${card.name}">card name here</option>
 		</select><br/>
+		<p>Which type of move do you want to make?</p>
 	    <input type="radio" th:field="*{moveType}" th:value="DISCARD" />
-		<label for="DISCARD">Discard</label><br>
+		<label for="moveType1">Discard</label><br>
  	    <input type="radio" th:field="*{moveType}" th:value="START_A_PEG" />
-		<label for="START_A_PEG">Start a Peg</label><br>
+		<label for="moveType2">Start a Peg</label><br>
  	    <input type="radio" th:field="*{moveType}" th:value="MOVE_PEG" />
-		<label for="MOVE_PEG">Move Peg</label><br>
+		<label for="moveType3">Move Peg</label><br>
  	    <input type="radio" th:field="*{moveType}" th:value="SPLIT_MOVE" />
-		<label for="SPLIT_MOVE">Split Move Between Two Pegs</label><br>
+		<label for="moveType4">Split Move Between Two Pegs</label><br>
 		<input type="radio" th:field="*{moveType}" th:value="USE_JOKER" />
-		<label for="USE_JOKER">Use A Joker</label><br>
+		<label for="moveType5	">Use A Joker</label><br>
 		
-		<p>Player Position Number: <input type="number" min="1" max="5" th:field="*{playerPositionNumber}" /> </p>
-        <p>Move Distance: <input type="number" min="-8" max="13" th:field="*{moveDistance}" /> </p>
+		<p><label>Which peg do you want to move? </label><input type="number" min="1" max="5" th:field="*{playerPositionNumber}" /> </p>
+        <p><label>How many spaces do you want to move? </label><input type="number" min="-8" max="13" th:field="*{moveDistance}" /> </p> spaces.  (not needed for starting, discarding, or jokers)
         <p>----FOR SPLIT MOVES ONLY----</p>
-		<p>Player Position Number 2: <input type="number" min="1" max="5" th:field="*{playerPositionNumber2}" /> </p>
-        <p>Move Distance 2: <input type="number" min="-8" max="13" th:field="*{moveDistance2}" /> </p>
+		<p><label>If this is a split move, pick another peg: </label><input type="number" min="1" max="5" th:field="*{playerPositionNumber2}" /> </p>
+        <p><label>How far do you want to move the second peg? </label><input type="number" min="-8" max="13" th:field="*{moveDistance2}" /> spaces.</p>
         <p>----FOR JOKER MOVES ONLY----</p>
-        <p>Opponent Peg Board Position: <input type="text" th:field="*{targetBoardPosition}" /> </p>
+        <p><label>For Jokers, pick a board position with an opponent's peg in it: </label>
+        <select th:field="*{targetBoardPosition}">
+ <!--        <th:block th:each="side:${playerView.board.playerSides}">
+ 			 <option th:each="position:${side.mainTrackPositions}"
+       		   th:value="${position.id}" 
+         		 th:text="${position.id}">board position id</option>
+         </th:block>
+-->	         
+         <th:block th:each="player:${playerView.otherPlayerPositions}">
+		 	<option th:each="position : ${player}"
+		 	     	th:value="${position.playerBoardPosition.id}" 
+         			th:text="${position.playerBoardPosition.id}" >board position id
+         	</option>
+         </th:block>
+
+		</select>
+<!--        <input type="text" th:field="*{targetBoardPosition}" /> </p>  -->
         
-        <input type="submit" value="Submit" /> <input type="reset" value="Reset" />
+        <input type="submit" value="Submit" />
     </form>
     
  <h2>Current Board</h2>
  <table>
  	<tr> 
- 	<th>Side Color</th><th>Start1</th><th>Start2</th><th>Start3</th><th>Start4</th><th>Start5</th><th>Home1</th><th>Home2</th><th>Home3</th><th>Home4</th><th>Home5</th><th>Space1</th><th>Space2</th><th>ReadyToGoHome</th><th>Space4</th><th>Space5</th><th>Space6</th><th>Space7</th><th>ComeOut</th><th>Space9</th><th>Space10</th><th>Space11</th><th>Space12</th><th>Space13</th><th>Space14</th><th>Space15</th><th>Space16</th><th>Space17</th><th>Space18</th>
+ 	<th>Side Color</th><th>Start 1</th><th>Start 2</th><th>Start 3</th><th>Start 4</th><th>Start 5</th><th>Home 1</th><th>Home 2</th><th>Home 3</th><th>Home 4</th><th>Home 5</th><th>Space 1</th><th>Space 2</th><th>Space 3<br/>ReadyToGoHome</th><th>Space 4</th><th>Space 5</th><th>Space 6</th><th>Space 7</th><th>Space 8<br/>Come Out</th><th>Space 9</th><th>Space 10</th><th>Space 11</th><th>Space 12</th><th>Space 13</th><th>Space 14</th><th>Space 15</th><th>Space 16</th><th>Space 17</th><th>Space 18</th>
  	</tr> 
  	<tr th:each="side : ${playerView.board.playerSides}">
  		<td th:bgcolor="${side.color}" th:text="${side.color}">color</td>
   		<td th:each="sp : ${side.startPositions}" th:bgcolor="${sp.pegColor}">
- 				<span th:text="${sp.pegColor}">peg color</span>
+ 				<span th:text="${sp.pegNumber}">peg color</span>
 		</td>
  		<td th:each="hp : ${side.homePositions}" th:bgcolor="${hp.pegColor}">
- 				<span th:text="${hp.pegColor}">peg color</span>
+ 				<span th:text="${hp.pegNumber}">peg color</span>
 		</td>
  		<td th:each="mp : ${side.mainTrackPositions}" th:bgcolor="${mp.pegColor}">
- 				<span th:text="${mp.pegColor}">peg color</span>
+ 				<span th:text="${mp.pegNumber}">peg color</span>
 		</td>
 	</tr>
  	

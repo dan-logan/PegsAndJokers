@@ -44,7 +44,7 @@ import com.danlogan.pegsandjokers.infrastructure.GameRepository;
 @Controller
 public class PegsandjokersApplication {
 
-	private final String allowedCrossOrigin = "http://localhost:4200";
+//	private final String allowedCrossOrigin = "http://localhost:4200";
 
 	private static GameRepository gameRepository = new GameRepository();
 //	private ArrayList<Game> games = new ArrayList<Game>();
@@ -54,7 +54,7 @@ public class PegsandjokersApplication {
 		SpringApplication.run(PegsandjokersApplication.class, args);
 	}
 
-	@Bean
+/*	@Bean
    	public WebMvcConfigurer corsConfigurer() {
       return new WebMvcConfigurer() {
         	@Override
@@ -63,7 +63,7 @@ public class PegsandjokersApplication {
          }
       };
    }
-
+*/
 	@GetMapping("/")
 	@ResponseBody
 	public String root() {

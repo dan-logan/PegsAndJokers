@@ -24,6 +24,7 @@ Player message: <span th:text="${playerView.playerMessage}">current player's nam
 	</tr>
 </table>
 
+<!-- 
 <h2>Player Peg Positions</h2>
 
 <table>
@@ -33,7 +34,8 @@ Player message: <span th:text="${playerView.playerMessage}">current player's nam
 		<td th:text="${position.playerBoardPosition.id}">Board Position Id</td>
 	</tr>
 </table>
-
+ -->
+ 
 <!-- 
 <br/>turn player number:<span th:text="${turnRequest.playerNumber}">player number</span><br/> 
  -->
@@ -61,13 +63,33 @@ Player message: <span th:text="${playerView.playerMessage}">current player's nam
 		<input type="radio" th:field="*{moveType}" th:value="USE_JOKER" />
 		<label for="moveType5	">Use A Joker</label><br>
 		
-		<p><label>Which peg do you want to move? </label><input type="number" min="1" max="5" th:field="*{playerPositionNumber}" /> </p>
-        <p><label>How many spaces do you want to move? </label><input type="number" min="-8" max="13" th:field="*{moveDistance}" /> </p> spaces.  (not needed for starting, discarding, or jokers)
-        <p>----FOR SPLIT MOVES ONLY----</p>
-		<p><label>If this is a split move, pick another peg: </label><input type="number" min="1" max="5" th:field="*{playerPositionNumber2}" /> </p>
-        <p><label>How far do you want to move the second peg? </label><input type="number" min="-8" max="13" th:field="*{moveDistance2}" /> spaces.</p>
+		<p><label th:text="'Which '+ ${playerView.playerColor} + ' peg do you want to move?'">which peg</label>
+			<select th:field="*{playerPositionNumber}">
+    			<option th:each="i : ${#numbers.sequence(1, 5)}" th:value="${i}" th:text="${i}">
+   			 	</option>
+			</select>
+ <!--        <p><label>How many spaces do you want to move? </label><input type="number" min="-8" max="13" th:field="*{moveDistance}" /> </p> spaces.  (not needed for starting, discarding, or jokers)  -->
+ 		<p><label>How many spaces do you want to move? </label>
+ 			<select th:field="*{moveDistance}">
+    			<option th:each="i : ${#numbers.sequence(-8, 13)}" th:value="${i}" th:text="${i}">
+   			 	</option>
+			</select>
+ 		spaces.  (not needed for starting, discarding, or jokers) Jacks=11,Queens=12,Kings=13</p> 
+        <p>----FOR SPLIT MOVES ONLY---(7s MAY split (both forward), 9s MUST split (one forward, one back) )-</p>
+		<p><label th:text="'If this is a split move, pick another '+${playerView.playerColor}+' peg: '">second peg</label>
+ 			<select th:field="*{playerPositionNumber2}">
+    			<option th:each="i : ${#numbers.sequence(1, 5)}" th:value="${i}" th:text="${i}">
+   			 	</option>
+			</select>
+		</p>
+        <p><label>How far do you want to move the second peg? </label>
+ 			<select th:field="*{moveDistance2}">
+    			<option th:each="i : ${#numbers.sequence(-8, 13)}" th:value="${i}" th:text="${i}">
+   			 	</option>
+			</select>  spaces.
+		</p>
         <p>----FOR JOKER MOVES ONLY----</p>
-        <p><label>For Jokers, pick a board position with an opponent's peg in it: </label>
+        <p><label>For Jokers, pick an opponent's peg to send back to start: </label>
         <select th:field="*{targetBoardPosition}">
  <!--        <th:block th:each="side:${playerView.board.playerSides}">
  			 <option th:each="position:${side.mainTrackPositions}"
@@ -78,7 +100,7 @@ Player message: <span th:text="${playerView.playerMessage}">current player's nam
          <th:block th:each="player:${playerView.otherPlayerPositions}">
 		 	<option th:each="position : ${player}"
 		 	     	th:value="${position.playerBoardPosition.id}" 
-         			th:text="${position.playerBoardPosition.id}" >board position id
+         			th:text="${position.playerBoardPosition.pegColor}+ ' peg# ' + ${position.playerBoardPosition.pegNumber} ">board position id
          	</option>
          </th:block>
 

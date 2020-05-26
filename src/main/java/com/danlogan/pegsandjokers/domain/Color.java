@@ -6,7 +6,7 @@ public enum Color {
 	LightGreen,
 	PINK,
 	ORANGE,
-	SandyBrown,
+	LemonChiffon,
 	SIENNA,
 	PLUM
 }

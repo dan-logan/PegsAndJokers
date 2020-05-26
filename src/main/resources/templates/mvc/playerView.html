@@ -32,7 +32,7 @@ table, th, td {
 <body>
 <div>
 <div id="message"> 
-You are the <span th:text="${playerView.playerColor}">player color</span> player. <span th:text="${playerView.playerMessage}">current player's name</span>
+You are the <span th:text="${playerView.playerColor}">player color</span> player. <span th:text="${playerView.playerMessage}">player message</span>
 <h3>Current Board</h3>
 </div>
 <div id="board">
@@ -61,7 +61,7 @@ You are the <span th:text="${playerView.playerColor}">player color</span> player
  	</tr> 
  	<th:block th:each="side : ${playerView.board.playerSides}">
  	<tr>
- 		<td th:bgcolor="${side.color}" th:text="${side.color} + ' Start Track'" th:width="30px">color<br/>Home Track</td>
+ 		<td th:bgcolor="${side.color}" th:text="'Start'" th:width="30px">color<br/>Home Track</td>
 		<td style="border: none"></td>
 		<td style="border: none"></td>
 		<td style="border: none"></td>
@@ -76,7 +76,7 @@ You are the <span th:text="${playerView.playerColor}">player color</span> player
 		</td>
 	</tr>
 	<tr>
-		<td th:bgcolor="${side.color}" th:text="${side.color} + ' Home Track'">color<br/>Home Track</td>
+		<td th:bgcolor="${side.color}" th:text="'Home'">color<br/>Home Track</td>
 		<td style="border: none"></td>
 		<td style="border: none"></td>
 		<td th:each="hp : ${side.homePositions}" th:bgcolor="${hp.pegColor}">

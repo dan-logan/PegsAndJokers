@@ -11,28 +11,29 @@
 	<tr>
 		<th>GameID</th>
 		<th>Status</th>
-		<th>View the Game</th>
-		<th>Player 1 View</th>
-		<th>Player 2 View</th>
-		<th>Player 3 View</th>
-		<th>Player 4 View</th>
-		
 	</tr>
-	<tr th:each="game : ${games}">
+	<th:block th:each="game : ${games}">
+	<tr>
 		<td th:text="${game.id}">placeholder game id</td>
 		<td th:text="${game.status}">placeholder game status</td>
 		<td> <a th:href="@{/mvc/game/{id}(id=${game.id})}">View the Game</a> </td>
-		<td> <a th:href="@{/mvc/game/{id}/playerView/1(id=${game.id})}">Player 1 View</a> </td>
-		<td> <a th:href="@{/mvc/game/{id}/playerView/2(id=${game.id})}">Player 2 View</a> </td>
-		<td> <a th:href="@{/mvc/game/{id}/playerView/3(id=${game.id})}">Player 3 View</a> </td>
-		<td> <a th:href="@{/mvc/game/{id}/playerView/4(id=${game.id})}">Player 4 View</a> </td>
+		<th:block th:each="player : ${game.players}">
+			<td> <a th:href="@{/mvc/game/{id}/playerView/{number}(id=${game.id},number=${player.number})}" th:text="'Player '+${player.number}+' View'">Player View</a> </td>
+		</th:block>
 	</tr>
+	</th:block>
 </table>
  
  <h2>Start A New Game</h2>        	
  
  <form action="#" th:action="@{/mvc/newGame}" th:object="${gameRequest}" method="post">
-        <input type="submit" value="Submit" /> 
+		<br/><label th:text="'How many player?'">number of players</label>
+			<select th:field="*{numberOfPlayers}">
+    			<option th:each="i : ${#numbers.sequence(4, 8)}" th:value="${i}" th:text="${i}">
+   			 	</option>
+			</select>
+         <input type="submit" value="Submit" /> 
+       
  </form>
  
   

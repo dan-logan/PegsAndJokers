@@ -200,7 +200,9 @@ public class PegsandjokersApplication {
 	@PostMapping("/mvc/newGame")
 	public String newGame(@ModelAttribute("gameRequest") GameRequest gameRequest) throws CannotStartGameWithoutPlayersException 
 	{
-		Game game = Game.Builder.newInstance().build();
+		Game game = Game.Builder.newInstance()
+				.withNumberOfPlayers(gameRequest.getNumberOfPlayers())
+				.build();
 		gameRepository.addGame(game);
 		game.start();
 
@@ -290,6 +292,21 @@ public class PegsandjokersApplication {
 	//Data Transfer Objects
 	public class GameRequest
 	{
+		private int numberOfPlayers;
+		
+		@Override
+		public String toString() {
+			return "GameRequest [numberOfPlayers=" + numberOfPlayers + "]";
+		}
+
+		public int getNumberOfPlayers() {
+			return numberOfPlayers;
+		}
+
+		public void setNumberOfPlayers(int numberOfPlayers) {
+			this.numberOfPlayers = numberOfPlayers;
+		}
+
 		public GameRequest()
 		{
 			

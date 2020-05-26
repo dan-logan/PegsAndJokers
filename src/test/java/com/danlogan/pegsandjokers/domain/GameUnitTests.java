@@ -43,13 +43,13 @@ public class GameUnitTests {
 	void testBuildGameWithSpecificPlayerNames()
 	{
 		Game game = Game.Builder.newInstance()
-				.withPlayerNamed("Player 1")
-				.withPlayerNamed("Player 2")
+				.withPlayerNamed("Dan")
+				.withPlayerNamed("Topher")
 				.build();
 
-		assertThat(game.getPlayers().get(0).getName()).isEqualTo("Player 1");
+		assertThat(game.getPlayers().get(0).getName()).isEqualTo("Dan");
 		assertThat(game.getPlayers().get(0).getNumber()).isEqualTo(1);
-		assertThat(game.getPlayers().get(1).getName()).isEqualTo("Player 2");
+		assertThat(game.getPlayers().get(1).getName()).isEqualTo("Topher");
 		assertThat(game.getPlayers().get(1).getNumber()).isEqualTo(2);
 
 	}
@@ -1005,5 +1005,18 @@ public class GameUnitTests {
 			
 	}
 
+	@Test
+	public void testGamesWithDifferentNumberOfPlayers()
+	{
+	
+//		Game gameWith4Players = Game.Builder.newInstance().withNumberOfPlayers(4).build();
+	//	assertThat(gameWith4Players.getPlayers().size()).isEqualTo(4);
+		
+		Game gameWith8Players = Game.Builder.newInstance()
+				.withNumberOfPlayers(8)
+				.build();
+		assertThat(gameWith8Players.getPlayers().size()).isEqualTo(8);
+
+	}
 
 }

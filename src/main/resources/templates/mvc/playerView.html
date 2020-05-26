@@ -3,23 +3,65 @@
     <title>Pegs and Jokers</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <style>
+		#message{
+			clear: both;
+			}
+         #board { 
+                float:left;  
+                width:50%;
+                 }
+         #playerHand { 
+                float:right;  
+                width:50%; 
+            } 
+          #turn { 
+                clear: both;
+            } 
+            
+
+table.fixed { table-layout:fixed; }
+table.fixed td { overflow: hidden; }
 table, th, td {
   border: 1px solid black;
   text-align: center;
+  padding: 5px;
+  height: 10px;
 }
 </style>
 </head>
 <body>
-<div> 
+<div>
+<div id="message"> 
 You are the <span th:text="${playerView.playerColor}">player color</span> player. <span th:text="${playerView.playerMessage}">current player's name</span>
-<h2>Current Board</h2>
-  <table>
+<h3>Current Board</h3>
+</div>
+<div id="board">
+  <table class="fixed">
+  	<col/>
+  	<col width = "20px" />
+   	<col width = "20px" />
+   	<col width = "20px" />
+   	<col width = "20px" />
+   	<col width = "20px" />
+   	<col width = "20px" />
+   	<col width = "20px" />
+   	<col width = "20px" />
+   	<col width = "20px" />
+   	<col width = "20px" />
+   	<col width = "20px" />
+   	<col width = "20px" />
+   	<col width = "20px" />
+   	<col width = "20px" />
+   	<col width = "20px" />
+   	<col width = "20px" />
+   	<col width = "20px" />
  	<tr> 
- 	<th>Side Color</th><th>Space 1</th><th>Space 2</th><th>Space 3<br/>ReadyToGoHome</th><th>Space 4</th><th>Space 5</th><th>Space 6</th><th>Space 7</th><th>Space 8<br/>Come Out</th><th>Space 9</th><th>Space 10</th><th>Space 11</th><th>Space 12</th><th>Space 13</th><th>Space 14</th><th>Space 15</th><th>Space 16</th><th>Space 17</th><th>Space 18</th>
+<!-- 	<th>Side Color</th><th></th><th></th><th><br/>Ready To Go Home</th><th></th><th></th><th></th><th></th><th><br/>Come Out</th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th> -->
+ 	<td>Side Color</td><td></td><td></td><td>Go Home</td><td></td><td></td><td></td><td></td><td>Come Out</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
  	</tr> 
  	<th:block th:each="side : ${playerView.board.playerSides}">
  	<tr>
- 		<td th:bgcolor="${side.color}" th:text="${side.color} + ' Start Track'">color<br/>Home Track</td>
+ 		<td th:bgcolor="${side.color}" th:text="${side.color} + ' Start Track'" th:width="30px">color<br/>Home Track</td>
 		<td style="border: none"></td>
 		<td style="border: none"></td>
 		<td style="border: none"></td>
@@ -44,13 +86,14 @@ You are the <span th:text="${playerView.playerColor}">player color</span> player
 	</th:block>
  	
  </table>
-  
-<h2>Player Hand</h2>
+ </div>
+ <div id="playerHand">
+<h3>Player Hand</h3>
 
 	<th:block th:each="card : ${playerView.playerHand.cards}">
 		<td><img th:src="@{'/cards/Playing_card_'+${card.name}+'.svg'}" alt="${card.name}" height="120" width="80" /></td>
 	</th:block>
-
+</div>
 <!-- 
 <h2>Player Peg Positions</h2>
 
@@ -66,8 +109,7 @@ You are the <span th:text="${playerView.playerColor}">player color</span> player
 <!-- 
 <br/>turn player number:<span th:text="${turnRequest.playerNumber}">player number</span><br/> 
  -->
- 
-<h2>Take a turn</h2>
+<h3>Take a turn</h3>
  
  <form action="#" th:action="@{/mvc/taketurn}" th:object="${turnRequest}" method="post">
     	<input type="hidden" th:field="*{playerNumber}" />
@@ -78,8 +120,16 @@ You are the <span th:text="${playerView.playerColor}">player color</span> player
           th:value="${card.name}" 
           th:text="${card.name}">card name here</option>
 		</select><br/>
-		<p>Which type of move do you want to make?</p>
-	    <input type="radio" th:field="*{moveType}" th:value="DISCARD" />
+		
+		<label for="moveType">Which type of move do you want to make? </label>
+		<select th:field="*{moveType}">
+			<option th:value="DISCARD" th:text="Discard">discard</option>
+			<option th:value="START_A_PEG" th:text="'Start a peg'">second</option>
+			<option th:value="MOVE_PEG" th:text="'Move a peg'">second</option>
+			<option th:value="SPLIT_MOVE" th:text="'Split move'">second</option>
+			<option th:value="USE_JOKER" th:text="'Use a joker'">second</option>
+		</select>
+<!-- 	    <input type="radio" th:field="*{moveType}" th:value="DISCARD" />
 		<label for="moveType1">Discard</label><br>
  	    <input type="radio" th:field="*{moveType}" th:value="START_A_PEG" />
 		<label for="moveType2">Start a Peg</label><br>
@@ -89,34 +139,33 @@ You are the <span th:text="${playerView.playerColor}">player color</span> player
 		<label for="moveType4">Split Move Between Two Pegs</label><br>
 		<input type="radio" th:field="*{moveType}" th:value="USE_JOKER" />
 		<label for="moveType5	">Use A Joker</label><br>
-		
-		<p><label th:text="'Which '+ ${playerView.playerColor} + ' peg do you want to move?'">which peg</label>
+-->	
+		<br/><label th:text="'Which '+ ${playerView.playerColor} + ' peg do you want to move?'">which peg</label>
 			<select th:field="*{playerPositionNumber}">
     			<option th:each="i : ${#numbers.sequence(1, 5)}" th:value="${i}" th:text="${i}">
    			 	</option>
 			</select>
  <!--        <p><label>How many spaces do you want to move? </label><input type="number" min="-8" max="13" th:field="*{moveDistance}" /> </p> spaces.  (not needed for starting, discarding, or jokers)  -->
- 		<p><label>How many spaces do you want to move? </label>
+ 		<br/><label>How many spaces do you want to move? </label>
  			<select th:field="*{moveDistance}">
     			<option th:each="i : ${#numbers.sequence(-8, 13)}" th:value="${i}" th:text="${i}">
    			 	</option>
 			</select>
- 		spaces.  (not needed for starting, discarding, or jokers) Jacks=11,Queens=12,Kings=13</p> 
-        <p>----FOR SPLIT MOVES ONLY---(7s MAY split (both forward), 9s MUST split (one forward, one back) )-</p>
-		<p><label th:text="'If this is a split move, pick another '+${playerView.playerColor}+' peg: '">second peg</label>
+ 		spaces.  (not needed for starting, discarding, or jokers) Jacks=11,Queens=12,Kings=13 
+        <p>----FOR SPLIT MOVES ONLY---<br/>(7s MAY split (both forward), 9s MUST split (one forward, one back) )-</p>
+		<label th:text="'If this is a split move, pick another '+${playerView.playerColor}+' peg: '">second peg</label>
  			<select th:field="*{playerPositionNumber2}">
     			<option th:each="i : ${#numbers.sequence(1, 5)}" th:value="${i}" th:text="${i}">
    			 	</option>
 			</select>
-		</p>
-        <p><label>How far do you want to move the second peg? </label>
+
+        <br/><label>How far do you want to move the second peg? </label>
  			<select th:field="*{moveDistance2}">
     			<option th:each="i : ${#numbers.sequence(-8, 13)}" th:value="${i}" th:text="${i}">
    			 	</option>
 			</select>  spaces.
-		</p>
-        <p>----FOR JOKER MOVES ONLY----</p>
-        <p><label>For Jokers, pick an opponent's peg to send back to start: </label>
+	      <p>----FOR JOKER MOVES ONLY----</p>
+        <label>For Jokers, pick an opponent's peg to send back to start: </label>
         <select th:field="*{targetBoardPosition}">
  <!--        <th:block th:each="side:${playerView.board.playerSides}">
  			 <option th:each="position:${side.mainTrackPositions}"
@@ -131,10 +180,10 @@ You are the <span th:text="${playerView.playerColor}">player color</span> player
          	</option>
          </th:block>
 
-		</select> </p>
+		</select> 
 <!--        <input type="text" th:field="*{targetBoardPosition}" /> </p>  -->
 
-        <input type="submit" value="Submit" />
+        <br/><input type="submit" value="Submit" />
     </form>
  <!--    
  <h2>Current Board</h2>
@@ -158,6 +207,6 @@ You are the <span th:text="${playerView.playerColor}">player color</span> player
  </table>
  -->
     
- </div>      
+</div>     
 </body>
 </html>

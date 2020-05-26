@@ -117,7 +117,7 @@ public class GameUnitTests {
 
 		game.takeTurn(turn);
 		
-		assertThat(game.getPlayerPosition(1,1).getPlayerBoardPosition().getId()).isEqualTo("RED-8");
+		assertThat(game.getPlayerPosition(1,1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-8");
 	}
 	
 	@Test
@@ -132,7 +132,7 @@ public class GameUnitTests {
 
 		Game game = Game.Builder.newInstance()
 				.withPlayerHand(playerHand)
-				.withPlayerPosition(1,1,"RED-8")
+				.withPlayerPosition(1,1,"Tomato-8")
 				.build();
 
 		PlayerTurn turn = PlayerTurn.Builder.newInstance()
@@ -143,13 +143,13 @@ public class GameUnitTests {
 				.withMoveDistance(3)
 				.build();
 		
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("RED-8");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-8");
 
 		game.takeTurn(turn);
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("RED-11");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-11");
 		
-		assertThat(game.getBoard().getBoardPositionById("RED-8").getHasPeg()).isFalse();
+		assertThat(game.getBoard().getBoardPositionById("Tomato-8").getHasPeg()).isFalse();
 		
 
 	}
@@ -166,8 +166,8 @@ public class GameUnitTests {
 
 		Game game = Game.Builder.newInstance()
 				.withPlayerHand(playerHand)
-				.withPlayerPosition(1,1,"RED-8")
-				.withPlayerPosition(1, 2, "RED-9")
+				.withPlayerPosition(1,1,"Tomato-8")
+				.withPlayerPosition(1, 2, "Tomato-9")
 				.build();
 
 		PlayerTurn turn = PlayerTurn.Builder.newInstance()
@@ -178,7 +178,7 @@ public class GameUnitTests {
 				.withMoveDistance(3)
 				.build();
 		
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("RED-8");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-8");
 
 		try {
 			game.takeTurn(turn);
@@ -189,7 +189,7 @@ public class GameUnitTests {
 			assertThat(e.getMessage()).contains("cannot move over a position with one of your own pegs in it");
 		}
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("RED-8");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-8");
 		
 	}
 
@@ -205,7 +205,7 @@ public class GameUnitTests {
 
 		Game game = Game.Builder.newInstance()
 				.withPlayerHand(playerHand)
-				.withPlayerPosition(1,1,"RED-8")
+				.withPlayerPosition(1,1,"Tomato-8")
 				.build();
 
 		PlayerTurn turn = PlayerTurn.Builder.newInstance()
@@ -238,7 +238,7 @@ public class GameUnitTests {
 
 		Game game = Game.Builder.newInstance()
 				.withPlayerHand(playerHand)
-				.withPlayerPosition(1,1,"RED-8")
+				.withPlayerPosition(1,1,"Tomato-8")
 				.build();
 
 		PlayerTurn turn = PlayerTurn.Builder.newInstance()
@@ -249,7 +249,7 @@ public class GameUnitTests {
 				.withMoveDistance(-3)
 				.build();
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("RED-8");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-8");
 
 		try {
 			game.takeTurn(turn);
@@ -260,7 +260,7 @@ public class GameUnitTests {
 			assertThat(e.getMessage()).contains("backward");
 		}
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("RED-8");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-8");
 
 	}
 
@@ -276,7 +276,7 @@ public class GameUnitTests {
 
 		Game game = Game.Builder.newInstance()
 				.withPlayerHand(playerHand)
-				.withPlayerPosition(1,1,"RED-8")
+				.withPlayerPosition(1,1,"Tomato-8")
 				.build();
 
 		PlayerTurn turn = PlayerTurn.Builder.newInstance()
@@ -287,7 +287,7 @@ public class GameUnitTests {
 				.withMoveDistance(8)
 				.build();
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("RED-8");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-8");
 
 		try {
 			game.takeTurn(turn);
@@ -298,7 +298,7 @@ public class GameUnitTests {
 			assertThat(e.getMessage()).contains("forward");
 		}
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("RED-8");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-8");
 
 	}
 
@@ -314,7 +314,7 @@ public class GameUnitTests {
 
 		Game game = Game.Builder.newInstance()
 				.withPlayerHand(playerHand)
-				.withPlayerPosition(1,1,"RED-8")
+				.withPlayerPosition(1,1,"Tomato-8")
 				.build();
 
 		PlayerTurn turn = PlayerTurn.Builder.newInstance()
@@ -325,7 +325,7 @@ public class GameUnitTests {
 				.withMoveDistance(-8)
 				.build();
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("RED-8");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-8");
 
 		game.takeTurn(turn);
 
@@ -345,7 +345,7 @@ public class GameUnitTests {
 
 		Game game = Game.Builder.newInstance()
 				.withPlayerHand(playerHand)
-				.withPlayerPosition(1,1,"RED-8")
+				.withPlayerPosition(1,1,"Tomato-8")
 				.build();
 
 		PlayerTurn turn = PlayerTurn.Builder.newInstance()
@@ -356,7 +356,7 @@ public class GameUnitTests {
 				.withMoveDistance(-4)
 				.build();
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("RED-8");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-8");
 
 		try {
 			game.takeTurn(turn);
@@ -367,7 +367,7 @@ public class GameUnitTests {
 			assertThat(e.getMessage()).contains("invalid distance");
 		}
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("RED-8");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-8");
 
 	}
 	
@@ -383,7 +383,7 @@ public class GameUnitTests {
 
 		Game game = Game.Builder.newInstance()
 				.withPlayerHand(playerHand)
-				.withPlayerPosition(2,1,"RED-8")
+				.withPlayerPosition(2,1,"Tomato-8")
 				.build();
 
 		PlayerTurn turn = PlayerTurn.Builder.newInstance()
@@ -393,7 +393,7 @@ public class GameUnitTests {
 				.withPositionNumber(1)
 				.build();
 		
-		assertThat(game.getPlayerPosition(2, 1).getPlayerBoardPosition().getId()).isEqualTo("RED-8");
+		assertThat(game.getPlayerPosition(2, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-8");
 
 		game.takeTurn(turn);
 
@@ -413,8 +413,8 @@ public class GameUnitTests {
 
 		Game game = Game.Builder.newInstance()
 				.withPlayerHand(playerHand)
-				.withPlayerPosition(1,1,"RED-8")
-				.withPlayerPosition(1,2,"BLUE-1")
+				.withPlayerPosition(1,1,"Tomato-8")
+				.withPlayerPosition(1,2,"LightBlue-1")
 				.build();
 
 		int[] splitMoveArray = {1,3,2,4};
@@ -426,13 +426,13 @@ public class GameUnitTests {
 				.withSplitMoveArray(splitMoveArray)
 				.build();
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("RED-8");
-		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPosition().getId()).isEqualTo("BLUE-1");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-8");
+		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPosition().getId()).isEqualTo("LightBlue-1");
 
 		game.takeTurn(turn);
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("RED-11");
-		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPosition().getId()).isEqualTo("BLUE-5");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-11");
+		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPosition().getId()).isEqualTo("LightBlue-5");
 
 	}
 
@@ -448,8 +448,8 @@ public class GameUnitTests {
 
 		Game game = Game.Builder.newInstance()
 				.withPlayerHand(playerHand)
-				.withPlayerPosition(1,1,"RED-8")
-				.withPlayerPosition(1,2,"BLUE-1")
+				.withPlayerPosition(1,1,"Tomato-8")
+				.withPlayerPosition(1,2,"LightBlue-1")
 				.build();
 
 		int[] splitMoveArray = {1,3,2,3};
@@ -461,8 +461,8 @@ public class GameUnitTests {
 				.withSplitMoveArray(splitMoveArray)
 				.build();
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("RED-8");
-		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPosition().getId()).isEqualTo("BLUE-1");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-8");
+		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPosition().getId()).isEqualTo("LightBlue-1");
 
 		try {
 			game.takeTurn(turn);
@@ -473,8 +473,8 @@ public class GameUnitTests {
 			assertThat(e.getMessage()).contains("cannot split a SEVEN");
 		}
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("RED-8");
-		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPosition().getId()).isEqualTo("BLUE-1");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-8");
+		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPosition().getId()).isEqualTo("LightBlue-1");
 
 	}
 	
@@ -491,8 +491,8 @@ public class GameUnitTests {
 
 		Game game = Game.Builder.newInstance()
 				.withPlayerHand(playerHand)
-				.withPlayerPosition(1,1,"RED-9")
-				.withPlayerPosition(1,2,"RED-8")
+				.withPlayerPosition(1,1,"Tomato-9")
+				.withPlayerPosition(1,2,"Tomato-8")
 				.build();
 
 		int[] splitMoveArray = {1,3,2,4};
@@ -504,8 +504,8 @@ public class GameUnitTests {
 				.withSplitMoveArray(splitMoveArray)
 				.build();
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("RED-9");
-		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPosition().getId()).isEqualTo("RED-8");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-9");
+		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPosition().getId()).isEqualTo("Tomato-8");
 
 		try {
 			game.takeTurn(turn);
@@ -516,8 +516,8 @@ public class GameUnitTests {
 			assertThat(e.getMessage()).contains("cannot move to a position with one of your own pegs in it");
 		}
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("RED-9");
-		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPosition().getId()).isEqualTo("RED-8");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-9");
+		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPosition().getId()).isEqualTo("Tomato-8");
 
 	}
 
@@ -533,8 +533,8 @@ public class GameUnitTests {
 
 		Game game = Game.Builder.newInstance()
 				.withPlayerHand(playerHand)
-				.withPlayerPosition(1,1,"RED-8")
-				.withPlayerPosition(1,2,"BLUE-1")
+				.withPlayerPosition(1,1,"Tomato-8")
+				.withPlayerPosition(1,2,"LightBlue-1")
 				.build();
 
 		int[] splitMoveArray = {1,3,2,3};
@@ -546,8 +546,8 @@ public class GameUnitTests {
 				.withSplitMoveArray(splitMoveArray)
 				.build();
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("RED-8");
-		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPosition().getId()).isEqualTo("BLUE-1");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-8");
+		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPosition().getId()).isEqualTo("LightBlue-1");
 
 		try {
 			game.takeTurn(turn);
@@ -558,8 +558,8 @@ public class GameUnitTests {
 			assertThat(e.getMessage()).contains("cannot split");
 		}
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("RED-8");
-		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPosition().getId()).isEqualTo("BLUE-1");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-8");
+		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPosition().getId()).isEqualTo("LightBlue-1");
 
 	}
 
@@ -575,7 +575,7 @@ public class GameUnitTests {
 
 		Game game = Game.Builder.newInstance()
 				.withPlayerHand(playerHand)
-				.withPlayerPosition(1,1,"RED-8")
+				.withPlayerPosition(1,1,"Tomato-8")
 				.build();
 
 	
@@ -587,7 +587,7 @@ public class GameUnitTests {
 				.withMoveDistance(9)
 				.build();
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("RED-8");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-8");
 	
 		try {
 			game.takeTurn(turn);
@@ -598,7 +598,7 @@ public class GameUnitTests {
 			assertThat(e.getMessage()).contains("9 is an invalid distance");
 		}
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("RED-8");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-8");
 
 	}
 	
@@ -614,8 +614,8 @@ public class GameUnitTests {
 
 		Game game = Game.Builder.newInstance()
 				.withPlayerHand(playerHand)
-				.withPlayerPosition(1,1,"RED-8")
-				.withPlayerPosition(1,2,"RED-9")
+				.withPlayerPosition(1,1,"Tomato-8")
+				.withPlayerPosition(1,2,"Tomato-9")
 				.build();
 
 		int[] splitMoveArray = {2,6,1,3};
@@ -627,8 +627,8 @@ public class GameUnitTests {
 				.withSplitMoveArray(splitMoveArray)
 				.build();
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("RED-8");
-		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPosition().getId()).isEqualTo("RED-9");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-8");
+		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPosition().getId()).isEqualTo("Tomato-9");
 	
 		try {
 			game.takeTurn(turn);
@@ -639,8 +639,8 @@ public class GameUnitTests {
 			assertThat(e.getMessage()).contains("cannot split");
 		}
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("RED-8");
-		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPosition().getId()).isEqualTo("RED-9");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-8");
+		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPosition().getId()).isEqualTo("Tomato-9");
 
 	}
 
@@ -656,8 +656,8 @@ public class GameUnitTests {
 
 		Game game = Game.Builder.newInstance()
 				.withPlayerHand(playerHand)
-				.withPlayerPosition(1,1,"RED-8")
-				.withPlayerPosition(1,2,"RED-9")
+				.withPlayerPosition(1,1,"Tomato-8")
+				.withPlayerPosition(1,2,"Tomato-9")
 				.build();
 
 		int[] splitMoveArray = {2,3,1,-6};
@@ -669,13 +669,13 @@ public class GameUnitTests {
 				.withSplitMoveArray(splitMoveArray)
 				.build();
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("RED-8");
-		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPosition().getId()).isEqualTo("RED-9");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-8");
+		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPosition().getId()).isEqualTo("Tomato-9");
 	
 		game.takeTurn(turn);
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("RED-2");
-		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPosition().getId()).isEqualTo("RED-12");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-2");
+		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPosition().getId()).isEqualTo("Tomato-12");
 
 	}
 
@@ -691,7 +691,7 @@ public class GameUnitTests {
 
 		Game game = Game.Builder.newInstance()
 				.withPlayerHand(playerHand)
-				.withPlayerPosition(2,1,"RED-8")
+				.withPlayerPosition(2,1,"Tomato-8")
 				.build();
 
 		PlayerTurn turn = PlayerTurn.Builder.newInstance()
@@ -699,16 +699,16 @@ public class GameUnitTests {
 				.withMoveType(MoveType.USE_JOKER)
 				.withPlayerNumber(1)
 				.withPositionNumber(1)
-				.withTargetBoardPositionId("RED-8")
+				.withTargetBoardPositionId("Tomato-8")
 				.build();
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("REDStart-1");
-		assertThat(game.getPlayerPosition(2, 1).getPlayerBoardPosition().getId()).isEqualTo("RED-8");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("TomatoStart-1");
+		assertThat(game.getPlayerPosition(2, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-8");
 	
 		game.takeTurn(turn);
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("RED-8");
-		assertThat(game.getPlayerPosition(2, 1).getPlayerBoardPosition().getId()).isEqualTo("BLUEStart-1");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-8");
+		assertThat(game.getPlayerPosition(2, 1).getPlayerBoardPosition().getId()).isEqualTo("LightBlueStart-1");
 
 	}
 
@@ -724,7 +724,7 @@ public class GameUnitTests {
 
 		Game game = Game.Builder.newInstance()
 				.withPlayerHand(playerHand)
-				.withPlayerPosition(2,1,"BLUE-9")
+				.withPlayerPosition(2,1,"LightBlue-9")
 				.build();
 
 		PlayerTurn turn = PlayerTurn.Builder.newInstance()
@@ -732,11 +732,11 @@ public class GameUnitTests {
 				.withMoveType(MoveType.USE_JOKER)
 				.withPlayerNumber(1)
 				.withPositionNumber(1)
-				.withTargetBoardPositionId("BLUE-9")
+				.withTargetBoardPositionId("LightBlue-9")
 				.build();
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("REDStart-1");
-		assertThat(game.getPlayerPosition(2, 1).getPlayerBoardPosition().getId()).isEqualTo("BLUE-9");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("TomatoStart-1");
+		assertThat(game.getPlayerPosition(2, 1).getPlayerBoardPosition().getId()).isEqualTo("LightBlue-9");
 	
 		try {
 			game.takeTurn(turn);
@@ -747,8 +747,8 @@ public class GameUnitTests {
 			assertThat(e.getMessage()).contains("is not a joker");
 		}
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("REDStart-1");
-		assertThat(game.getPlayerPosition(2, 1).getPlayerBoardPosition().getId()).isEqualTo("BLUE-9");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("TomatoStart-1");
+		assertThat(game.getPlayerPosition(2, 1).getPlayerBoardPosition().getId()).isEqualTo("LightBlue-9");
 
 	}
 
@@ -771,10 +771,10 @@ public class GameUnitTests {
 				.withMoveType(MoveType.USE_JOKER)
 				.withPlayerNumber(1)
 				.withPositionNumber(1)
-				.withTargetBoardPositionId("BLUE-9")
+				.withTargetBoardPositionId("LightBlue-9")
 				.build();
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("REDStart-1");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("TomatoStart-1");
 	
 		try {
 			game.takeTurn(turn);
@@ -785,7 +785,7 @@ public class GameUnitTests {
 			assertThat(e.getMessage()).contains("There is not a peg in position");
 		}
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("REDStart-1");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("TomatoStart-1");
 	
 	}
 
@@ -801,7 +801,7 @@ public class GameUnitTests {
 
 		Game game = Game.Builder.newInstance()
 				.withPlayerHand(playerHand)
-				.withPlayerPosition(1,2,"BLUE-9")
+				.withPlayerPosition(1,2,"LightBlue-9")
 				.build();
 
 		PlayerTurn turn = PlayerTurn.Builder.newInstance()
@@ -809,11 +809,11 @@ public class GameUnitTests {
 				.withMoveType(MoveType.USE_JOKER)
 				.withPlayerNumber(1)
 				.withPositionNumber(1)
-				.withTargetBoardPositionId("BLUE-9")
+				.withTargetBoardPositionId("LightBlue-9")
 				.build();
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("REDStart-1");
-		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPosition().getId()).isEqualTo("BLUE-9");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("TomatoStart-1");
+		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPosition().getId()).isEqualTo("LightBlue-9");
 	
 		try {
 			game.takeTurn(turn);
@@ -824,8 +824,8 @@ public class GameUnitTests {
 			assertThat(e.getMessage()).contains("replace your own peg");
 		}
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("REDStart-1");
-		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPosition().getId()).isEqualTo("BLUE-9");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("TomatoStart-1");
+		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPosition().getId()).isEqualTo("LightBlue-9");
 
 	}
 
@@ -841,7 +841,7 @@ public class GameUnitTests {
 
 		Game game = Game.Builder.newInstance()
 				.withPlayerHand(playerHand)
-				.withPlayerPosition(1,1,"RED-3")
+				.withPlayerPosition(1,1,"Tomato-3")
 				.build();
 
 		PlayerTurn turn = PlayerTurn.Builder.newInstance()
@@ -852,11 +852,11 @@ public class GameUnitTests {
 				.withMoveDistance(3)
 				.build();
 		
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("RED-3");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-3");
 	
 		game.takeTurn(turn);
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("REDHome-3");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("TomatoHome-3");
 		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().isHomePosition()).isTrue();
 		
 	}
@@ -874,7 +874,7 @@ public class GameUnitTests {
 
 		Game game = Game.Builder.newInstance()
 				.withPlayerHand(playerHand)
-				.withPlayerPosition(1,1,"RED-2")
+				.withPlayerPosition(1,1,"Tomato-2")
 				.build();
 
 		PlayerTurn turn = PlayerTurn.Builder.newInstance()
@@ -885,11 +885,11 @@ public class GameUnitTests {
 				.withMoveDistance(10)
 				.build();
 		
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("RED-2");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-2");
 	
 		game.takeTurn(turn);
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("RED-12");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-12");
 		
 	}
 
@@ -905,7 +905,7 @@ public class GameUnitTests {
 
 		Game game = Game.Builder.newInstance()
 				.withPlayerHand(playerHand)
-				.withPlayerPosition(1,1,"REDHome-2")
+				.withPlayerPosition(1,1,"TomatoHome-2")
 				.build();
 
 		PlayerTurn turn = PlayerTurn.Builder.newInstance()
@@ -916,11 +916,11 @@ public class GameUnitTests {
 				.withMoveDistance(2)
 				.build();
 		
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("REDHome-2");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("TomatoHome-2");
 	
 		game.takeTurn(turn);
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("REDHome-4");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("TomatoHome-4");
 		
 	}
 
@@ -936,7 +936,7 @@ public class GameUnitTests {
 
 		Game game = Game.Builder.newInstance()
 				.withPlayerHand(playerHand)
-				.withPlayerPosition(1,1,"REDHome-2")
+				.withPlayerPosition(1,1,"TomatoHome-2")
 				.build();
 
 		PlayerTurn turn = PlayerTurn.Builder.newInstance()
@@ -947,7 +947,7 @@ public class GameUnitTests {
 				.withMoveDistance(6)
 				.build();
 		
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("REDHome-2");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("TomatoHome-2");
 	
 		System.out.println("Testing cannot move past end of home when starting from within home");
 		try
@@ -960,7 +960,7 @@ public class GameUnitTests {
 			assertThat(ex.getMessage()).contains("past end of home");
 		}
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("REDHome-2");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("TomatoHome-2");
 		
 	}
 	
@@ -977,8 +977,8 @@ public class GameUnitTests {
 
 		Game game = Game.Builder.newInstance()
 				.withPlayerHand(playerHand)
-				.withPlayerPosition(1,1,"RED-3")
-				.withPlayerPosition(1, 2, "REDHome-1")
+				.withPlayerPosition(1,1,"Tomato-3")
+				.withPlayerPosition(1, 2, "TomatoHome-1")
 				.build();
 
 		PlayerTurn turn = PlayerTurn.Builder.newInstance()
@@ -989,7 +989,7 @@ public class GameUnitTests {
 				.withMoveDistance(3)
 				.build();
 		
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("RED-3");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-3");
 	
 		try
 		{
@@ -1001,7 +1001,7 @@ public class GameUnitTests {
 			assert(ex.getMessage()).contains("cannot move over a position with one of your own");
 		}
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("RED-3");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-3");
 			
 	}
 

@@ -6,6 +6,11 @@ import java.util.Random;
 public class DeckOfCards {
 	
 	private ArrayList<Card> cards = new ArrayList<Card>();
+	
+	public DeckOfCards(ArrayList<Card> cards)
+	{
+		this.cards = cards;
+	}
 
 	public DeckOfCards() {
 		

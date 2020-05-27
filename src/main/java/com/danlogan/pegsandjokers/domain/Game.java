@@ -66,6 +66,12 @@ public class Game {
 			return this;
 		}
 		
+		public Builder withDrawPile(DeckOfCards drawPile)
+		{
+			this.drawPile = drawPile;
+			return this;
+		}
+		
 		public Builder withNumberOfPlayers(int numberOfPlayers)
 		{
 			for (int i=1;i<=numberOfPlayers;i++)
@@ -166,16 +172,18 @@ public class Game {
 			}
 			
 			
-			//set up draw pile with three decks of cards
-			this.drawPile = new DeckOfCards();
-			this.drawPile.combineDecks(new DeckOfCards());
-			this.drawPile.combineDecks(new DeckOfCards());
-
-			if (players.size() > 6) //if more than 6 players, use a fourth deck
+			//if drawPile not pre-supplied to builder, set up draw pile with three decks of cards
+			if(this.drawPile == null)
 			{
+				this.drawPile = new DeckOfCards();
 				this.drawPile.combineDecks(new DeckOfCards());
-			}
+				this.drawPile.combineDecks(new DeckOfCards());
 
+				if (players.size() > 6) //if more than 6 players, use a fourth deck
+				{
+					this.drawPile.combineDecks(new DeckOfCards());
+				}
+			}
 				
 			
 			Game game = new Game(this);
@@ -249,6 +257,11 @@ public class Game {
 		return drawPile.cardsRemaining();
 	}
 	
+	public int getDiscardPileCount()
+	{
+		return this.discardPile.size();
+	}
+	
 	public void takeTurn(PlayerTurn turn) throws PlayerNotFoundException, InvalidGameStateException, InvalidMoveException, PlayerPositionNotFoundException, CannotMoveToAPositionYouOccupyException {
 
 		//Get the PlayerHand for the player taking a turn
@@ -299,9 +312,17 @@ public class Game {
 					
 		}
 		
-		
+			
 		//At end of turn, draw a new card, and move player to back of the queue
 		playerHand.drawCard(this.drawPile);
+
+		//If we have used up the drawPile, then need to reshuffle the discard pile back into the draw pile
+		if(this.getCardsRemaining() == 0)
+		{
+			drawPile.combineDecks(new DeckOfCards(this.discardPile));
+			drawPile.shuffle();
+			this.discardPile.clear();
+		}
 		
 		Player tempPlayer = playerQueue.remove();
 		playerQueue.add(tempPlayer);

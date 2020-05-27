@@ -1070,6 +1070,61 @@ public class GameUnitTests {
 			assertThat(ex.getMessage()).contains("null cannot be discarded");
 		}
 		
+	}
+	
+	@Test
+	public void testReshuffleFromDiscardPileWhenDrawPileDepleted() throws PlayerNotFoundException, InvalidGameStateException, InvalidMoveException, PlayerPositionNotFoundException, CannotMoveToAPositionYouOccupyException
+	{
+		ArrayList<Card> drawPile = new ArrayList<Card>();
+		
+		for (int i=1;i<23;i++)
+		{
+			drawPile.add(new Card(CardRank.ACE,Suit.CLUBS));
+		}
+		
+		DeckOfCards drawPileDeck = new DeckOfCards(drawPile);
+		
+		Game game = Game.Builder.newInstance()
+				.withDrawPile(drawPileDeck)
+				.build();
+		
+		assertThat(game.getCardsRemaining()).isEqualTo(22);
+		assertThat(game.getDiscardPileCount()).isEqualTo(0);
+		
+		game.deal();
+		
+		assertThat(game.getCardsRemaining()).isEqualTo(2);
+		assertThat(game.getDiscardPileCount()).isEqualTo(0);
+		
+		//Now each player has 5 cards, the drawPile has 2 cards and nothing in the discard pile
+		//when we have a player discard the drawPile should go to 1 and the discard pile should go to 1
+		
+		PlayerTurn turn = PlayerTurn.Builder.newInstance()
+							.withPlayerNumber(1)
+							.withCardName("ACE of CLUBS")
+							.withMoveType(MoveType.DISCARD)
+							.build();
+		
+		game.takeTurn(turn);
+		
+		assertThat(game.getCardsRemaining()).isEqualTo(1);
+		assertThat(game.getDiscardPileCount()).isEqualTo(1);
+	
+		//Now each player has 5 cards, the drawPile has 1 cards and discard pile has 1 card
+		//when we have a player discard the last card from the  drawPile,
+		//we want the discardPile to be put back in drawPile so drawpile should go to 2 and the discard pile should go to 0
+
+		PlayerTurn turn2 = PlayerTurn.Builder.newInstance()
+				.withPlayerNumber(2)
+				.withCardName("ACE of CLUBS")
+				.withMoveType(MoveType.DISCARD)
+				.build();
+
+		game.takeTurn(turn2);
+
+		assertThat(game.getCardsRemaining()).isEqualTo(2);
+		assertThat(game.getDiscardPileCount()).isEqualTo(0);
+
 		
 	}
 

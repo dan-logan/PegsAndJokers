@@ -41,8 +41,8 @@ public class DeckOfCards {
 	public DeckOfCards shuffle()
 	{
         
-        //shuffle through the deck 3 times
-       for(int shuffle=1;shuffle<4;shuffle++)
+        //shuffle through the deck 10 times
+       for(int shuffle=1;shuffle<11;shuffle++)
        {
 
     	   Random rand = new Random(); 

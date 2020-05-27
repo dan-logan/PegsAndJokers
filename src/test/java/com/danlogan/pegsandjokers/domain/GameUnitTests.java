@@ -1043,5 +1043,34 @@ public class GameUnitTests {
 
 		
 	}
+	
+	@Test
+	public void testPlayerHandDiscard() throws InvalidMoveException
+	{
+		PlayerHand hand1 = PlayerHand.Builder.newInstance(1)
+		.withCard(new Card(CardRank.ACE, Suit.CLUBS))
+		.withCard(new Card(CardRank.TWO, Suit.CLUBS))
+		.build();
+		
+		ArrayList<Card> discardPile = new ArrayList<Card>();
+		
+		hand1.discardCard(discardPile, "ACE of CLUBS");
+		
+		assertThat(hand1.getCards().size()).isEqualTo(1);
+		assertThat(hand1.getCard("ACE of CLUBS")).isNull();
+		
+		//Now make sure error handling is correct
+		try
+		{
+			hand1.discardCard(discardPile, null);
+			assert(false);
+		}
+		catch (InvalidMoveException ex)
+		{
+			assertThat(ex.getMessage()).contains("null cannot be discarded");
+		}
+		
+		
+	}
 
 }

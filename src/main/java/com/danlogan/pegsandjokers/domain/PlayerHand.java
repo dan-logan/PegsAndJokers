@@ -87,22 +87,18 @@ public class PlayerHand {
 		
 	}
 	
-	public void discardCard(ArrayList<Card> discardPile, String cardName)
+	public void discardCard(ArrayList<Card> discardPile, String cardName) throws InvalidMoveException
 	{
-		Card cardToDiscard=null;
-		
-		for (Card card : this.cards)
-		{
-			if(card.getName().equals(cardName))
-			{
-				cardToDiscard = card;
-			}
-		}
+		Card cardToDiscard=this.getCard(cardName);
 		
 		if (cardToDiscard != null)
 		{
 			discardPile.add(cardToDiscard);
 			this.cards.remove(cardToDiscard);
+		}
+		else
+		{
+			throw new InvalidMoveException(String.format("%s cannot be discarded because it is not in your hand.",cardName));
 		}
 	}
 }

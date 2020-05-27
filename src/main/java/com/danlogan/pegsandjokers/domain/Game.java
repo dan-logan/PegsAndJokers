@@ -274,6 +274,7 @@ public class Game {
 			case START_A_PEG: 
 				
 				this.handleStartAPegRequest(turn, playerHand);
+				playerHand.discardCard(this.discardPile, turn.getCardName());
 				break;
 
 			case DISCARD:
@@ -283,21 +284,23 @@ public class Game {
 				
 			case MOVE_PEG:
 				this.handleMovePegRequest(turn, playerHand);
+				playerHand.discardCard(this.discardPile, turn.getCardName());
 				break;
 				
 			case SPLIT_MOVE:
 				this.handleSplitMoveRequest(turn, playerHand);
+				playerHand.discardCard(this.discardPile, turn.getCardName());
 				break;
 				
 			case USE_JOKER:
 				this.handleUseJokerRequest(turn, playerHand);
+				playerHand.discardCard(this.discardPile, turn.getCardName());
 				break;
 					
 		}
 		
 		
-		//At end of turn, discard the card played, draw a new card, and move player to back of the queue
-		playerHand.discardCard(this.discardPile, turn.getCardName());
+		//At end of turn, draw a new card, and move player to back of the queue
 		playerHand.drawCard(this.drawPile);
 		
 		Player tempPlayer = playerQueue.remove();
@@ -420,7 +423,7 @@ public class Game {
 		fromPlayerPosition.moveTo(toBoardPosition);
 	}
 	
-	private void handleDiscardRequest(PlayerTurn turn, PlayerHand playerHand)
+	private void handleDiscardRequest(PlayerTurn turn, PlayerHand playerHand) throws InvalidMoveException
 	{
 		
 		playerHand.discardCard(this.discardPile, turn.getCardName());

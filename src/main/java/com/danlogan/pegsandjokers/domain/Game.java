@@ -166,9 +166,17 @@ public class Game {
 			}
 			
 			
-			//set up draw pile with two decks of cards
+			//set up draw pile with three decks of cards
 			this.drawPile = new DeckOfCards();
 			this.drawPile.combineDecks(new DeckOfCards());
+			this.drawPile.combineDecks(new DeckOfCards());
+
+			if (players.size() > 6) //if more than 6 players, use a fourth deck
+			{
+				this.drawPile.combineDecks(new DeckOfCards());
+			}
+
+				
 			
 			Game game = new Game(this);
 			

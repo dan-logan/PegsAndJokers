@@ -35,7 +35,7 @@ public class GameUnitTests {
 		assertThat(game.getPlayerPositions(1).get(3).getPlayerBoardPosition().isStartPosition());
 		assertThat(game.getPlayerPositions(1).get(4).getPlayerBoardPosition().isStartPosition());
 
-		assertThat(game.getCardsRemaining()).isEqualTo(108);
+		assertThat(game.getCardsRemaining()).isEqualTo(162);
 		
 	}
 	
@@ -1017,6 +1017,31 @@ public class GameUnitTests {
 				.build();
 		assertThat(gameWith8Players.getPlayers().size()).isEqualTo(8);
 
+	}
+	
+	@Test
+	public void testUseTheRightNumberOfDecks()
+	{
+		Game gameWith4Players = Game.Builder.newInstance()
+				.withNumberOfPlayers(4)
+				.build();
+		
+		assertThat(gameWith4Players.getCardsRemaining()).isEqualTo(162);
+	
+		Game gameWith6Players = Game.Builder.newInstance()
+				.withNumberOfPlayers(6)
+				.build();
+		
+		assertThat(gameWith6Players.getCardsRemaining()).isEqualTo(162);
+
+
+		Game gameWith8Players = Game.Builder.newInstance()
+				.withNumberOfPlayers(8)
+				.build();
+		
+		assertThat(gameWith8Players.getCardsRemaining()).isEqualTo(216);
+
+		
 	}
 
 }

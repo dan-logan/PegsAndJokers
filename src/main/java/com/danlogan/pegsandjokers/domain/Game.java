@@ -276,7 +276,7 @@ public class Game {
 		}
 			
 		//Make sure the current player has the card being played in their hand
-		if (!playerHand.hasCard(turn.getCardName()))
+		if (turn.getMoveType() != MoveType.FREE_START && !playerHand.hasCard(turn.getCardName()))
 		{
 			throw new InvalidGameStateException("You cannot play a card that is not in your hand.");
 		}
@@ -288,6 +288,7 @@ public class Game {
 				
 				this.handleStartAPegRequest(turn, playerHand);
 				playerHand.discardCard(this.discardPile, turn.getCardName());
+				playerHand.resetBurnedCards();
 				break;
 
 			case DISCARD:
@@ -298,23 +299,33 @@ public class Game {
 			case MOVE_PEG:
 				this.handleMovePegRequest(turn, playerHand);
 				playerHand.discardCard(this.discardPile, turn.getCardName());
+				playerHand.resetBurnedCards();
 				break;
 				
 			case SPLIT_MOVE:
 				this.handleSplitMoveRequest(turn, playerHand);
 				playerHand.discardCard(this.discardPile, turn.getCardName());
+				playerHand.resetBurnedCards();
 				break;
 				
 			case USE_JOKER:
 				this.handleUseJokerRequest(turn, playerHand);
 				playerHand.discardCard(this.discardPile, turn.getCardName());
+				playerHand.resetBurnedCards();
 				break;
+				
+			case FREE_START:
+				this.handleFreeStartRequest(turn,playerHand);
+				playerHand.resetBurnedCards();
 					
 		}
 		
 			
 		//At end of turn, draw a new card, and move player to back of the queue
-		playerHand.drawCard(this.drawPile);
+		if(turn.getMoveType() != MoveType.FREE_START)
+		{
+			playerHand.drawCard(this.drawPile);
+		}
 
 		//If we have used up the drawPile, then need to reshuffle the discard pile back into the draw pile
 		if(this.getCardsRemaining() == 0)
@@ -375,6 +386,34 @@ public class Game {
 		PlayerPosition fromPlayerPosition = this.getPlayerPositions(turn.getPlayerNumber()).get(turn.getPlayerPositionNumber()-1);
 		this.movePeg(fromPlayerPosition, targetBoardPosition);
 
+	}
+	
+	private void handleFreeStartRequest(PlayerTurn turn, PlayerHand playerHand) throws InvalidGameStateException, CannotMoveToAPositionYouOccupyException, PlayerPositionNotFoundException
+	{
+		//Make sure a valid position is referenced in the request
+		this.validatePosition(turn.getPlayerPositionNumber());
+		//Then verify that the peg being requested to move is in a start position
+		int playerPositionNumber = turn.getPlayerPositionNumber();
+		PlayerPosition playerPosition = this.getPlayerPositions(turn.getPlayerNumber()).get(playerPositionNumber-1);
+		
+		if (!playerPosition.getPlayerBoardPosition().isStartPosition())
+		{
+			throw new InvalidGameStateException("Can only start pegs that are in the start position.");
+		}
+		
+		//Lastly make sure there is actually a peg in that start position
+		if (!playerPosition.getPlayerBoardPosition().getHasPeg())
+		{
+			throw new InvalidGameStateException(String.format("Player Postion %d does not have a peg in it.", playerPositionNumber));
+		}
+		
+		//Then update the PlayerPosition to be in the come out position
+		BoardPosition comeOutPosition = this.board.getPlayerSides().get(turn.getPlayerNumber()-1).getComeOutPosition();
+		
+		this.movePeg(playerPosition, comeOutPosition);
+		
+		return;
+		
 	}
 	
 	private void handleStartAPegRequest(PlayerTurn turn, PlayerHand playerHand) throws InvalidGameStateException, CannotMoveToAPositionYouOccupyException, PlayerPositionNotFoundException
@@ -447,7 +486,7 @@ public class Game {
 	private void handleDiscardRequest(PlayerTurn turn, PlayerHand playerHand) throws InvalidMoveException
 	{
 		
-		playerHand.discardCard(this.discardPile, turn.getCardName());
+		playerHand.burnCard(this.discardPile, turn.getCardName());
 		
 	}
 	

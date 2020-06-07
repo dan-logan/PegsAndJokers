@@ -11,5 +11,6 @@ public enum MoveType {
 	MOVE_PEG_BACKWARD,
 	USE_JOKER,
 	SPLIT_MOVE,
+	FREE_START,
 	END_TURN
 }

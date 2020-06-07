@@ -6,12 +6,14 @@ public class PlayerHand {
 
 	private int playerNumber;
 	private ArrayList<Card> cards;
+	private int burnedCardCount;
 	
 	//Builder Class
 	public static class Builder {
 		
 		private int playerNumber;
 		private ArrayList<Card> cards = new ArrayList<Card>();
+		private int burnedCardCount=0;
 		
 		public static Builder newInstance(int playerNumber) {
 			return new Builder(playerNumber);
@@ -34,6 +36,12 @@ public class PlayerHand {
 			return this;
 		}
 		
+		public Builder withBurnedCardCount(int count)
+		{
+			this.burnedCardCount = count;
+			return this;
+		}
+		
 	}
 	
 	//Player Hand Methods
@@ -41,6 +49,7 @@ public class PlayerHand {
 		
 		this.playerNumber = builder.playerNumber;
 		this.cards = builder.cards;
+		this.burnedCardCount = builder.burnedCardCount;
 	}
 	
 	public void drawCard(DeckOfCards deck)
@@ -100,5 +109,21 @@ public class PlayerHand {
 		{
 			throw new InvalidMoveException(String.format("%s cannot be discarded because it is not in your hand.",cardName));
 		}
+	}
+	
+	public void burnCard(ArrayList<Card> discardPile, String cardName) throws InvalidMoveException
+	{
+		this.discardCard(discardPile, cardName);
+		this.burnedCardCount++;
+	}
+	
+	public int getBurnedCardCount()
+	{
+		return this.burnedCardCount;
+	}
+	
+	public void resetBurnedCards()
+	{
+		this.burnedCardCount = 0;
 	}
 }

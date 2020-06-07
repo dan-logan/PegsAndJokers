@@ -1127,5 +1127,92 @@ public class GameUnitTests {
 
 		
 	}
+	
+	
+	@Test
+	public void testTrackFirstBurnedCard() throws PlayerNotFoundException, InvalidGameStateException, InvalidMoveException, PlayerPositionNotFoundException, CannotMoveToAPositionYouOccupyException
+	{
+		Game game = Game.Builder.newInstance().build();
+		
+		game.deal();
+		int deckSizeBeforeTurn = game.getCardsRemaining();
+		
+		Card cardToDiscard = game.getPlayerHand(1).getCard(1);
+	
+		PlayerTurn turn = PlayerTurn.Builder.newInstance()
+								.withCardName(cardToDiscard.getName())
+								.withMoveType(MoveType.DISCARD)
+								.withPlayerNumber(1)
+								.build();
 
+		assertThat(game.getPlayerHand(1).getBurnedCardCount()).isEqualTo(0);
+		
+		game.takeTurn(turn);
+		
+		assertThat(game.getPlayerHand(1).getCard(cardToDiscard.getName())).isNull();
+		assertThat(deckSizeBeforeTurn - game.getCardsRemaining()).isEqualTo(1);
+		assertThat(game.getPlayerHand(1).getBurnedCardCount()).isEqualTo(1);
+		
+	}
+	
+	@Test
+	public void testTrackSecondBurnedCard() throws PlayerNotFoundException, InvalidGameStateException, InvalidMoveException, PlayerPositionNotFoundException, CannotMoveToAPositionYouOccupyException
+	{
+		PlayerHand hand = PlayerHand.Builder.newInstance(1)
+							.withBurnedCardCount(1)
+							.withCard(new Card(CardRank.ACE, Suit.CLUBS))
+							.build();
+		
+		Game game = Game.Builder.newInstance()
+				.withPlayerHand(hand)
+				.build();
+		
+		game.deal();
+		int deckSizeBeforeTurn = game.getCardsRemaining();
+		
+		Card cardToDiscard = game.getPlayerHand(1).getCard(1);
+	
+		PlayerTurn turn = PlayerTurn.Builder.newInstance()
+								.withCardName(cardToDiscard.getName())
+								.withMoveType(MoveType.DISCARD)
+								.withPlayerNumber(1)
+								.build();
+
+		assertThat(game.getPlayerHand(1).getBurnedCardCount()).isEqualTo(1);
+		
+		game.takeTurn(turn);
+		
+		assertThat(game.getPlayerHand(1).getCard(cardToDiscard.getName())).isNull();
+		assertThat(deckSizeBeforeTurn - game.getCardsRemaining()).isEqualTo(1);
+		assertThat(game.getPlayerHand(1).getBurnedCardCount()).isEqualTo(2);
+		
+	}
+	
+	@Test
+	public void testUseFreeStartWith2BurnedCards() throws PlayerNotFoundException, InvalidGameStateException, InvalidMoveException, PlayerPositionNotFoundException, CannotMoveToAPositionYouOccupyException
+	{
+		PlayerHand hand = PlayerHand.Builder.newInstance(1)
+				.withBurnedCardCount(2)
+				.withCard(new Card(CardRank.ACE, Suit.CLUBS))
+				.build();
+
+		Game game = Game.Builder.newInstance()
+				.withPlayerHand(hand)
+				.build();
+
+		game.deal();
+	
+		PlayerTurn turn = PlayerTurn.Builder.newInstance()
+				.withMoveType(MoveType.FREE_START)
+				.withPlayerNumber(1)
+				.withPositionNumber(1)
+				.build();
+
+		game.takeTurn(turn);
+		
+		assertThat(game.getPlayerPosition(1,1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-8");
+
+		
+	}
+	
 }

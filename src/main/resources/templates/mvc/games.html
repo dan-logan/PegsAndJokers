@@ -29,7 +29,7 @@
  <form action="#" th:action="@{/mvc/newGame}" th:object="${gameRequest}" method="post">
 		<br/><label th:text="'How many player?'">number of players</label>
 			<select th:field="*{numberOfPlayers}">
-    			<option th:each="i : ${#numbers.sequence(4, 8)}" th:value="${i}" th:text="${i}">
+    			<option th:each="i : ${#numbers.sequence(2, 8)}" th:value="${i}" th:text="${i}">
    			 	</option>
 			</select>
          <input type="submit" value="Submit" /> 

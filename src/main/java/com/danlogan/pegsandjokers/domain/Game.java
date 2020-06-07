@@ -74,17 +74,7 @@ public class Game {
 		
 		public Builder withNumberOfPlayers(int numberOfPlayers)
 		{
-			for (int i=1;i<=numberOfPlayers;i++)
-			{
-				int playerNumber = players.size()+1;
-				Player player = Player.Builder.newInstance()
-						.withName("Player " + playerNumber)
-						.withNumber(playerNumber)
-						.build();
-				
-				players.add(player);
-						
-			}
+			this.defaultNumberOfPlayers = numberOfPlayers;
 			
 			return this;
 		}
@@ -105,7 +95,7 @@ public class Game {
 		//build method to return a new instance from Builder
 		public Game build() {
 			
-			//if less than 3 players have been provided to the builder use default players
+			//if less than default number of players have been provided to the builder use default players
 			if (this.players.size() < this.defaultNumberOfPlayers) {
 				for(Player defaultPlayer : getDefaultPlayers())
 				{
@@ -236,10 +226,10 @@ public class Game {
 	
 	public String start( ) throws CannotStartGameWithoutPlayersException {
 		
-		if (players.size() > 2) {
+		if (players.size() > 1) {
 			this.status = Game.STARTED;
 		} else {
-			throw new CannotStartGameWithoutPlayersException("Game requires at least 3 players. Add players before starting game");
+			throw new CannotStartGameWithoutPlayersException("Game requires at least 2 players. Add players before starting game");
 		}
 		
 		//after game is started shuffle the draw pile and deal the cards

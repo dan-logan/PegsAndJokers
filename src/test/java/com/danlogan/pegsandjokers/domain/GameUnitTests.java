@@ -1215,4 +1215,18 @@ public class GameUnitTests {
 		
 	}
 	
+	@Test
+	public void testGameWith2Players()
+	{
+		
+		Game game = Game.Builder.newInstance()
+				.withNumberOfPlayers(2)
+				.build();
+
+		game.deal();
+	
+		assertThat(game.getPlayers().size()).isEqualTo(2);
+		
+	}
+	
 }

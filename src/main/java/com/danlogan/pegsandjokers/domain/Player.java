@@ -54,5 +54,10 @@ public class Player {
 	{
 		return number;
 	}
+	
+	public Color getColor()
+	{
+		return Color.values()[this.number-1];
+	}
 }
 

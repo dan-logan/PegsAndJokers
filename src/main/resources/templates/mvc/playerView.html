@@ -42,7 +42,8 @@ table, th, td {
 		<div id="message">
 			You are the <span th:text="${playerView.playerColor}">player
 				color</span> player. <span th:text="${playerView.playerMessage}">player
-				message</span>
+				message</span><br/>
+				<span th:if="${playerView.playerColor != playerView.colorOfCurrentTurnPlayer}" th:text="'Waiting for the ' + ${playerView.colorOfCurrentTurnPlayer} + ' player.'">waiting for player</span>
 			<h3>Current Board</h3>
 		</div>
 		<div id="board">

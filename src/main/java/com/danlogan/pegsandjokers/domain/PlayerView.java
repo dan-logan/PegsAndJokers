@@ -7,6 +7,7 @@ public class PlayerView {
 	private Game game;
 	private int playerNumber;
 	private PlayerHand playerHand;
+
 	
 	public PlayerView(Game game, int playerNumber) throws PlayerNotFoundException
 	{
@@ -24,6 +25,11 @@ public class PlayerView {
 	public Color getPlayerColor()
 	{
 		return Color.values()[this.playerNumber-1];
+	}
+	
+	public Color getColorOfCurrentTurnPlayer()
+	{
+		return this.game.getCurrentPlayer().getColor();
 	}
 	
 	public Board getBoard()

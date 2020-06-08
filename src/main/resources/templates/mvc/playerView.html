@@ -120,12 +120,19 @@ table, th, td {
 
 			</table>
 		</div>
+		<div id="drawPile">
+			<h3>Draw Pile</h3>
+			<img th:src=	"@{/cards/Card_back.svg}" alt="Discard Pile" height="120" width="80"> Cards Remaining: <span th:text="${playerView.cardsRemaining}">cards remaining</span>
+		</div>
 		<div id="playerHand">
 			<h3>Player Hand</h3>
 
 			<th:block th:each="card : ${playerView.playerHand.cards}">
 				<td><img th:src="@{'/cards/Playing_card_'+${card.name}+'.svg'}"
-					alt="${card.name}" height="120" width="80" /></td>
+				    th:data-cardname="${card.name}"
+					alt="${card.name}" height="120" width="80" 
+					/></td>
+			<!-- 			onclick="{alert('clicked ' + this.getAttribute('data-cardname'));}"  -->
 			</th:block>
 			<span th:if="${playerView.playerHand.burnedCardCount > 0}">
 				<th:block th:each="i: ${#numbers.sequence(1, playerView.playerHand.burnedCardCount)}">
@@ -160,7 +167,7 @@ table, th, td {
 				<option th:each="card : ${playerView.playerHand.cards}"
 					th:value="${card.name}" th:text="${card.name}">card name
 					here</option>
-			</select><br /> <label for="moveType">Which type of move do you want
+			</select><p /> <label for="moveType">Which type of move do you want
 				to make? </label> <select th:field="*{moveType}">
 				<option th:value="START_A_PEG" th:text="'Start a peg'">second</option>
 				<option th:value="MOVE_PEG" th:text="'Move a peg'">second</option>
@@ -180,7 +187,7 @@ table, th, td {
 		<input type="radio" th:field="*{moveType}" th:value="USE_JOKER" />
 		<label for="moveType5	">Use A Joker</label><br>
 -->
-			<br />
+			<p />
 			<label
 				th:text="'Which '+ ${playerView.playerColor} + ' peg do you want to move?'">which
 				peg</label> <select th:field="*{playerPositionNumber}">
@@ -188,7 +195,7 @@ table, th, td {
 					th:text="${i}"></option>
 			</select>
 			<!--        <p><label>How many spaces do you want to move? </label><input type="number" min="-8" max="13" th:field="*{moveDistance}" /> </p> spaces.  (not needed for starting, discarding, or jokers)  -->
-			<br />
+			<p />
 			<label>How many spaces do you want to move? </label> <select
 				th:field="*{moveDistance}">
 				<option th:each="i : ${#numbers.sequence(-8, 13)}" th:value="${i}"
@@ -204,7 +211,7 @@ table, th, td {
 				peg</label> <select th:field="*{playerPositionNumber2}">
 				<option th:each="i : ${#numbers.sequence(1, 5)}" th:value="${i}"
 					th:text="${i}"></option>
-			</select> <br />
+			</select> <p />
 			<label>How far do you want to move the second peg? </label> <select
 				th:field="*{moveDistance2}">
 				<option th:each="i : ${#numbers.sequence(-8, 13)}" th:value="${i}"

@@ -32,6 +32,11 @@ public class PlayerView {
 		return this.game.getCurrentPlayer().getColor();
 	}
 	
+	public int getCardsRemaining()
+	{
+		return this.game.getCardsRemaining();
+	}
+	
 	public Board getBoard()
 	{
 		return this.game.getBoard();

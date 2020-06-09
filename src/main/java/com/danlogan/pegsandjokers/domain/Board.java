@@ -149,4 +149,11 @@ public class Board {
 		return playerSide.getReadyToGoHomePosition().getId();
 	}
 
+	public ArrayList<BoardPosition> getHomePositionsForPlayerNumber(int playerNumber) {
+
+		Side playerSide = this.playerSides.get(playerNumber -1);
+		
+		return playerSide.getHomePositions();
+	}
+
 }

@@ -543,12 +543,72 @@ public class Game {
 		int stepsToEndOfHome = -1;
 		int currentHomePositionNumber = 0;
 		String playersReadyToGoHomePositionId = this.board.getReadyToGoHomePositionIdForPlayerNumber(playerNumber);
+		int endOfHome = 1; 
+		boolean searchedInHomePastCurrentPlayer=false;
+		
+		//determine the "end of home" based on the last spot in home path that is open relative to current player position
+		//If player is on main track.. search thru all home positions
+		if(playerBoardPosition.isMainTrackPosition())
+		{
+			for (BoardPosition hp : this.board.getHomePositionsForPlayerNumber(playerNumber))
+			{
+				//if home position is occupied, break out of loop, otherwise increment endOfHome index 
+				if (hp.getHasPeg())
+				{
+					break;
+				}
+				else
+				{
+					endOfHome++;
+				}
+			}
+		}
+		else
+			if(playerBoardPosition.isHomePosition()) //start searching thru home at current position until next peg found
+			{
+				int currentPlayerHomePositionIndex = 0;
+				ArrayList<BoardPosition> currentPlayerHomePositions = this.board.getHomePositionsForPlayerNumber(playerNumber);
+
+				for (BoardPosition hp : currentPlayerHomePositions)
+				{
+					currentPlayerHomePositionIndex++;
+					if (hp.getId().equals(playerBoardPosition.getId())) 
+					{ 
+						break;
+					}
+				}
+
+				//if current player is in home position 5 then 5 is endOfHome
+				if(currentPlayerHomePositionIndex == 5)
+				{
+					endOfHome = 5;
+				}
+				else
+				{
+					endOfHome = currentPlayerHomePositionIndex;
+					//loop thru remaining home positions until next peg is found
+					for (int i = currentPlayerHomePositionIndex+1; i<=5 ; i++)
+					{
+						if(currentPlayerHomePositions.get(i-1).getHasPeg())
+						{
+							break;
+						}
+						else
+						{
+							endOfHome++;
+						}
+
+					}
+				}
+
+
+			}
 
 		if (playersReadyToGoHomePositionId.equals(playerBoardPosition.getId()))
 		{
 			//player is on the ready to go home spot so set step number to 0 and stepsToEndOfHome = 5
 			readyToGoHomeStep = 0;
-			stepsToEndOfHome = 5;
+			stepsToEndOfHome = endOfHome;
 		}
 
 		if (playerBoardPosition.isHomePosition())
@@ -557,12 +617,12 @@ public class Game {
 			//	readyToGoHomeStep=0 - playerBoardPosition.getHomePositionNumber();
 			readyToGoHomeStep=0;
 			currentHomePositionNumber = playerBoardPosition.getHomePositionNumber();
-			stepsToEndOfHome = 5 - currentHomePositionNumber;
+			stepsToEndOfHome = endOfHome - currentHomePositionNumber;
 		}
 
 		for(int step=startStep;step != spacesToMove;step=step+stepDistance)
 		{
-			System.out.println(String.format("Taking step %d of %d with %d stepsToEndOfHome", step, spacesToMove, stepsToEndOfHome));
+//			System.out.println(String.format("Taking step %d of %d with %d stepsToEndOfHome", step, spacesToMove, stepsToEndOfHome));
 			BoardPosition stepPosition = null;
 
 			if (readyToGoHomeStep < 0)
@@ -575,7 +635,7 @@ public class Game {
 				{
 					stepPosition = board.getPlayerSides().get(playerNumber-1).getHomePositionByNumber(currentHomePositionNumber+1);
 //					stepsToEndOfHome--;
-					System.out.println(String.format("Stepping forward into %s ", stepPosition.getId()));
+//					System.out.println(String.format("Stepping forward into %s ", stepPosition.getId()));
 					currentHomePositionNumber++;
 				}		
 				else
@@ -597,7 +657,7 @@ public class Game {
 			if (stepDistance > 0 && stepPosition.getId().equals(playersReadyToGoHomePositionId) )
 			{
 				readyToGoHomeStep = step;
-				stepsToEndOfHome = 5;
+				stepsToEndOfHome = endOfHome;
 			}
 
 			//check the BoardPosition at this step against other PlayerPositions
@@ -625,7 +685,7 @@ public class Game {
 		if (playerBoardPosition.isMainTrackPosition())
 		{
 			//if passing over readyToGoHome spot move into the home track
-			if (readyToGoHomeStep > -1 && spacesToMove-readyToGoHomeStep <=5)
+			if (readyToGoHomeStep > -1 && spacesToMove-readyToGoHomeStep <=endOfHome)
 			{
 				int homeSpace = spacesToMove - readyToGoHomeStep;
 				BoardPosition newBoardPosition = board.getPlayerSides().get(playerNumber-1).getHomePositionByNumber(homeSpace);

@@ -1229,4 +1229,37 @@ public class GameUnitTests {
 		
 	}
 	
+	@Test
+	public void testMovePastHomeWhenHomePartiallyFull() throws PlayerNotFoundException, InvalidGameStateException, InvalidMoveException, PlayerPositionNotFoundException, CannotMoveToAPositionYouOccupyException
+	{
+		PlayerHand hand = PlayerHand.Builder.newInstance(1)
+							.withCard(new Card(CardRank.SIX, Suit.HEARTS))
+							.build();
+		
+		Game game = Game.Builder.newInstance()
+					.withNumberOfPlayers(2)
+					.withPlayerPosition(1, 1, "TomatoHome-2")
+					.withPlayerPosition(1, 2, "TomatoHome-5")
+					.withPlayerPosition(1, 3, "TomatoHome-3")
+					.withPlayerPosition(1, 4, "TomatoHome-1")
+					.withPlayerPosition(1, 5, "LightBlue-18")
+					.withPlayerHand(hand)
+					.build();
+		
+		game.deal();
+		
+		PlayerTurn turn = PlayerTurn.Builder.newInstance()
+							.withCardName("SIX of HEARTS")
+							.withMoveType(MoveType.MOVE_PEG)
+							.withMoveDistance(6)
+							.withPlayerNumber(1)
+							.withPositionNumber(5)
+							.build();
+		
+		game.takeTurn(turn);
+		
+		assertThat(game.getPlayerPosition(1, 5).getPlayerBoardPosition().getId()).isEqualTo("Tomato-6");
+		
+	}
+	
 }

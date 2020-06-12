@@ -43,11 +43,12 @@ table, th, td {
 			You are the <span th:text="${playerView.playerColor}">player
 				color</span> player. <span th:text="${playerView.playerMessage}">player
 				message</span><br/>
-				<span th:if="${playerView.playerColor != playerView.colorOfCurrentTurnPlayer}" th:text="'Waiting for the ' + ${playerView.colorOfCurrentTurnPlayer} + ' player.'">waiting for player</span>
+<!-- 				<span th:if="${playerView.playerColor != playerView.colorOfCurrentTurnPlayer}" th:text="'Waiting for the ' + ${playerView.colorOfCurrentTurnPlayer} + ' player.'">waiting for player</span>  -->
 			<h3>Current Board</h3>
 		</div>
 		<div id="board">
 			<table class="fixed">
+				<col />
 				<col />
 				<col width="20px" />
 				<col width="20px" />
@@ -68,6 +69,7 @@ table, th, td {
 				<col width="20px" />
 				<tr>
 					<!-- 	<th>Side Color</th><th></th><th></th><th><br/>Ready To Go Home</th><th></th><th></th><th></th><th></th><th><br/>Come Out</th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th> -->
+					<td>Current<br/>Player</td>
 					<td>Side Color</td>
 					<td></td>
 					<td></td>
@@ -90,6 +92,7 @@ table, th, td {
 				</tr>
 				<th:block th:each="side : ${playerView.board.playerSides}">
 					<tr>
+						<td></td>
 						<td th:bgcolor="${side.color}" th:text="'Start'" th:width="30px">color<br />Home
 							Track
 						</td>
@@ -101,12 +104,14 @@ table, th, td {
 								color</span></td>
 					</tr>
 					<tr>
+						<td><span th:if="${side.color == playerView.colorOfCurrentTurnPlayer}"><img th:src="@{/images/ltr-grey.svg}" alt="Current Player" height="40" width="40"/></span> </td>
 						<td th:bgcolor="${side.color}" th:text="${side.color}">color</td>
 						<td th:each="mp : ${side.mainTrackPositions}"
 							th:bgcolor="${mp.pegColor}"><span th:text="${mp.pegNumber}">peg
 								color</span></td>
 					</tr>
 					<tr>
+						<td></td>
 						<td th:bgcolor="${side.color}" th:text="'Home'">color<br />Home
 							Track
 						</td>

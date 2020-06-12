@@ -121,8 +121,16 @@ table, th, td {
 			</table>
 		</div>
 		<div id="drawPile">
-			<h3>Draw Pile</h3>
-			<img th:src=	"@{/cards/Card_back.svg}" alt="Discard Pile" height="120" width="80"> Cards Remaining: <span th:text="${playerView.cardsRemaining}">cards remaining</span>
+			<table>
+			<tr>
+			<th>Draw Pile</th>
+			<th>Discard Pile</th>
+			</tr>
+			<tr>
+			<td><figure><img th:src="@{/cards/Card_back.svg}" alt="Discard Pile" height="120" width="80"><figcaption><span th:text="${playerView.cardsRemaining}">cards remaining</span> cards remaining </figcaption></figure></td> 
+			<td><figure th:if="${playerView.lastCardPlayed}"><img th:src="@{'/cards/Playing_card_'+${playerView.lastCardPlayed.name}+'.svg'}" alt="Last Card Played" height="120" width="80"><figcaption>Last Card Played</figcaption></figure></td> 
+			</tr>
+			</table>
 		</div>
 		<div id="playerHand">
 			<h3>Player Hand</h3>

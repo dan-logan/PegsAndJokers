@@ -544,7 +544,6 @@ public class Game {
 		int currentHomePositionNumber = 0;
 		String playersReadyToGoHomePositionId = this.board.getReadyToGoHomePositionIdForPlayerNumber(playerNumber);
 		int endOfHome = 1; 
-		boolean searchedInHomePastCurrentPlayer=false;
 		
 		//determine the "end of home" based on the last spot in home path that is open relative to current player position
 		//If player is on main track.. search thru all home positions
@@ -851,7 +850,11 @@ public class Game {
 		return allowedMoves; 
 	}
 
-	
+	public Card getLastCardPlayed()
+	{
+		
+		return (this.discardPile.size()>0) ? this.discardPile.get(this.discardPile.size()-1) : null;
+	}
 
 
 }

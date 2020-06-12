@@ -37,6 +37,11 @@ public class PlayerView {
 		return this.game.getCardsRemaining();
 	}
 	
+	public Card getLastCardPlayed()
+	{
+		return this.game.getLastCardPlayed();
+	}
+	
 	public Board getBoard()
 	{
 		return this.game.getBoard();

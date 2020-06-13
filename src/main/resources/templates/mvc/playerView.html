@@ -1,11 +1,10 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>Pegs and Jokers</title>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Pegs and Jokers</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link th:href="@{/styles/cssandjs/main.css}" rel="stylesheet" />
+
 <style>
-#message {
-	clear: both;
-}
 
 #board {
 	float: left;
@@ -36,6 +35,10 @@ table, th, td {
 	height: 10px;
 }
 </style>
+<script type="text/javascript" th:src="@{/js/cssandjs/actions.js}"></script>
+<script th:inline="javascript">
+    var nameJs = /*[[${playerView.playerColor}]]*/;
+</script>
 </head>
 <body>
 	<div>
@@ -252,6 +255,8 @@ table, th, td {
 			<br />
 			<input type="submit" value="Submit" />
 		</form>
+<!--  		<button type="button" th:onclick="showAlert()">Show Alert</button>
+		<button type="button" th:onclick="showName(nameJs);">Show Name</button> -->
 		<!--    
  <h2>Current Board</h2>
  <table>

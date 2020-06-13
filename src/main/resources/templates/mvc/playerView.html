@@ -52,6 +52,7 @@ table, th, td {
 		</div>
 		<div id="board">
 			<table class="fixed">
+				<col width="160px"/>
 				<col />
 				<col />
 				<col width="20px" />
@@ -73,6 +74,7 @@ table, th, td {
 				<col width="20px" />
 				<tr>
 					<!-- 	<th>Side Color</th><th></th><th></th><th><br/>Ready To Go Home</th><th></th><th></th><th></th><th></th><th><br/>Come Out</th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th> -->
+					<td>Burnt Cards</td>
 					<td>Current<br/>Player</td>
 					<td>Side Color</td>
 					<td></td>
@@ -94,9 +96,16 @@ table, th, td {
 					<td></td>
 					<td></td>
 				</tr>
-				<th:block th:each="side : ${playerView.board.playerSides}">
+				<th:block th:each="side, iterStat : ${playerView.board.playerSides}">
 					<tr>
-						<td></td>
+	 					<td rowspan="3">
+						<span th:if="${playerView.burntCardCounts[iterStat.index] > 0}">
+							<th:block th:each="i: ${#numbers.sequence(1, playerView.burntCardCounts[iterStat.index])}">
+								<img th:src="@{'/cards/Card_back.svg'}" alt="face-down card" height="60" width="40" />
+							</th:block>
+						</span>
+						</td>
+ 						<td rowspan="3"><span th:if="${side.color == playerView.colorOfCurrentTurnPlayer}"><img th:src="@{/images/ltr-grey.svg}" alt="Current Player" height="40" width="40"/></span> </td>
 						<td th:bgcolor="${side.color}" th:text="'Start'" th:width="30px">color<br />Home
 							Track
 						</td>
@@ -108,14 +117,13 @@ table, th, td {
 								color</span></td>
 					</tr>
 					<tr>
-						<td><span th:if="${side.color == playerView.colorOfCurrentTurnPlayer}"><img th:src="@{/images/ltr-grey.svg}" alt="Current Player" height="40" width="40"/></span> </td>
-						<td th:bgcolor="${side.color}" th:text="${side.color}">color</td>
+	<!-- 				<td>burnt card count for index <span th:text="${iterStat.index}" >index</span> is <span th:text="${playerView.burntCardCounts[iterStat.index]}">count</span></td>  
+	 -->				<td th:bgcolor="${side.color}" th:text="${side.color}">color</td>
 						<td th:each="mp : ${side.mainTrackPositions}"
 							th:bgcolor="${mp.pegColor}"><span th:text="${mp.pegNumber}">peg
 								color</span></td>
 					</tr>
 					<tr>
-						<td></td>
 						<td th:bgcolor="${side.color}" th:text="'Home'">color<br />Home
 							Track
 						</td>

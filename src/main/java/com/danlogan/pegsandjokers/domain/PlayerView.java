@@ -22,6 +22,11 @@ public class PlayerView {
 		return this.playerHand;
 	}
 	
+	public int getPlayerNumber()
+	{
+		return this.playerNumber;
+	}
+	
 	public Color getPlayerColor()
 	{
 		return Color.values()[this.playerNumber-1];
@@ -40,6 +45,24 @@ public class PlayerView {
 	public Card getLastCardPlayed()
 	{
 		return this.game.getLastCardPlayed();
+	}
+	
+	public int[] getBurntCardCounts() 
+	{
+		int[] result = new int[this.game.getPlayers().size()];
+		
+		for (Player player : this.game.getPlayers())
+		{
+			try {
+				result[player.getNumber()-1] = this.game.getPlayerHand(player.getNumber()).getBurnedCardCount();
+			} catch (PlayerNotFoundException e) {
+				// This should not happen, but print it if it does
+				e.printStackTrace();
+			}
+			
+		}
+		
+		return result;
 	}
 	
 	public Board getBoard()

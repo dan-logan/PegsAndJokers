@@ -227,7 +227,6 @@ public class PegsandjokersApplication {
 		turnRequest.setTargetBoardPosition("");
 		model.addAttribute("turnRequest",turnRequest);
 
-		System.out.println("in mvc player view request");
 		return "mvc/playerView";
 	}
 

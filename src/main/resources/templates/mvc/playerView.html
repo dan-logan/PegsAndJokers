@@ -171,9 +171,12 @@ table, th, td {
 		<!-- 
 <br/>turn player number:<span th:text="${turnRequest.playerNumber}">player number</span><br/> 
  -->
-		<h3>Take a turn</h3>
+ 		<p th:if="${playerView.playerColor != playerView.colorOfCurrentTurnPlayer}">
+ 			<button  type="button" th:onclick="refreshPage()">Refresh</button>
+		</p>
+		<h3 th:if="${playerView.playerColor == playerView.colorOfCurrentTurnPlayer}">Take a turn</h3>
 
-		<form action="#" th:action="@{/mvc/taketurn}"
+		<form th:if="${playerView.playerColor == playerView.colorOfCurrentTurnPlayer}" action="#" th:action="@{/mvc/taketurn}"
 			th:object="${turnRequest}" method="post">
 			<input type="hidden" th:field="*{playerNumber}" /> <input
 				type="hidden" th:field="*{gameId}" />

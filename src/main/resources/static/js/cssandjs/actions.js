@@ -9,3 +9,7 @@ function showAlert() {
 function showName(name) {
     alert("Here's the name: " + name);
 }
+
+function refreshPage(){
+	location.reload();
+}

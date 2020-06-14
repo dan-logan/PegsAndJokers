@@ -15,7 +15,13 @@ h2 {
  	}
  
  #message {
-	clear: both;
 	font-family: sans-serif;
+}
+
+table, th, td {
+	border: 1px solid black;
+	text-align: center;
+	padding: 1px;
+	height: 10px;
 }
  

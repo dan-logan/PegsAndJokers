@@ -132,6 +132,9 @@ table, th, td {
 
 			</table>
 		</div>
+		<div class="col">
+		<div class="container">
+		<div class="row">
 		<div class="col" id="drawPile">
 			<table>
 			<tr>
@@ -143,6 +146,7 @@ table, th, td {
 			<td><figure th:if="${playerView.lastCardPlayed}"><img th:src="@{'/cards/Playing_card_'+${playerView.lastCardPlayed.name}+'.svg'}" alt="Last Card Played" height="120" width="80"><figcaption>Last Card Played</figcaption></figure></td> 
 			</tr>
 			</table>
+		</div>
 		</div>
 	</div>
 	<div class="row">
@@ -162,6 +166,8 @@ table, th, td {
 				</th:block>
 			</span>
 		</div>
+	</div>
+	</div>
 	</div>
 		<!-- 
 <h2>Player Peg Positions</h2>

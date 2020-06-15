@@ -110,6 +110,7 @@ public class BoardPosition {
 		this.peg = null;
 		this.hasPeg = false;
 		this.pegColor = null;
+		this.pegNumber=null;
 		return temp;
 	}
 	
@@ -118,6 +119,7 @@ public class BoardPosition {
 		this.peg = pegToAdd;
 		this.hasPeg = true;
 		this.pegColor = pegToAdd.getColor();
+		this.pegNumber = Integer.valueOf(pegToAdd.getNumber());
 	}
 
 	public boolean isMainTrackPosition() {

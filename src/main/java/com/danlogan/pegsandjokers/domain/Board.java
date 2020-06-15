@@ -77,6 +77,10 @@ public class Board {
 
 	}
 	
+	public boolean isStartPosition(String positionId)
+	{
+		return this.getBoardPositionById(positionId).isStartPosition();
+	}
 	
 	public BoardPosition getBoardPositionById(String positionId)
 	{
@@ -146,7 +150,7 @@ public class Board {
 	{
 		Side playerSide = this.playerSides.get(playerNumber - 1);
 		
-		return playerSide.getReadyToGoHomePosition().getId();
+		return playerSide.getReadyToGoHomePositionId();
 	}
 
 	public ArrayList<BoardPosition> getHomePositionsForPlayerNumber(int playerNumber) {

@@ -262,8 +262,8 @@ table, th, td {
 -->
 				<th:block th:each="player:${playerView.otherPlayerPositions}">
 					<option th:each="position : ${player}"
-						th:value="${position.playerBoardPosition.id}"
-						th:text="${position.playerBoardPosition.pegColor}+ ' peg# ' + ${position.playerBoardPosition.pegNumber} ">board
+						th:value="${position.playerBoardPositionId}"
+						th:text="${position.pegColor}+ ' peg# ' + ${position.pegNumber} ">board
 						position id</option>
 				</th:block>
 

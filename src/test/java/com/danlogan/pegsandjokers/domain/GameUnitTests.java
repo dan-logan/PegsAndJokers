@@ -34,12 +34,11 @@ public class GameUnitTests {
 		assertThat(game.getBoard().getPlayerSides().size()).isEqualTo(4);
 		
 		assertThat(game.getPlayerPositions(1).size()).isEqualTo(5);
-		assertThat(game.getPlayerPositions(1).get(0).getPlayerBoardPosition().isStartPosition());
-		assertThat(game.getPlayerPositions(1).get(1).getPlayerBoardPosition().isStartPosition());
-		assertThat(game.getPlayerPositions(1).get(2).getPlayerBoardPosition().isStartPosition());
-		assertThat(game.getPlayerPositions(1).get(3).getPlayerBoardPosition().isStartPosition());
-		assertThat(game.getPlayerPositions(1).get(4).getPlayerBoardPosition().isStartPosition());
-
+		assertThat(game.getBoard().isStartPosition(game.getPlayerPositions(1).get(0).getPlayerBoardPositionId()));
+		assertThat(game.getBoard().isStartPosition(game.getPlayerPositions(1).get(1).getPlayerBoardPositionId()));
+		assertThat(game.getBoard().isStartPosition(game.getPlayerPositions(1).get(2).getPlayerBoardPositionId()));
+		assertThat(game.getBoard().isStartPosition(game.getPlayerPositions(1).get(3).getPlayerBoardPositionId()));
+		assertThat(game.getBoard().isStartPosition(game.getPlayerPositions(1).get(4).getPlayerBoardPositionId()));
 		assertThat(game.getCardsRemaining()).isEqualTo(162);
 		
 	}
@@ -122,7 +121,7 @@ public class GameUnitTests {
 
 		game.takeTurn(turn);
 
-		assertThat(game.getPlayerPosition(1,1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-8");
+		assertThat(game.getPlayerPosition(1,1).getPlayerBoardPositionId()).isEqualTo("Tomato-8");
 		assertThat(game.getBoard().getBoardPositionById("Tomato-8").getPegColor()).isEqualTo(Color.Tomato);
 		
 	}
@@ -150,11 +149,11 @@ public class GameUnitTests {
 				.withMoveDistance(3)
 				.build();
 		
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-8");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isEqualTo("Tomato-8");
 
 		game.takeTurn(turn);
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-11");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isEqualTo("Tomato-11");
 		
 		assertThat(game.getBoard().getBoardPositionById("Tomato-8").getHasPeg()).isFalse();
 		
@@ -185,7 +184,7 @@ public class GameUnitTests {
 				.withMoveDistance(3)
 				.build();
 		
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-8");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isEqualTo("Tomato-8");
 
 		try {
 			game.takeTurn(turn);
@@ -196,7 +195,7 @@ public class GameUnitTests {
 			assertThat(e.getMessage()).contains("cannot move over a position with one of your own pegs in it");
 		}
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-8");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isEqualTo("Tomato-8");
 		
 	}
 
@@ -256,7 +255,7 @@ public class GameUnitTests {
 				.withMoveDistance(-3)
 				.build();
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-8");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isEqualTo("Tomato-8");
 
 		try {
 			game.takeTurn(turn);
@@ -267,7 +266,7 @@ public class GameUnitTests {
 			assertThat(e.getMessage()).contains("backward");
 		}
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-8");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isEqualTo("Tomato-8");
 
 	}
 
@@ -294,7 +293,7 @@ public class GameUnitTests {
 				.withMoveDistance(8)
 				.build();
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-8");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isEqualTo("Tomato-8");
 
 		try {
 			game.takeTurn(turn);
@@ -305,7 +304,7 @@ public class GameUnitTests {
 			assertThat(e.getMessage()).contains("forward");
 		}
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-8");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isEqualTo("Tomato-8");
 
 	}
 
@@ -332,11 +331,11 @@ public class GameUnitTests {
 				.withMoveDistance(-8)
 				.build();
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-8");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isEqualTo("Tomato-8");
 
 		game.takeTurn(turn);
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("PINK-18");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isEqualTo("PINK-18");
 
 	}
 
@@ -363,7 +362,7 @@ public class GameUnitTests {
 				.withMoveDistance(-4)
 				.build();
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-8");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isEqualTo("Tomato-8");
 
 		try {
 			game.takeTurn(turn);
@@ -374,7 +373,7 @@ public class GameUnitTests {
 			assertThat(e.getMessage()).contains("invalid distance");
 		}
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-8");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isEqualTo("Tomato-8");
 
 	}
 	
@@ -400,11 +399,11 @@ public class GameUnitTests {
 				.withPositionNumber(1)
 				.build();
 		
-		assertThat(game.getPlayerPosition(2, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-8");
+		assertThat(game.getPlayerPosition(2, 1).getPlayerBoardPositionId()).isEqualTo("Tomato-8");
 
 		game.takeTurn(turn);
 
-		assertThat(game.getPlayerPosition(2, 1).getPlayerBoardPosition().isStartPosition()).isTrue();
+		assertThat(game.getBoard().isStartPosition(game.getPlayerPosition(2, 1).getPlayerBoardPositionId())).isTrue();
 		
 	}
 
@@ -433,13 +432,13 @@ public class GameUnitTests {
 				.withSplitMoveArray(splitMoveArray)
 				.build();
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-8");
-		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPosition().getId()).isEqualTo("LightBlue-1");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isEqualTo("Tomato-8");
+		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPositionId()).isEqualTo("LightBlue-1");
 
 		game.takeTurn(turn);
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-11");
-		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPosition().getId()).isEqualTo("LightBlue-5");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isEqualTo("Tomato-11");
+		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPositionId()).isEqualTo("LightBlue-5");
 
 	}
 
@@ -468,8 +467,8 @@ public class GameUnitTests {
 				.withSplitMoveArray(splitMoveArray)
 				.build();
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-8");
-		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPosition().getId()).isEqualTo("LightBlue-1");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isEqualTo("Tomato-8");
+		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPositionId()).isEqualTo("LightBlue-1");
 
 		try {
 			game.takeTurn(turn);
@@ -480,8 +479,8 @@ public class GameUnitTests {
 			assertThat(e.getMessage()).contains("cannot split a SEVEN");
 		}
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-8");
-		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPosition().getId()).isEqualTo("LightBlue-1");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isEqualTo("Tomato-8");
+		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPositionId()).isEqualTo("LightBlue-1");
 
 	}
 	
@@ -511,8 +510,8 @@ public class GameUnitTests {
 				.withSplitMoveArray(splitMoveArray)
 				.build();
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-9");
-		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPosition().getId()).isEqualTo("Tomato-8");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isEqualTo("Tomato-9");
+		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPositionId()).isEqualTo("Tomato-8");
 
 		try {
 			game.takeTurn(turn);
@@ -523,8 +522,8 @@ public class GameUnitTests {
 			assertThat(e.getMessage()).contains("with one of your own pegs in it");
 		}
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-9");
-		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPosition().getId()).isEqualTo("Tomato-8");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isEqualTo("Tomato-9");
+		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPositionId()).isEqualTo("Tomato-8");
 
 	}
 
@@ -553,8 +552,8 @@ public class GameUnitTests {
 				.withSplitMoveArray(splitMoveArray)
 				.build();
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-8");
-		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPosition().getId()).isEqualTo("LightBlue-1");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isEqualTo("Tomato-8");
+		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPositionId()).isEqualTo("LightBlue-1");
 
 		try {
 			game.takeTurn(turn);
@@ -565,8 +564,8 @@ public class GameUnitTests {
 			assertThat(e.getMessage()).contains("cannot split");
 		}
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-8");
-		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPosition().getId()).isEqualTo("LightBlue-1");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isEqualTo("Tomato-8");
+		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPositionId()).isEqualTo("LightBlue-1");
 
 	}
 
@@ -594,7 +593,7 @@ public class GameUnitTests {
 				.withMoveDistance(9)
 				.build();
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-8");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isEqualTo("Tomato-8");
 	
 		try {
 			game.takeTurn(turn);
@@ -605,7 +604,7 @@ public class GameUnitTests {
 			assertThat(e.getMessage()).contains("9 is an invalid distance");
 		}
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-8");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isEqualTo("Tomato-8");
 
 	}
 	
@@ -634,8 +633,8 @@ public class GameUnitTests {
 				.withSplitMoveArray(splitMoveArray)
 				.build();
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-8");
-		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPosition().getId()).isEqualTo("Tomato-9");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isEqualTo("Tomato-8");
+		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPositionId()).isEqualTo("Tomato-9");
 	
 		try {
 			game.takeTurn(turn);
@@ -646,8 +645,8 @@ public class GameUnitTests {
 			assertThat(e.getMessage()).contains("cannot split");
 		}
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-8");
-		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPosition().getId()).isEqualTo("Tomato-9");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isEqualTo("Tomato-8");
+		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPositionId()).isEqualTo("Tomato-9");
 
 	}
 
@@ -676,13 +675,13 @@ public class GameUnitTests {
 				.withSplitMoveArray(splitMoveArray)
 				.build();
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-8");
-		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPosition().getId()).isEqualTo("Tomato-9");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isEqualTo("Tomato-8");
+		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPositionId()).isEqualTo("Tomato-9");
 	
 		game.takeTurn(turn);
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-2");
-		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPosition().getId()).isEqualTo("Tomato-12");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isEqualTo("Tomato-2");
+		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPositionId()).isEqualTo("Tomato-12");
 
 	}
 
@@ -709,13 +708,13 @@ public class GameUnitTests {
 				.withTargetBoardPositionId("Tomato-8")
 				.build();
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("TomatoStart-1");
-		assertThat(game.getPlayerPosition(2, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-8");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isEqualTo("TomatoStart-1");
+		assertThat(game.getPlayerPosition(2, 1).getPlayerBoardPositionId()).isEqualTo("Tomato-8");
 	
 		game.takeTurn(turn);
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-8");
-		assertThat(game.getPlayerPosition(2, 1).getPlayerBoardPosition().getId()).isEqualTo("LightBlueStart-1");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isEqualTo("Tomato-8");
+		assertThat(game.getPlayerPosition(2, 1).getPlayerBoardPositionId()).isEqualTo("LightBlueStart-1");
 
 	}
 
@@ -742,8 +741,8 @@ public class GameUnitTests {
 				.withTargetBoardPositionId("LightBlue-9")
 				.build();
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("TomatoStart-1");
-		assertThat(game.getPlayerPosition(2, 1).getPlayerBoardPosition().getId()).isEqualTo("LightBlue-9");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isEqualTo("TomatoStart-1");
+		assertThat(game.getPlayerPosition(2, 1).getPlayerBoardPositionId()).isEqualTo("LightBlue-9");
 	
 		try {
 			game.takeTurn(turn);
@@ -754,8 +753,8 @@ public class GameUnitTests {
 			assertThat(e.getMessage()).contains("is not a joker");
 		}
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("TomatoStart-1");
-		assertThat(game.getPlayerPosition(2, 1).getPlayerBoardPosition().getId()).isEqualTo("LightBlue-9");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isEqualTo("TomatoStart-1");
+		assertThat(game.getPlayerPosition(2, 1).getPlayerBoardPositionId()).isEqualTo("LightBlue-9");
 
 	}
 
@@ -781,7 +780,7 @@ public class GameUnitTests {
 				.withTargetBoardPositionId("LightBlue-9")
 				.build();
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("TomatoStart-1");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isEqualTo("TomatoStart-1");
 	
 		try {
 			game.takeTurn(turn);
@@ -792,7 +791,7 @@ public class GameUnitTests {
 			assertThat(e.getMessage()).contains("There is not a peg in position");
 		}
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("TomatoStart-1");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isEqualTo("TomatoStart-1");
 	
 	}
 
@@ -819,8 +818,8 @@ public class GameUnitTests {
 				.withTargetBoardPositionId("LightBlue-9")
 				.build();
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("TomatoStart-1");
-		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPosition().getId()).isEqualTo("LightBlue-9");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isEqualTo("TomatoStart-1");
+		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPositionId()).isEqualTo("LightBlue-9");
 	
 		try {
 			game.takeTurn(turn);
@@ -831,8 +830,8 @@ public class GameUnitTests {
 			assertThat(e.getMessage()).contains("replace your own peg");
 		}
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("TomatoStart-1");
-		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPosition().getId()).isEqualTo("LightBlue-9");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isEqualTo("TomatoStart-1");
+		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPositionId()).isEqualTo("LightBlue-9");
 
 	}
 
@@ -859,12 +858,12 @@ public class GameUnitTests {
 				.withMoveDistance(3)
 				.build();
 		
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-3");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isEqualTo("Tomato-3");
 	
 		game.takeTurn(turn);
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("TomatoHome-3");
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().isHomePosition()).isTrue();
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isEqualTo("TomatoHome-3");
+		assertThat(game.getBoard().getBoardPositionById(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isHomePosition()).isTrue();
 		
 	}
 
@@ -892,11 +891,11 @@ public class GameUnitTests {
 				.withMoveDistance(10)
 				.build();
 		
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-2");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isEqualTo("Tomato-2");
 	
 		game.takeTurn(turn);
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-12");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isEqualTo("Tomato-12");
 		
 	}
 
@@ -923,11 +922,11 @@ public class GameUnitTests {
 				.withMoveDistance(2)
 				.build();
 		
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("TomatoHome-2");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isEqualTo("TomatoHome-2");
 	
 		game.takeTurn(turn);
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("TomatoHome-4");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isEqualTo("TomatoHome-4");
 		
 	}
 
@@ -954,7 +953,7 @@ public class GameUnitTests {
 				.withMoveDistance(6)
 				.build();
 		
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("TomatoHome-2");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isEqualTo("TomatoHome-2");
 	
 		System.out.println("Testing cannot move past end of home when starting from within home");
 		try
@@ -967,7 +966,7 @@ public class GameUnitTests {
 			assertThat(ex.getMessage()).contains("past end of home");
 		}
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("TomatoHome-2");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isEqualTo("TomatoHome-2");
 		
 	}
 	
@@ -996,7 +995,7 @@ public class GameUnitTests {
 				.withMoveDistance(3)
 				.build();
 		
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-3");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isEqualTo("Tomato-3");
 	
 		try
 		{
@@ -1008,7 +1007,7 @@ public class GameUnitTests {
 			assert(ex.getMessage()).contains("cannot move over a position with one of your own");
 		}
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-3");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isEqualTo("Tomato-3");
 			
 	}
 
@@ -1217,7 +1216,7 @@ public class GameUnitTests {
 
 		game.takeTurn(turn);
 		
-		assertThat(game.getPlayerPosition(1,1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-8");
+		assertThat(game.getPlayerPosition(1,1).getPlayerBoardPositionId()).isEqualTo("Tomato-8");
 
 		
 	}
@@ -1265,7 +1264,7 @@ public class GameUnitTests {
 		
 		game.takeTurn(turn);
 		
-		assertThat(game.getPlayerPosition(1, 5).getPlayerBoardPosition().getId()).isEqualTo("Tomato-6");
+		assertThat(game.getPlayerPosition(1, 5).getPlayerBoardPositionId()).isEqualTo("Tomato-6");
 		
 	}
 	
@@ -1328,7 +1327,7 @@ public class GameUnitTests {
 		
 		game = gameRepository.findGameById(gameId);
 		
-		assertThat(game.getPlayerPosition(1,1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-8");
+		assertThat(game.getPlayerPosition(1,1).getPlayerBoardPositionId()).isEqualTo("Tomato-8");
 		assertThat(game.getBoard().getBoardPositionById("Tomato-8").getPegColor()).isEqualTo(Color.Tomato);
 	
 		PlayerView playerView = game.getPlayerView(1);

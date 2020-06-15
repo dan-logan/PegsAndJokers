@@ -9,8 +9,8 @@ public class Side {
 	private ArrayList<BoardPosition> homePositions;
 	private ArrayList<BoardPosition> startPositions;
 	private ArrayList<BoardPosition> mainTrackPositions;
-	private BoardPosition comeOutPosition;
-	private BoardPosition readyToGoHomePosition;
+	private String comeOutPositionId;
+	private String readyToGoHomePositionId;
 	
 
 	//Side Builder
@@ -21,8 +21,8 @@ public class Side {
 		private ArrayList<BoardPosition> homePositions = new ArrayList<BoardPosition>();
 		private ArrayList<BoardPosition> startPositions = new ArrayList<BoardPosition>();
 		private ArrayList<BoardPosition> mainTrackPositions = new ArrayList<BoardPosition>();
-		private BoardPosition comeOutPosition;
-		private BoardPosition readyToGoHomePosition;
+		private String comeOutPositionId;
+		private String readyToGoHomePositionId;
 		 
 		public static Builder newInstance()
 		{
@@ -62,10 +62,10 @@ public class Side {
 			}
 			
 			//the ready to go home position is the third spot on the track (index of 2 in the array)
-			this.readyToGoHomePosition = mainTrackPositions.get(2);
+			this.readyToGoHomePositionId = mainTrackPositions.get(2).getId();
 			
 			//the come out position is the eighth spot on the track (index of 7 in the array)
-			this.comeOutPosition = mainTrackPositions.get(7);
+			this.comeOutPositionId = mainTrackPositions.get(7).getId();
 
 			return new Side(this);
 		}
@@ -82,8 +82,8 @@ public class Side {
 		this.homePositions = builder.homePositions;
 		this.startPositions = builder.startPositions;
 		this.mainTrackPositions = builder.mainTrackPositions;
-		this.comeOutPosition = builder.comeOutPosition;
-		this.readyToGoHomePosition = builder.readyToGoHomePosition;
+		this.comeOutPositionId = builder.comeOutPositionId;
+		this.readyToGoHomePositionId = builder.readyToGoHomePositionId;
 	
 	}
 	
@@ -119,14 +119,19 @@ public class Side {
 		return this.mainTrackPositions;
 	}
 
-	public BoardPosition getComeOutPosition()
+	public String getComeOutPositionId()
 	{
-		return this.comeOutPosition;
+		return this.comeOutPositionId;
+	}
+	
+	public BoardPosition comeOutPosition()
+	{
+		return this.mainTrackPositions.get(7);
 	}
 
-	public BoardPosition getReadyToGoHomePosition()
+	public String getReadyToGoHomePositionId()
 	{
-		return this.readyToGoHomePosition;
+		return this.readyToGoHomePositionId;
 	}
 
 	public BoardPosition getPosition(int index) {

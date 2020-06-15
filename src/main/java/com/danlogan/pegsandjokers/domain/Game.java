@@ -136,32 +136,7 @@ public class Game {
 				
 				this.playerPositions.add(playerInitialPositions);
 				
-				//for any initialized player positions... move update the default start positions
-				ArrayList<String> thisPlayersInitialPositionIds = null;
-				
-				if (this.initialPlayerPositionIds.size() > playerNumber)
-				{
-					thisPlayersInitialPositionIds = this.initialPlayerPositionIds.get(playerNumber);
-				}
-
-				int initialPositionNumber = 0;
-				for(String positionId : thisPlayersInitialPositionIds)
-				{
-					if (positionId != null)
-					{
-						PlayerPosition positionToInitialize = this.playerPositions.get(playerNumber).get(initialPositionNumber);
-
-						try {
-							positionToInitialize.moveTo(this.board.getBoardPositionById(positionId));
-						}catch(CannotMoveToAPositionYouOccupyException ex)
-						{
-							throw new RuntimeException("Cannot intialize with board with given initial postions. Duplicate Position found.");
-						}
-					}
-
-					initialPositionNumber++;
-				}
-				
+					
 				playerNumber++;
 			}
 			
@@ -178,10 +153,37 @@ public class Game {
 					this.drawPile.combineDecks(new DeckOfCards());
 				}
 			}
-				
-			
+					
 			Game game = new Game(this);
 			
+			for (int p=0;p<5;p++)
+			{
+				//for any initialized player positions... move update the default start positions
+				ArrayList<String> thisPlayersInitialPositionIds = null;
+
+				if (this.initialPlayerPositionIds.size() > p)
+				{
+					thisPlayersInitialPositionIds = this.initialPlayerPositionIds.get(p);
+				}
+
+				int initialPositionNumber = 0;
+				for(String positionId : thisPlayersInitialPositionIds)
+				{
+					if (positionId != null)
+					{
+						PlayerPosition positionToInitialize = this.playerPositions.get(p).get(initialPositionNumber);
+
+						try {
+							game.movePeg(positionToInitialize, this.board.getBoardPositionById(positionId));
+						}catch(CannotMoveToAPositionYouOccupyException ex)
+						{
+							throw new RuntimeException("Cannot intialize with board with given initial postions. Duplicate Position found.");
+						}
+					}
+
+					initialPositionNumber++;
+				}
+			}
 					
 			return game;
 		}
@@ -405,21 +407,21 @@ public class Game {
 		int playerPositionNumber = turn.getPlayerPositionNumber();
 		PlayerPosition playerPosition = this.getPlayerPositions(turn.getPlayerNumber()).get(playerPositionNumber-1);
 		
-		if (!playerPosition.getPlayerBoardPosition().isStartPosition()) //FIX
+		if (!this.board.isStartPosition(playerPosition.getPlayerBoardPositionId()))
 		{
 			throw new InvalidGameStateException("Can only start pegs that are in the start position.");
 		}
 		
 		//Lastly make sure there is actually a peg in that start position
-		if (!playerPosition.getPlayerBoardPosition().getHasPeg()) //FIX
+		if (!this.board.getBoardPositionById(playerPosition.getPlayerBoardPositionId()).getHasPeg())
 		{
 			throw new InvalidGameStateException(String.format("Player Postion %d does not have a peg in it.", playerPositionNumber));
 		}
 		
 		//Then update the PlayerPosition to be in the come out position
-		BoardPosition comeOutPosition = this.board.getPlayerSides().get(turn.getPlayerNumber()-1).getComeOutPosition();
+		BoardPosition comeOutPosition = this.board.getPlayerSides().get(turn.getPlayerNumber()-1).comeOutPosition();
 		
-		this.movePeg(playerPosition, comeOutPosition); //FIX
+		this.movePeg(playerPosition, comeOutPosition); 
 		
 		return;
 		
@@ -443,19 +445,19 @@ public class Game {
 		int playerPositionNumber = turn.getPlayerPositionNumber();
 		PlayerPosition playerPosition = this.getPlayerPositions(turn.getPlayerNumber()).get(playerPositionNumber-1);
 		
-		if (!playerPosition.getPlayerBoardPosition().isStartPosition()) //FIX
+		if (!this.board.isStartPosition(playerPosition.getPlayerBoardPositionId()))
 		{
 			throw new InvalidGameStateException("Can only start pegs that are in the start position.");
 		}
 		
 		//Lastly make sure there is actually a peg in that start position
-		if (!playerPosition.getPlayerBoardPosition().getHasPeg()) //FIX
+		if (!this.board.getBoardPositionById(playerPosition.getPlayerBoardPositionId()).getHasPeg())
 		{
 			throw new InvalidGameStateException(String.format("Player Postion %d does not have a peg in it.", playerPositionNumber));
 		}
 		
 		//Then update the PlayerPosition to be in the come out position
-		BoardPosition comeOutPosition = this.board.getPlayerSides().get(turn.getPlayerNumber()-1).getComeOutPosition();
+		BoardPosition comeOutPosition = this.board.getPlayerSides().get(turn.getPlayerNumber()-1).comeOutPosition();
 		
 		this.movePeg(playerPosition, comeOutPosition); //FIX
 		
@@ -464,8 +466,10 @@ public class Game {
 	
 	private void movePeg(PlayerPosition fromPlayerPosition, BoardPosition toBoardPosition) throws CannotMoveToAPositionYouOccupyException
 	{
+		BoardPosition fromBoardPosition = this.getBoard().getBoardPositionById(fromPlayerPosition.getPlayerBoardPositionId());
+		
 		//If to position being moved to is occupied by another player, that other players peg will be sent back to start
-		if(toBoardPosition.getHasPeg() && !toBoardPosition.getPegColor().equals(fromPlayerPosition.getPegColor()))
+		if(toBoardPosition.getHasPeg() && !toBoardPosition.getPegColor().equals(fromBoardPosition.getPegColor()))
 		{
 			
 			//get the player position that corresponds to the target position
@@ -483,13 +487,24 @@ public class Game {
 					}
 				
 			}
-
-			otherPlayerPosition.moveTo(availableStartPosition);
 			
+			//Put the other players in their available start position
+			Peg pegToMove = toBoardPosition.removePeg();
+			availableStartPosition.addPeg(pegToMove);
+			otherPlayerPosition.moveTo(availableStartPosition.getId());
+
 		}
-		
+
+		//Make sure not to move to a position you already occupy
+		if (fromPlayerPosition.getPegColor() == toBoardPosition.getPegColor())
+		{
+			throw new CannotMoveToAPositionYouOccupyException("You cannot move to a position with one of your own pegs in it.");
+		}
+
 		//Make the requested move once the other player has been moved
-		fromPlayerPosition.moveTo(toBoardPosition); //FIX
+		Peg pegToMove = fromBoardPosition.removePeg();
+		toBoardPosition.addPeg(pegToMove);
+		fromPlayerPosition.moveTo(toBoardPosition.getId());
 	}
 	
 	private void handleDiscardRequest(PlayerTurn turn, PlayerHand playerHand) throws InvalidMoveException
@@ -516,7 +531,7 @@ public class Game {
 		//Verify that the position referenced in the turn is not a start position
 		PlayerPosition playerPosition = this.getPlayerPositions(playerNumber).get(playerPositionNumber-1);
 
-		if (playerPosition.getPlayerBoardPosition().isStartPosition()) //FIX
+		if (this.board.isStartPosition(playerPosition.getPlayerBoardPositionId()))
 		{
 			throw new InvalidGameStateException("Pegs in start position cannot move forward.");
 		}
@@ -555,7 +570,7 @@ public class Game {
 		}
 
 		//Verify that the player does not pass one of his/her own pegs along the way
-		BoardPosition playerBoardPosition = playerPosition.getPlayerBoardPosition(); //FIX
+		BoardPosition playerBoardPosition = this.board.getBoardPositionById(playerPosition.getPlayerBoardPositionId()); 
 		int startStep = 0 + stepDistance;
 
 		//Keep track if player passes over the readyToGoHomePosition which step is it
@@ -682,14 +697,13 @@ public class Game {
 			//check the BoardPosition at this step against other PlayerPositions
 			for (PlayerPosition otherPosition : this.getPlayerPositions(playerNumber))
 			{
-				System.out.println(String.format("Comparing %s against %s", otherPosition.getPlayerBoardPosition().getId(), stepPosition.getId()));
 				if (playerPosition.equals(otherPosition))
 				{
 					//skip over the current player position
 				}
 				else
 				{
-					if (otherPosition.getPlayerBoardPosition().getPegColor().equals(stepPosition.getPegColor()))
+					if (otherPosition.getPegColor().equals(stepPosition.getPegColor()))
 					{
 						System.out.println(String.format("This is the step it blows up on %s", stepPosition.getId()));
 						throw new CannotMoveToAPositionYouOccupyException("You cannot move over a position with one of your own pegs in it.");
@@ -732,7 +746,7 @@ public class Game {
 		}
 		else
 		{//player is moving in home track
-			BoardPosition newBoardPosition = board.getPlayerSides().get(playerNumber-1).getHomePositionByNumber(playerPosition.getPlayerBoardPosition().getHomePositionNumber() + spacesToMove);			
+			BoardPosition newBoardPosition = board.getPlayerSides().get(playerNumber-1).getHomePositionByNumber(this.board.getBoardPositionById(playerPosition.getPlayerBoardPositionId()).getHomePositionNumber() + spacesToMove);			
 			this.movePeg(playerPosition, newBoardPosition); //FIX
 		}
 
@@ -758,7 +772,7 @@ public class Game {
 		}
 		
 		PlayerPosition originalPosition1 = this.getPlayerPosition(turn.getPlayerNumber(),movePositionNumber1);
-		String originalPosition1ID = originalPosition1.getPlayerBoardPosition().getId();
+		String originalPosition1ID = originalPosition1.getPlayerBoardPositionId();
 		
 		//handle moving the first peg
 		this.handleMoveASinglePeg(turn.getPlayerNumber(), movePositionNumber1, moveDistance1, turn.getCardName(), playerHand); 
@@ -771,7 +785,7 @@ public class Game {
 		catch (Throwable t)
 		{
 			//move the first peg back where it came from
-			originalPosition1.moveTo(this.board.getBoardPositionById(originalPosition1ID));
+			this.movePeg(originalPosition1, this.board.getBoardPositionById(originalPosition1ID));
 			throw t;
 		}
 		
@@ -838,7 +852,7 @@ public class Game {
 		{
 			for (PlayerPosition playerPosition : this.playerPositions.get(p))
 			{
-				if (playerPosition.getPlayerBoardPosition().equals(boardPosition)) //FIX
+				if (playerPosition.getPlayerBoardPositionId().equals(boardPosition.getId()))
 				{
 					return playerPosition;
 				}

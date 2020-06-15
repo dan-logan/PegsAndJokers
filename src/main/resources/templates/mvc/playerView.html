@@ -1,39 +1,22 @@
-<!doctype html>
-<html lang="end" xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">	
+<!-- Required meta tags always come first -->
 	<meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<!--  	<meta  http-equiv="Content-Type" content="text/html; charset=UTF-8" /> -->
 	<meta th:if="${playerView.playerColor != playerView.colorOfCurrentTurnPlayer}" http-equiv="Refresh" content="5">
-    <link th:href="@{/styles/cssandjs/main.css}" rel="stylesheet" />
-	<title>Pegs and Jokers</title>
-
-<!-- <style>
-
-table.fixed {
-	table-layout: fixed;
-}
-
-table.fixed td {
-	overflow: hidden;
-}
-
-table, th, td {
-	border: 1px solid black;
-	text-align: center;
-	padding: 5px;
-	height: 10px;
-}
-</style>
--->
-<script type="text/javascript" th:src="@{/js/cssandjs/actions.js}"></script>
-<script th:inline="javascript">
-    var nameJs = /*[[${playerView.playerColor}]]*/;
-</script>
+ <!-- Bootstrap CSS -->
+ 	<meta http-equiv="x-ua-compatible" content="ie=edge">
+ 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">	
+<!--   <link th:href="@{/styles/cssandjs/main.css}" rel="stylesheet" />
+ -->  	<title>Pegs and Jokers</title>
+	<script type="text/javascript" th:src="@{/js/cssandjs/actions.js}"></script>
+	<script th:inline="javascript">
+   		 var nameJs = /*[[${playerView.playerColor}]]*/;
+	</script>
 </head>
 <body>
-	<div class="container">
+	<div class="container-fluid">
 	 <div class="row">
 		<div class = "col" id="message">
 			You are the <span th:text="${playerView.playerColor}">player
@@ -43,10 +26,10 @@ table, th, td {
 		</div>
 	</div>
 	<div class="row">
-		<div class = "col" id="board">
+		<div class="col" id="board">
 			<h3>Current Board</h3>
-			<table class="fixed">
-				<col width="160px"/>
+			<table class="table table-bordered">
+<!-- 			<col width="160px"/>
 				<col />
 				<col />
 				<col width="20px" />
@@ -67,30 +50,33 @@ table, th, td {
 				<col width="20px" />
 				<col width="20px" />
 				<col width="20px" />
-				<tr>
+ -->	<thead>
+ 				<tr>
 					<!-- 	<th>Side Color</th><th></th><th></th><th><br/>Ready To Go Home</th><th></th><th></th><th></th><th></th><th><br/>Come Out</th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th> -->
-					<td>Burnt Cards</td>
-					<td>Current<br/>Player</td>
-					<td>Side Color</td>
-					<td></td>
-					<td></td>
-					<td>Go Home</td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td>Come Out</td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
+					<th scope="col">Burnt Cards</th>
+					<th scope="col">Current<br/>Player</th>
+					<th scope="col">Side Color</th>
+					<th scope="col"></th>
+					<th scope="col"></th>
+					<th scope="col">Go Home</th>
+					<th scope="col"></th>
+					<th scope="col"></th>
+					<th scope="col"></th>
+					<th scope="col"></th>
+					<th scope="col">Come Out</th>
+					<th scope="col"></th>
+					<th scope="col"></th>
+					<th scope="col"></th>
+					<th scope="col"></th>
+					<th scope="col"></th>
+					<th scope="col"></th>
+					<th scope="col"></th>
+					<th scope="col"></th>
+					<th scope="col"></th>
+					<th scope="col"></th>
 				</tr>
+				<thead>
+				<tbody>
 				<th:block th:each="side, iterStat : ${playerView.board.playerSides}">
 					<tr>
 	 					<td rowspan="3">
@@ -129,10 +115,10 @@ table, th, td {
 								color</span></td>
 					</tr>
 				</th:block>
-
+				</tbody>
 			</table>
 		</div>
-		<div class="col">
+		<div class="col-4">
 		<div class="container">
 		<div class="row">
 		<div class="col" id="drawPile">
@@ -142,13 +128,12 @@ table, th, td {
 			<th>Discard Pile</th>
 			</tr>
 			<tr>
-			<td><figure><img th:src="@{/cards/Card_back.svg}" alt="Discard Pile" height="120" width="80"><figcaption><span th:text="${playerView.cardsRemaining}">cards remaining</span> cards remaining </figcaption></figure></td> 
-			<td><figure th:if="${playerView.lastCardPlayed}"><img th:src="@{'/cards/Playing_card_'+${playerView.lastCardPlayed.name}+'.svg'}" alt="Last Card Played" height="120" width="80"><figcaption>Last Card Played</figcaption></figure></td> 
+			<td><figure><img th:src="@{/cards/Card_back.svg}" alt="Discard Pile" height="90" width="60"><figcaption><span th:text="${playerView.cardsRemaining}">cards remaining</span> cards remaining </figcaption></figure></td> 
+			<td><figure th:if="${playerView.lastCardPlayed}"><img th:src="@{'/cards/Playing_card_'+${playerView.lastCardPlayed.name}+'.svg'}" alt="Last Card Played" height="90" width="60"><figcaption>Last Card Played</figcaption></figure></td> 
 			</tr>
 			</table>
 		</div>
 		</div>
-	</div>
 	<div class="row">
 		<div class="col" id="playerHand">
 			<h3>Player Hand</h3>
@@ -156,7 +141,7 @@ table, th, td {
 			<th:block th:each="card : ${playerView.playerHand.cards}">
 				<td><img th:src="@{'/cards/Playing_card_'+${card.name}+'.svg'}"
 				    th:data-cardname="${card.name}"
-					alt="${card.name}" height="120" width="80" 
+					alt="${card.name}" height="90" width="60" 
 					/></td>
 			<!-- 			onclick="{alert('clicked ' + this.getAttribute('data-cardname'));}"  -->
 			</th:block>
@@ -299,7 +284,7 @@ table, th, td {
  </table>
  -->
 
-	</div>
+</div>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>

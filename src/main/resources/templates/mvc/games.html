@@ -1,17 +1,27 @@
-<html xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Pegs and Jokers</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<!-- Required meta tags always come first -->
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.3/css/bootstrap.min.css">
+<title>Pags and Jokers - Games</title>
 </head>
 <body>
-    
-<h1>Games</h1>
-
-<table>
+<div class="container">
+<div class="row">
+<div class="col">
+<table class="table table-bordered">
+	<thead>
 	<tr>
-		<th>GameID</th>
-		<th>Status</th>
+		<th scope="col">GameID</th>
+		<th scope="col">Status</th>
 	</tr>
+	</thead>
+	<tbody>
 	<th:block th:each="game : ${games}">
 	<tr>
 		<td th:text="${game.id}">placeholder game id</td>
@@ -22,12 +32,17 @@
 		</th:block>
 	</tr>
 	</th:block>
+	</tbody>
 </table>
- 
- <h2>Start A New Game</h2>        	
+ </div>
+ </div>
+ <div class="row">
+ <div class="col">
+ <p/>
+ <h3>Start A New Game</h3>        	
  
  <form action="#" th:action="@{/mvc/newGame}" th:object="${gameRequest}" method="post">
-		<br/><label th:text="'How many player?'">number of players</label>
+		<label th:text="'How many player?'">number of players</label>
 			<select th:field="*{numberOfPlayers}">
     			<option th:each="i : ${#numbers.sequence(2, 8)}" th:value="${i}" th:text="${i}">
    			 	</option>
@@ -35,7 +50,13 @@
          <input type="submit" value="Submit" /> 
        
  </form>
- 
+ </div>
+ </div>
+ </div>
+	<!-- jQuery first, then Bootstrap JS. All Inclusive Plug-in -->
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" ></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" ></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" ></script>
   
 </body>
 </html>

@@ -21,4 +21,9 @@ public class Peg {
 		return this.number;
 	}
 
+	//Default Constructor to support deserializtion
+	public Peg()
+	{
+		
+	}
 }

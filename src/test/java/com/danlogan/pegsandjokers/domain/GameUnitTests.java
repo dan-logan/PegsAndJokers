@@ -6,6 +6,11 @@ import java.util.ArrayList;
 
 import org.junit.jupiter.api.Test;
 
+import com.danlogan.pegsandjokers.infrastructure.GameNotFoundException;
+import com.danlogan.pegsandjokers.infrastructure.GameRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 public class GameUnitTests {
 	
 	@Test
@@ -116,8 +121,10 @@ public class GameUnitTests {
 				.build();
 
 		game.takeTurn(turn);
-		
+
 		assertThat(game.getPlayerPosition(1,1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-8");
+		assertThat(game.getBoard().getBoardPositionById("Tomato-8").getPegColor()).isEqualTo(Color.Tomato);
+		
 	}
 	
 	@Test
@@ -513,7 +520,7 @@ public class GameUnitTests {
 		}
 		catch (CannotMoveToAPositionYouOccupyException e)
 		{
-			assertThat(e.getMessage()).contains("cannot move to a position with one of your own pegs in it");
+			assertThat(e.getMessage()).contains("with one of your own pegs in it");
 		}
 
 		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-9");
@@ -1262,4 +1269,72 @@ public class GameUnitTests {
 		
 	}
 	
+	@Test
+	public void testBasicGameSerializeAndDeserialize() throws JsonProcessingException, PlayerNotFoundException, CannotStartGameWithoutPlayersException
+	{
+		
+		Game game = Game.Builder.newInstance().build();
+		
+		game.start();
+		
+		PlayerHand hand1 = game.getPlayerHand(1);
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		
+		String gameAsString = objectMapper.writeValueAsString(game);
+		
+		Game restoredGame = objectMapper.readValue(gameAsString, Game.class);
+		
+		assertThat(restoredGame.getPlayerHand(1).getCards().get(0)).usingRecursiveComparison().isEqualTo(hand1.getCards().get(0));
+
+		assertThat(restoredGame).usingRecursiveComparison().isEqualTo(game);
+		
+		assertThat(restoredGame.getPlayerHand(1).getCards().size()).isEqualTo(5);
+	}
+	
+	@Test
+	public void testStartAPegWithRepositorySaveRetrieve() throws JsonProcessingException, PlayerNotFoundException, InvalidGameStateException, InvalidMoveException, PlayerPositionNotFoundException, CannotMoveToAPositionYouOccupyException, GameNotFoundException
+	{
+		
+		Card cardToPlay = new Card(CardRank.ACE, Suit.CLUBS);
+		
+		PlayerHand playerHand = PlayerHand.Builder.newInstance(1)
+				.withCard(cardToPlay)
+				.build();
+
+		Game game = Game.Builder.newInstance()
+				.withPlayerHand(playerHand)
+				.build();
+
+		String gameId = game.getId().toString();
+		
+		GameRepository gameRepository = new GameRepository();
+		
+		gameRepository.addGame(game);
+		
+		game = gameRepository.findGameById(gameId);
+		
+		PlayerTurn turn = PlayerTurn.Builder.newInstance()
+				.withCardName(cardToPlay.getName())
+				.withMoveType(MoveType.START_A_PEG)
+				.withPlayerNumber(1)
+				.withPositionNumber(1)
+				.build();
+
+		game.takeTurn(turn);
+		assertThat(game.getBoard().getBoardPositionById("Tomato-8").getPegColor()).isEqualTo(Color.Tomato);
+		
+		gameRepository.saveGame(game);
+		
+		game = gameRepository.findGameById(gameId);
+		
+		assertThat(game.getPlayerPosition(1,1).getPlayerBoardPosition().getId()).isEqualTo("Tomato-8");
+		assertThat(game.getBoard().getBoardPositionById("Tomato-8").getPegColor()).isEqualTo(Color.Tomato);
+	
+		PlayerView playerView = game.getPlayerView(1);
+		
+		assertThat(playerView.getBoard().getBoardPositionById("Tomato-8").getPegColor()).isEqualTo(Color.Tomato);
+
+	}
+
 }

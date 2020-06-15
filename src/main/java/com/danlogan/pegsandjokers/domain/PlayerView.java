@@ -13,7 +13,6 @@ public class PlayerView {
 	{
 		this.game = game;
 		this.playerNumber = playerNumber;
-		
 		this.playerHand = this.game.getPlayerHand(playerNumber);
 	}
 	

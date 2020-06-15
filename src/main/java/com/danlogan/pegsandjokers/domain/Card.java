@@ -1,9 +1,10 @@
 package com.danlogan.pegsandjokers.domain;
 
 public class Card {
-	private final CardRank rank;
-	private final String name;
-	private final Suit suit;
+	private CardRank rank;
+	private String name;
+	private Suit suit;
+	boolean joker=false;
 
 	public Card(CardRank rank, Suit suit) {
 		this.rank = rank;
@@ -24,7 +25,7 @@ public class Card {
 	}
 	
 	public boolean isJoker() {
-		return false;
+		return joker;
 	}
 	
 	public boolean canBeUsedToStart()
@@ -167,6 +168,12 @@ public class Card {
 		}
 		
 		return true;
+	}
+	
+	//default constructor for deserialization
+	public Card()
+	{
+		
 	}
 
 }

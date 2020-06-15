@@ -70,5 +70,10 @@ public class DeckOfCards {
        return this;
  
 	}
+	
+	public ArrayList<Card> getCards()
+	{
+		return this.cards;
+	}
 
 }

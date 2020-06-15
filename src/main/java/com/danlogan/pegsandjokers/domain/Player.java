@@ -4,8 +4,10 @@ package com.danlogan.pegsandjokers.domain;
 public class Player {
 
 	//Player properties
-	private final String name;
-	private final int number;
+	private String name;
+	private int number;
+	private Color color;
+	
 
 	//Player Class Builder
 	public static class Builder{
@@ -44,6 +46,7 @@ public class Player {
 		//set all properties from the builder
 		this.name = builder.name;
 		this.number = builder.number;
+		this.color = Color.values()[this.number-1];
 	}
 
 	public String getName() {
@@ -57,7 +60,13 @@ public class Player {
 	
 	public Color getColor()
 	{
-		return Color.values()[this.number-1];
+		return this.color;
+	}
+	
+	//Default constructor used for deserialization
+	public Player()
+	{
+			
 	}
 }
 

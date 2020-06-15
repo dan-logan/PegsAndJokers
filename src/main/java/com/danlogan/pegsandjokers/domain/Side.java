@@ -11,7 +11,6 @@ public class Side {
 	private ArrayList<BoardPosition> mainTrackPositions;
 	private BoardPosition comeOutPosition;
 	private BoardPosition readyToGoHomePosition;
-	private ArrayList<Peg> pegs;
 	
 
 	//Side Builder
@@ -24,7 +23,6 @@ public class Side {
 		private ArrayList<BoardPosition> mainTrackPositions = new ArrayList<BoardPosition>();
 		private BoardPosition comeOutPosition;
 		private BoardPosition readyToGoHomePosition;
-		private ArrayList<Peg> pegs = new ArrayList<Peg>();
 		 
 		public static Builder newInstance()
 		{
@@ -58,7 +56,6 @@ public class Side {
 			for(int i=1;i<=5;i++)
 			{
 				Peg peg = new Peg(this.sideColor, i);
-				this.pegs.add(peg);
 				
 				BoardPosition boardPosition = new BoardPosition(peg,this.sideColor.toString()+"Start-"+i);
 				startPositions.add(boardPosition);
@@ -87,7 +84,6 @@ public class Side {
 		this.mainTrackPositions = builder.mainTrackPositions;
 		this.comeOutPosition = builder.comeOutPosition;
 		this.readyToGoHomePosition = builder.readyToGoHomePosition;
-		this.pegs = builder.pegs;
 	
 	}
 	
@@ -143,4 +139,9 @@ public class Side {
 		return this.homePositions.get(homePositionNumber-1);
 	}
 	  
+	//Default contstructor to support deserialization
+	public Side()
+	{
+		
+	}
 }

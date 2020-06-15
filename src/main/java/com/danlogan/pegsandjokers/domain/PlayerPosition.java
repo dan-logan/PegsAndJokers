@@ -2,13 +2,15 @@ package com.danlogan.pegsandjokers.domain;
 
 public class PlayerPosition {
 	
-	private BoardPosition boardPosition;
+	private BoardPosition playerBoardPosition;
 	private int playerNumber;
+	private Color pegColor;
 	
 	public PlayerPosition(int playerNumber, BoardPosition bp)
 	{
 		this.playerNumber = playerNumber;
-		this.boardPosition = bp;
+		this.playerBoardPosition = bp;
+		this.pegColor = bp.getPegColor();
 	}
 	
 	public int getPlayerNumber()
@@ -18,7 +20,7 @@ public class PlayerPosition {
 	
 	public BoardPosition getPlayerBoardPosition()
 	{
-		return  this.boardPosition;
+		return  this.playerBoardPosition;
 	}
 	
 	public void moveTo(BoardPosition newPosition) throws CannotMoveToAPositionYouOccupyException
@@ -29,19 +31,25 @@ public class PlayerPosition {
 			throw new CannotMoveToAPositionYouOccupyException("You cannot move to a position with one of your own pegs in it.");
 		}
 		
-		Peg peg = boardPosition.removePeg();
-		System.out.println("moving peg from: " + boardPosition.id);
+		Peg peg = playerBoardPosition.removePeg();
+		System.out.println("moving peg from: " + playerBoardPosition.getId());
 		
 		newPosition.addPeg(peg);
 		
-		System.out.println("moved pegged to: " + newPosition.id);
+		System.out.println("moved pegged to: " + newPosition.getId());
 		
-		this.boardPosition = newPosition;
+		this.playerBoardPosition = newPosition;
+		this.pegColor = peg.getColor();
 	}
 	
 	public Color getPegColor()
 	{
-		return this.boardPosition.getPegColor();
+		return this.pegColor;
 	}
 
+	//Default Constructor for deserialiation
+	public PlayerPosition()
+	{
+		
+	}
 }

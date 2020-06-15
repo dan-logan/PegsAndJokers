@@ -126,4 +126,15 @@ public class PlayerHand {
 	{
 		this.burnedCardCount = 0;
 	}
+	
+	public int getPlayerNumber()
+	{
+		return this.playerNumber;
+	}
+	
+	//Default Contstructor for deserialization
+	public PlayerHand()
+	{
+		
+	}
 }

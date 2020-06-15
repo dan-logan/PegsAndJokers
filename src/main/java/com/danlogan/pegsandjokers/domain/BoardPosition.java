@@ -2,11 +2,36 @@ package com.danlogan.pegsandjokers.domain;
 
 public class BoardPosition {
 	
-	Peg peg;
-	String id;
+	private Peg peg;
+	private String id;
+	private boolean startPosition;
+	private boolean homePosition;
+	private boolean mainTrackPosition;
+	private int homePositionNumber;
+	private boolean hasPeg;
+	private Color pegColor;
+	private Integer pegNumber;
 
 	public BoardPosition(String id) {
 		this.id = id;
+		this.startPosition = this.id.contains("Start");
+		this.homePosition = this.id.contains("Home");
+		if (this.startPosition || this.homePosition)
+		{
+			this.mainTrackPosition = false;
+		}
+		else { this.mainTrackPosition = true; }
+		if (homePosition)
+		{
+				homePositionNumber =  Integer.parseInt(this.id.substring(this.id.indexOf("-")+1));	
+		}
+		else
+		{
+			homePositionNumber = -1;
+		}
+		this.hasPeg=false;
+		this.pegColor=null;
+		this.pegNumber=null;
 	}
 	
 	//Constructor for start positions where Peg is inserted as board is laid out
@@ -14,26 +39,49 @@ public class BoardPosition {
 	{
 		this.peg = peg;
 		this.id = id;
+		this.startPosition = this.id.contains("Start");
+		this.homePosition = this.id.contains("Home");
+		if (this.startPosition || this.homePosition)
+		{
+			this.mainTrackPosition = false;
+		}
+		else { this.mainTrackPosition = true; }
+		if (homePosition)
+		{
+				homePositionNumber =  Integer.parseInt(this.id.substring(this.id.indexOf("-")+1));	
+		}
+		else
+		{
+			homePositionNumber = -1;
+		}
+		if(peg == null)
+		{
+			this.hasPeg = false;
+			this.pegColor = null;
+			this.pegNumber = null;
+		}
+		else {this.hasPeg = true; this.pegColor = peg.getColor(); this.pegNumber = Integer.valueOf(peg.getNumber());}
 	}
 	
 	public boolean getHasPeg()
 	{
-		if(peg == null)
-		{
-			return false;
-		}
-		
-		return true;
+			
+		return this.hasPeg;
 	}
 	
 	public Color getPegColor()
 	{
-		return getHasPeg() ? peg.getColor() : null;
+		return this.pegColor;
+	}
+	
+	public Peg getPeg()
+	{
+		return this.peg;
 	}
 	
 	public Integer getPegNumber()
 	{
-		return getHasPeg() ? Integer.valueOf(peg.getNumber()) : null;
+		return this.pegNumber;
 	}
 		
 	public String getId()
@@ -43,45 +91,44 @@ public class BoardPosition {
 	
 	public boolean isStartPosition()
 	{
-		return this.id.contains("Start");
+		return this.startPosition;
 	}
 	
 	public boolean isHomePosition()
 	{
-		return this.id.contains("Home");
+		return this.homePosition;
 	}
 	
 	public int getHomePositionNumber()
 	{
-		if (isHomePosition())
-		{
-				return Integer.parseInt(this.id.substring(this.id.indexOf("-")+1));	
-		}
-		else
-		{
-			return -1;
-		}
+		return this.homePositionNumber;
 	}
 	
 	public Peg removePeg()
 	{
 		Peg temp = this.peg;
 		this.peg = null;
+		this.hasPeg = false;
+		this.pegColor = null;
 		return temp;
 	}
 	
 	public void addPeg(Peg pegToAdd)
 	{
 		this.peg = pegToAdd;
+		this.hasPeg = true;
+		this.pegColor = pegToAdd.getColor();
 	}
 
 	public boolean isMainTrackPosition() {
 
-		if (this.isStartPosition() || this.isHomePosition())
-		{
-			return false;
-		}
-		else { return true; }
+		return this.mainTrackPosition;
+		
+	}
+	
+	//Default constructor to support deserialization
+	public BoardPosition()
+	{
 		
 	}
 }

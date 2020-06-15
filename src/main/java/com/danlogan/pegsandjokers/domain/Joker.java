@@ -5,11 +5,8 @@ public class Joker extends Card {
 	public Joker()
 	{
 		super(null,null);
+		this.joker=true;
 				
-	}
-	
-	public boolean isJoker() {
-		return true;
 	}
 	
 	public String getName() {

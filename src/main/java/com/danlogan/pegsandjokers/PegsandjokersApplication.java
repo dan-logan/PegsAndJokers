@@ -38,6 +38,8 @@ import java.net.URI;
 import java.util.ArrayList;
 import com.danlogan.pegsandjokers.infrastructure.GameNotFoundException;
 import com.danlogan.pegsandjokers.infrastructure.GameRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 
 
 @SpringBootApplication
@@ -67,7 +69,7 @@ public class PegsandjokersApplication {
 	//Return all Games
 	@GetMapping("/games")
 	@ResponseBody
-	public ResponseEntity<ArrayList<Game>> games()
+	public ResponseEntity<ArrayList<Game>> games() throws JsonMappingException, JsonProcessingException
 	{
 		ArrayList<Game>games = gameRepository.getAllGames();
 		
@@ -78,7 +80,7 @@ public class PegsandjokersApplication {
 	//New Game API
 	@PostMapping("/games")
 	@ResponseBody
-	public ResponseEntity<Game> newGame(UriComponentsBuilder ucb) throws CannotStartGameWithoutPlayersException
+	public ResponseEntity<Game> newGame(UriComponentsBuilder ucb) throws CannotStartGameWithoutPlayersException, JsonProcessingException
 	{
 		
 		Game game = Game.Builder.newInstance().build();
@@ -101,7 +103,7 @@ public class PegsandjokersApplication {
 	//Get a game by it's id
 	@GetMapping(value = "/game/{id}")
 	@ResponseBody
-	public ResponseEntity<Game> getGameById(@PathVariable String id) throws GameNotFoundException
+	public ResponseEntity<Game> getGameById(@PathVariable String id) throws GameNotFoundException, JsonMappingException, JsonProcessingException
 	{
 		Game game = gameRepository.findGameById(id);
 			
@@ -113,11 +115,13 @@ public class PegsandjokersApplication {
 	@ResponseBody
 	public ResponseEntity<Game> takeTurn(@PathVariable String id, @RequestBody PlayerTurn turn) 
 			throws GameNotFoundException, PlayerNotFoundException, InvalidMoveException, InvalidGameStateException, PlayerPositionNotFoundException,
-				CannotMoveToAPositionYouOccupyException
+				CannotMoveToAPositionYouOccupyException, JsonMappingException, JsonProcessingException
 	{
 		Game game = gameRepository.findGameById(id);
 	
 		game.takeTurn(turn);
+		
+		gameRepository.saveGame(game);
 						
 		return  new ResponseEntity<Game>(game, HttpStatus.OK);
 	}
@@ -125,7 +129,7 @@ public class PegsandjokersApplication {
 	//Get Player Hands for a specific player number
 	@GetMapping(value="/game/{id}/playerhand/{playerNumber}")
 	@ResponseBody
-	public ResponseEntity<PlayerHand> getPlayerHand(@PathVariable String id, @PathVariable int playerNumber) throws GameNotFoundException, PlayerNotFoundException
+	public ResponseEntity<PlayerHand> getPlayerHand(@PathVariable String id, @PathVariable int playerNumber) throws GameNotFoundException, PlayerNotFoundException, JsonMappingException, JsonProcessingException
 	{
 		  Game game = gameRepository.findGameById(id); 
 		  
@@ -138,7 +142,7 @@ public class PegsandjokersApplication {
 	//Get current board layout
 	@GetMapping(value="/game/{id}/board")
 	@ResponseBody
-	public ResponseEntity<Board> getBoard(@PathVariable String id) throws GameNotFoundException
+	public ResponseEntity<Board> getBoard(@PathVariable String id) throws GameNotFoundException, JsonMappingException, JsonProcessingException
 	{
 		Game game = gameRepository.findGameById(id);
 		
@@ -151,7 +155,7 @@ public class PegsandjokersApplication {
 	//Get view of the game for a specific player
 	@GetMapping(value="/game/{id}/playerView/{playerNumber}")
 	@ResponseBody
-	public ResponseEntity<PlayerView> getPlayerView(@PathVariable String id, @PathVariable int playerNumber) throws GameNotFoundException, PlayerNotFoundException
+	public ResponseEntity<PlayerView> getPlayerView(@PathVariable String id, @PathVariable int playerNumber) throws GameNotFoundException, PlayerNotFoundException, JsonMappingException, JsonProcessingException
 	{
 		Game game = gameRepository.findGameById(id);
 		
@@ -162,9 +166,9 @@ public class PegsandjokersApplication {
 	
 	
 	//probably should deprecate this action concept as it is not really RESTful
-	@GetMapping(value = "/game/{id}", params = "action")
+/*	@GetMapping(value = "/game/{id}", params = "action")
 	@ResponseBody
-	public ResponseEntity<Game> gameAction(@PathVariable String id, @RequestParam String action) throws GameNotFoundException, CannotStartGameWithoutPlayersException {
+	public ResponseEntity<Game> gameAction(@PathVariable String id, @RequestParam String action) throws GameNotFoundException, CannotStartGameWithoutPlayersException, JsonMappingException, JsonProcessingException {
 		
 		Game game = gameRepository.findGameById(id);
 		
@@ -181,9 +185,9 @@ public class PegsandjokersApplication {
 		
 		
 	}
-
+*/
 	@RequestMapping("/mvc/games")
-	public String getGames(Model model)
+	public String getGames(Model model) throws JsonMappingException, JsonProcessingException
 	{
 		model.addAttribute("games", gameRepository.getAllGames());
 		model.addAttribute("gameRequest", new GameRequest());
@@ -192,24 +196,26 @@ public class PegsandjokersApplication {
 	}
 	
 	@RequestMapping("/mvc/game/{id}")
-	public String getGameById(String id, Model model)
+	public String getGameById(String id, Model model) throws JsonMappingException, JsonProcessingException, GameNotFoundException
 	{
+		Game game = gameRepository.findGameById(id);
+		model.addAttribute("game", game);
 		
 		return "mvc/game";
 	}
 	@PostMapping("/mvc/newGame")
-	public String newGame(@ModelAttribute("gameRequest") GameRequest gameRequest) throws CannotStartGameWithoutPlayersException 
+	public String newGame(@ModelAttribute("gameRequest") GameRequest gameRequest) throws CannotStartGameWithoutPlayersException, JsonProcessingException 
 	{
 		Game game = Game.Builder.newInstance()
 				.withNumberOfPlayers(gameRequest.getNumberOfPlayers())
 				.build();
-		gameRepository.addGame(game);
 		game.start();
+		gameRepository.addGame(game);
 
 		return "redirect:/mvc/games";
 	}
 	@RequestMapping("/mvc/game/{id}/playerView/{playerNumber}")
-	public String getPlayerViewByGameAndPlayerNumber(@PathVariable String id, @PathVariable int playerNumber, Model model) throws GameNotFoundException, PlayerNotFoundException 
+	public String getPlayerViewByGameAndPlayerNumber(@PathVariable String id, @PathVariable int playerNumber, Model model) throws GameNotFoundException, PlayerNotFoundException, JsonMappingException, JsonProcessingException 
 	{
 		Game game = gameRepository.findGameById(id);
 		
@@ -231,7 +237,7 @@ public class PegsandjokersApplication {
 	}
 
 	@PostMapping("/mvc/taketurn")
-	public String takeTurn(@ModelAttribute("turnRequest") TurnRequest turnRequest) throws GameNotFoundException, PlayerNotFoundException, InvalidGameStateException, InvalidMoveException, PlayerPositionNotFoundException, CannotMoveToAPositionYouOccupyException
+	public String takeTurn(@ModelAttribute("turnRequest") TurnRequest turnRequest) throws GameNotFoundException, PlayerNotFoundException, InvalidGameStateException, InvalidMoveException, PlayerPositionNotFoundException, CannotMoveToAPositionYouOccupyException, JsonMappingException, JsonProcessingException
 	{
 		System.out.println("got turn request: " + turnRequest.toString());
 		
@@ -284,6 +290,8 @@ public class PegsandjokersApplication {
 		}
 		
 		game.takeTurn(turn);
+		
+		gameRepository.saveGame(game);
 		
 		return "redirect:/mvc/game/"+gameId+"/playerView/"+turnRequest.getPlayerNumber();
 	}

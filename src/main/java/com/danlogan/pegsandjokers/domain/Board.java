@@ -155,5 +155,11 @@ public class Board {
 		
 		return playerSide.getHomePositions();
 	}
+	
+	//Default constructor to support deserialization
+	public Board()
+	{
+		
+	}
 
 }

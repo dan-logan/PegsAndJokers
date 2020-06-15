@@ -12,10 +12,14 @@ public class Game {
 	private ArrayList<Player> players;
 	private DeckOfCards drawPile;
 	private ArrayList<Card> discardPile;
+	private int discardPileCount=0;
+	private Card lastCardPlayed=null;
+	private int cardsRemaining=0;
 	private ArrayBlockingQueue<Player> playerQueue;
 	private ArrayList<PlayerHand> playerHands;
 	private ArrayList<ArrayList<PlayerPosition>> playerPositions;
 	private Board board;
+	private Player currentPlayer=null;
 
 	
 	public static class Builder{
@@ -127,7 +131,7 @@ public class Game {
 				
 				for (BoardPosition bp : playerStartPositions)
 				{
-					playerInitialPositions.add(new PlayerPosition(playerNumber+1,bp));
+					playerInitialPositions.add(new PlayerPosition(playerNumber+1,bp));  //FIX
 				}
 				
 				this.playerPositions.add(playerInitialPositions);
@@ -213,11 +217,14 @@ public class Game {
 		//set all properties from the builder
 		players = builder.players;
 		drawPile = builder.drawPile;
+		cardsRemaining = drawPile.cardsRemaining();
 		playerQueue = builder.playerQueue;
+		currentPlayer = playerQueue.peek();
 		playerHands = builder.playerHands;
 		board = builder.board;
 		playerPositions = builder.playerPositions;
 		this.discardPile = builder.discardPile;
+		this.discardPileCount = this.discardPile.size();
 	}
 
 	public String getStatus() {
@@ -244,12 +251,12 @@ public class Game {
 	}
 
 	public int getCardsRemaining() {
-		return drawPile.cardsRemaining();
+		return cardsRemaining;
 	}
 	
 	public int getDiscardPileCount()
 	{
-		return this.discardPile.size();
+		return this.discardPileCount;
 	}
 	
 	public void takeTurn(PlayerTurn turn) throws PlayerNotFoundException, InvalidGameStateException, InvalidMoveException, PlayerPositionNotFoundException, CannotMoveToAPositionYouOccupyException {
@@ -271,6 +278,8 @@ public class Game {
 			throw new InvalidGameStateException("You cannot play a card that is not in your hand.");
 		}
 		
+		Card cardBeingPlayed = playerHand.getCard(turn.getCardName());
+		
 		//Make the requested move
 		switch(turn.getMoveType())
 		{
@@ -278,6 +287,7 @@ public class Game {
 				
 				this.handleStartAPegRequest(turn, playerHand);
 				playerHand.discardCard(this.discardPile, turn.getCardName());
+				this.discardPileCount++;
 				playerHand.resetBurnedCards();
 				break;
 
@@ -289,18 +299,21 @@ public class Game {
 			case MOVE_PEG:
 				this.handleMovePegRequest(turn, playerHand);
 				playerHand.discardCard(this.discardPile, turn.getCardName());
+				this.discardPileCount++;
 				playerHand.resetBurnedCards();
 				break;
 				
 			case SPLIT_MOVE:
 				this.handleSplitMoveRequest(turn, playerHand);
 				playerHand.discardCard(this.discardPile, turn.getCardName());
+				this.discardPileCount++;
 				playerHand.resetBurnedCards();
 				break;
 				
 			case USE_JOKER:
 				this.handleUseJokerRequest(turn, playerHand);
 				playerHand.discardCard(this.discardPile, turn.getCardName());
+				this.discardPileCount++;
 				playerHand.resetBurnedCards();
 				break;
 				
@@ -315,6 +328,7 @@ public class Game {
 		if(turn.getMoveType() != MoveType.FREE_START)
 		{
 			playerHand.drawCard(this.drawPile);
+			cardsRemaining=drawPile.cardsRemaining();
 		}
 
 		//If we have used up the drawPile, then need to reshuffle the discard pile back into the draw pile
@@ -322,11 +336,16 @@ public class Game {
 		{
 			drawPile.combineDecks(new DeckOfCards(this.discardPile));
 			drawPile.shuffle();
+			cardsRemaining=drawPile.cardsRemaining();
 			this.discardPile.clear();
+			this.discardPileCount = 0;
 		}
+		
+		this.lastCardPlayed = cardBeingPlayed;
 		
 		Player tempPlayer = playerQueue.remove();
 		playerQueue.add(tempPlayer);
+		currentPlayer=playerQueue.peek();
 	}
 	
 	private void validatePosition(int playerPositionNumber) throws PlayerPositionNotFoundException
@@ -374,7 +393,7 @@ public class Game {
 		}
 		
 		PlayerPosition fromPlayerPosition = this.getPlayerPositions(turn.getPlayerNumber()).get(turn.getPlayerPositionNumber()-1);
-		this.movePeg(fromPlayerPosition, targetBoardPosition);
+		this.movePeg(fromPlayerPosition, targetBoardPosition); //FIX
 
 	}
 	
@@ -386,13 +405,13 @@ public class Game {
 		int playerPositionNumber = turn.getPlayerPositionNumber();
 		PlayerPosition playerPosition = this.getPlayerPositions(turn.getPlayerNumber()).get(playerPositionNumber-1);
 		
-		if (!playerPosition.getPlayerBoardPosition().isStartPosition())
+		if (!playerPosition.getPlayerBoardPosition().isStartPosition()) //FIX
 		{
 			throw new InvalidGameStateException("Can only start pegs that are in the start position.");
 		}
 		
 		//Lastly make sure there is actually a peg in that start position
-		if (!playerPosition.getPlayerBoardPosition().getHasPeg())
+		if (!playerPosition.getPlayerBoardPosition().getHasPeg()) //FIX
 		{
 			throw new InvalidGameStateException(String.format("Player Postion %d does not have a peg in it.", playerPositionNumber));
 		}
@@ -400,7 +419,7 @@ public class Game {
 		//Then update the PlayerPosition to be in the come out position
 		BoardPosition comeOutPosition = this.board.getPlayerSides().get(turn.getPlayerNumber()-1).getComeOutPosition();
 		
-		this.movePeg(playerPosition, comeOutPosition);
+		this.movePeg(playerPosition, comeOutPosition); //FIX
 		
 		return;
 		
@@ -424,13 +443,13 @@ public class Game {
 		int playerPositionNumber = turn.getPlayerPositionNumber();
 		PlayerPosition playerPosition = this.getPlayerPositions(turn.getPlayerNumber()).get(playerPositionNumber-1);
 		
-		if (!playerPosition.getPlayerBoardPosition().isStartPosition())
+		if (!playerPosition.getPlayerBoardPosition().isStartPosition()) //FIX
 		{
 			throw new InvalidGameStateException("Can only start pegs that are in the start position.");
 		}
 		
 		//Lastly make sure there is actually a peg in that start position
-		if (!playerPosition.getPlayerBoardPosition().getHasPeg())
+		if (!playerPosition.getPlayerBoardPosition().getHasPeg()) //FIX
 		{
 			throw new InvalidGameStateException(String.format("Player Postion %d does not have a peg in it.", playerPositionNumber));
 		}
@@ -438,7 +457,7 @@ public class Game {
 		//Then update the PlayerPosition to be in the come out position
 		BoardPosition comeOutPosition = this.board.getPlayerSides().get(turn.getPlayerNumber()-1).getComeOutPosition();
 		
-		this.movePeg(playerPosition, comeOutPosition);
+		this.movePeg(playerPosition, comeOutPosition); //FIX
 		
 		return;
 	}
@@ -470,13 +489,14 @@ public class Game {
 		}
 		
 		//Make the requested move once the other player has been moved
-		fromPlayerPosition.moveTo(toBoardPosition);
+		fromPlayerPosition.moveTo(toBoardPosition); //FIX
 	}
 	
 	private void handleDiscardRequest(PlayerTurn turn, PlayerHand playerHand) throws InvalidMoveException
 	{
 		
 		playerHand.burnCard(this.discardPile, turn.getCardName());
+		discardPileCount++;
 		
 	}
 	
@@ -496,7 +516,7 @@ public class Game {
 		//Verify that the position referenced in the turn is not a start position
 		PlayerPosition playerPosition = this.getPlayerPositions(playerNumber).get(playerPositionNumber-1);
 
-		if (playerPosition.getPlayerBoardPosition().isStartPosition())
+		if (playerPosition.getPlayerBoardPosition().isStartPosition()) //FIX
 		{
 			throw new InvalidGameStateException("Pegs in start position cannot move forward.");
 		}
@@ -535,7 +555,7 @@ public class Game {
 		}
 
 		//Verify that the player does not pass one of his/her own pegs along the way
-		BoardPosition playerBoardPosition = playerPosition.getPlayerBoardPosition();
+		BoardPosition playerBoardPosition = playerPosition.getPlayerBoardPosition(); //FIX
 		int startStep = 0 + stepDistance;
 
 		//Keep track if player passes over the readyToGoHomePosition which step is it
@@ -688,7 +708,7 @@ public class Game {
 			{
 				int homeSpace = spacesToMove - readyToGoHomeStep;
 				BoardPosition newBoardPosition = board.getPlayerSides().get(playerNumber-1).getHomePositionByNumber(homeSpace);
-				this.movePeg(playerPosition, newBoardPosition);
+				this.movePeg(playerPosition, newBoardPosition); //FIX
 			}
 			else
 			{  //not moving past home so keep going
@@ -707,13 +727,13 @@ public class Game {
 
 				BoardPosition newBoardPosition = nextSide.getPosition((18+spacesToMove+sidePositionIndex)%18);
 
-				this.movePeg(playerPosition, newBoardPosition);
+				this.movePeg(playerPosition, newBoardPosition); //FIX
 			}
 		}
 		else
 		{//player is moving in home track
 			BoardPosition newBoardPosition = board.getPlayerSides().get(playerNumber-1).getHomePositionByNumber(playerPosition.getPlayerBoardPosition().getHomePositionNumber() + spacesToMove);			
-			this.movePeg(playerPosition, newBoardPosition);
+			this.movePeg(playerPosition, newBoardPosition); //FIX
 		}
 
 	}
@@ -766,6 +786,7 @@ public class Game {
 		{
 			for (PlayerHand hand : this.playerHands) {
 				hand.drawCard(this.drawPile);
+				cardsRemaining=drawPile.cardsRemaining();
 			}
 		}
 		
@@ -773,9 +794,7 @@ public class Game {
 	
 	public Player getCurrentPlayer() 
 	{
-			Player currentPlayer=playerQueue.peek();
-
-			return currentPlayer;
+			return this.currentPlayer;
 	}
 	
 	public PlayerHand getPlayerHand(int playerNumber) throws PlayerNotFoundException {
@@ -811,7 +830,7 @@ public class Game {
 		return this.playerPositions.get(playerNumber - 1).get(positionNumber -1);
 	}
 	
-	public PlayerPosition getPlayerPositionForBoardPosition(BoardPosition boardPosition)
+	public PlayerPosition getPlayerPositionForBoardPosition(BoardPosition boardPosition) //FIX
 	{
 		PlayerPosition  positionToReturn = null;
 		
@@ -819,7 +838,7 @@ public class Game {
 		{
 			for (PlayerPosition playerPosition : this.playerPositions.get(p))
 			{
-				if (playerPosition.getPlayerBoardPosition().equals(boardPosition))
+				if (playerPosition.getPlayerBoardPosition().equals(boardPosition)) //FIX
 				{
 					return playerPosition;
 				}
@@ -853,8 +872,38 @@ public class Game {
 	public Card getLastCardPlayed()
 	{
 		
-		return (this.discardPile.size()>0) ? this.discardPile.get(this.discardPile.size()-1) : null;
+		return lastCardPlayed;
+	}
+	
+	public ArrayList<Card> getDiscardPile()
+	{
+		return this.discardPile;
 	}
 
+	public DeckOfCards getDrawPile()
+	{
+		return this.drawPile;
+	}
+	
+	public ArrayBlockingQueue<Player> getPlayerQueue()
+	{
+		return this.playerQueue;
+	}
+	
+	public ArrayList<PlayerHand> getPlayerHands()
+	{
+		return this.playerHands;
+	}
+	
+	public ArrayList<ArrayList<PlayerPosition>> getPlayerPositions()
+	{
+		return this.playerPositions;
+	}
+	
+	//Default constructor used for deserialization
+	public Game()
+	{
+		
+	}
 
 }

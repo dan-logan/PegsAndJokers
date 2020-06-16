@@ -52,11 +52,10 @@
 			You are the <span th:text="${playerView.playerColor}">player
 				color</span> player. <span th:text="${playerView.playerMessage}">player
 				message</span><br/>
-<!-- 				<span th:if="${playerView.playerColor != playerView.colorOfCurrentTurnPlayer}" th:text="'Waiting for the ' + ${playerView.colorOfCurrentTurnPlayer} + ' player.'">waiting for player</span>  -->
 		</div>
 	</div>
 	<div class="row equal-cols">
-		<div class="col" id="board">
+		<div class="col-xs" id="board">
 			<h3>Current Board</h3>
 			<table class="table table-bordered">
 				<thead>
@@ -126,19 +125,23 @@
 				</tbody>
 			</table>
 		</div> <!-- end of playerView left hand side board layout column div -->
-		<div class="col-4">
+		<div class="col">
 		<div class="container-fluid">
 		<div class="row">
 		<div class="col" id="drawPile">
 			<table>
+			<thead>
 			<tr>
-			<th>Draw Pile</th>
-			<th>Discard Pile</th>
+			<th scope="col">Draw Pile</th>
+			<th scope="col">Discard Pile</th>
 			</tr>
+			</thead>
+			<tbody>
 			<tr>
-			<td><figure><img th:src="@{/cards/Card_back_resized.svg}" alt="Discard Pile" class="img-fluid"><figcaption><span th:text="${playerView.cardsRemaining}">cards remaining</span> cards remaining </figcaption></figure></td> 
+	 		<td><figure><img th:src="@{/cards/Card_back_resized.svg}" alt="Discard Pile" class="img-fluid"><figcaption><span th:text="${playerView.cardsRemaining}">cards remaining</span> cards remaining </figcaption></figure></td> 
 			<td><figure th:if="${playerView.lastCardPlayed}"><img th:src="@{'/cards/Playing_card_'+${playerView.lastCardPlayed.name}+'.svg'}" alt="Last Card Played" class="img-fluid"><figcaption>Last Card Played</figcaption></figure></td> 
-			</tr>
+	 		</tr>
+			</tbody>
 			</table>
 		</div>  <!-- end of discard and draw pile col div -->
 		</div>  <!-- end of discard and draw pile row div -->
@@ -150,13 +153,17 @@
 			<tbody>
 			<tr>
 			<th:block th:each="card : ${playerView.playerHand.cards}">
-				<td><img th:src="@{'/cards/Playing_card_'+${card.name}+'.svg'}"
+				<td>   
+				<img th:src="@{'/cards/Playing_card_'+${card.name}+'.svg'}"
 				    th:data-cardname="${card.name}"
 					alt="${card.name}" class="img-fluid" 
-					/></td>
+					/>
+				</td> 
 			</th:block>
 				<th:block th:if="${playerView.playerHand.burnedCardCount > 0}" th:each="i: ${#numbers.sequence(1, playerView.playerHand.burnedCardCount)}">
-					<td><img th:src="@{'/cards/Card_back_resized.svg'}" alt="face-down card" class="img-fluid" /></td>
+					<td>  
+					<img th:src="@{'/cards/Card_back_resized.svg'}" alt="face-down card" class="img-fluid" />
+			 		</td>
 				</th:block>
 			</tr>
 			</tbody>

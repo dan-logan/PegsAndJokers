@@ -14,6 +14,36 @@
 	<script th:inline="javascript">
    		 var nameJs = /*[[${playerView.playerColor}]]*/;
 	</script>
+	<style>
+	.row.equal-cols {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+}
+
+.row.equal-cols:before,
+.row.equal-cols:after {
+  display: block;
+}
+
+.row.equal-cols > [class*='col-'] {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+}
+
+.row.equal-cols > [class*='col-'] > * {
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto; 
+}
+	</style>
 </head>
 <body>
 	<div class="container-fluid">
@@ -25,34 +55,12 @@
 <!-- 				<span th:if="${playerView.playerColor != playerView.colorOfCurrentTurnPlayer}" th:text="'Waiting for the ' + ${playerView.colorOfCurrentTurnPlayer} + ' player.'">waiting for player</span>  -->
 		</div>
 	</div>
-	<div class="row">
+	<div class="row equal-cols">
 		<div class="col" id="board">
 			<h3>Current Board</h3>
 			<table class="table table-bordered">
-<!-- 			<col width="160px"/>
-				<col />
-				<col />
-				<col width="20px" />
-				<col width="20px" />
-				<col width="20px" />
-				<col width="20px" />
-				<col width="20px" />
-				<col width="20px" />
-				<col width="20px" />
-				<col width="20px" />
-				<col width="20px" />
-				<col width="20px" />
-				<col width="20px" />
-				<col width="20px" />
-				<col width="20px" />
-				<col width="20px" />
-				<col width="20px" />
-				<col width="20px" />
-				<col width="20px" />
-				<col width="20px" />
- -->	<thead>
+				<thead>
  				<tr>
-					<!-- 	<th>Side Color</th><th></th><th></th><th><br/>Ready To Go Home</th><th></th><th></th><th></th><th></th><th><br/>Come Out</th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th> -->
 					<th scope="col">Burnt Cards</th>
 					<th scope="col">Current<br/>Player</th>
 					<th scope="col">Side Color</th>
@@ -82,12 +90,12 @@
 	 					<td rowspan="3">
 						<span th:if="${playerView.burntCardCounts[iterStat.index] > 0}">
 							<th:block th:each="i: ${#numbers.sequence(1, playerView.burntCardCounts[iterStat.index])}">
-								<img th:src="@{'/cards/Card_back.svg'}" alt="face-down card" height="60" width="40" />
+								<img th:src="@{'/cards/Card_back_resized.svg'}" alt="face-down card" class="img-fluid" />
 							</th:block>
 						</span>
 						</td>
- 						<td rowspan="3"><span th:if="${side.color == playerView.colorOfCurrentTurnPlayer}"><img th:src="@{/images/ltr-grey.svg}" alt="Current Player" height="40" width="40"/></span> </td>
-						<td th:bgcolor="${side.color}" th:text="'Start'" th:width="30px">color<br />Home
+ 						<td rowspan="3"><span th:if="${side.color == playerView.colorOfCurrentTurnPlayer}"><img th:src="@{/images/ltr-grey.svg}" alt="Current Player" class="img-fluid"/></span> </td>
+						<td th:bgcolor="${side.color}" th:text="'Start'" >color<br />Home
 							Track
 						</td>
 						<td style="border: none"></td>
@@ -117,9 +125,9 @@
 				</th:block>
 				</tbody>
 			</table>
-		</div>
+		</div> <!-- end of playerView left hand side board layout column div -->
 		<div class="col-4">
-		<div class="container">
+		<div class="container-fluid">
 		<div class="row">
 		<div class="col" id="drawPile">
 			<table>
@@ -128,47 +136,37 @@
 			<th>Discard Pile</th>
 			</tr>
 			<tr>
-			<td><figure><img th:src="@{/cards/Card_back.svg}" alt="Discard Pile" height="90" width="60"><figcaption><span th:text="${playerView.cardsRemaining}">cards remaining</span> cards remaining </figcaption></figure></td> 
-			<td><figure th:if="${playerView.lastCardPlayed}"><img th:src="@{'/cards/Playing_card_'+${playerView.lastCardPlayed.name}+'.svg'}" alt="Last Card Played" height="90" width="60"><figcaption>Last Card Played</figcaption></figure></td> 
+			<td><figure><img th:src="@{/cards/Card_back_resized.svg}" alt="Discard Pile" class="img-fluid"><figcaption><span th:text="${playerView.cardsRemaining}">cards remaining</span> cards remaining </figcaption></figure></td> 
+			<td><figure th:if="${playerView.lastCardPlayed}"><img th:src="@{'/cards/Playing_card_'+${playerView.lastCardPlayed.name}+'.svg'}" alt="Last Card Played" class="img-fluid"><figcaption>Last Card Played</figcaption></figure></td> 
 			</tr>
 			</table>
-		</div>
-		</div>
+		</div>  <!-- end of discard and draw pile col div -->
+		</div>  <!-- end of discard and draw pile row div -->
 	<div class="row">
 		<div class="col" id="playerHand">
 			<h3>Player Hand</h3>
 
+			<table>
+			<tbody>
+			<tr>
 			<th:block th:each="card : ${playerView.playerHand.cards}">
 				<td><img th:src="@{'/cards/Playing_card_'+${card.name}+'.svg'}"
 				    th:data-cardname="${card.name}"
-					alt="${card.name}" height="90" width="60" 
+					alt="${card.name}" class="img-fluid" 
 					/></td>
-			<!-- 			onclick="{alert('clicked ' + this.getAttribute('data-cardname'));}"  -->
 			</th:block>
-			<span th:if="${playerView.playerHand.burnedCardCount > 0}">
-				<th:block th:each="i: ${#numbers.sequence(1, playerView.playerHand.burnedCardCount)}">
-					<img th:src="@{'/cards/Card_back.svg'}" alt="face-down card" height="120" width="80" />
+				<th:block th:if="${playerView.playerHand.burnedCardCount > 0}" th:each="i: ${#numbers.sequence(1, playerView.playerHand.burnedCardCount)}">
+					<td><img th:src="@{'/cards/Card_back_resized.svg'}" alt="face-down card" class="img-fluid" /></td>
 				</th:block>
-			</span>
-		</div>
-	</div>
-	</div>
-	</div>
-		<!-- 
-<h2>Player Peg Positions</h2>
-
-<table>
-	<tr><th>Peg Number</th><th><span th:text="${playerView.playerColor}">color</span> Player's Peg Position</th></tr>
-	<tr th:each="position,iterStat : ${playerView.playerPositions}">
-		<td th:text=${iterStat.count}>count</td>
-		<td th:text="${position.playerBoardPosition.id}">Board Position Id</td>
-	</tr>
-</table>
- -->
-
-		<!-- 
-<br/>turn player number:<span th:text="${turnRequest.playerNumber}">player number</span><br/> 
- -->
+			</tr>
+			</tbody>
+			</table>
+		</div> <!-- end of playerhand col div -->
+	</div> <!-- end of playerhand row div -->
+	</div> <!-- end of player view right hand side with cards nested container div -->
+	</div> <!-- end of player view right hand side with cards col div -->
+	</div> <!-- end of player view row div -->
+<!--   form section for taking turns -->
  	<div class="row">
  	  <div class="col">
  		<p th:if="${playerView.playerColor != playerView.colorOfCurrentTurnPlayer}">
@@ -239,13 +237,7 @@
 			<p>----FOR JOKER MOVES ONLY----</p>
 			<label>For Jokers, pick an opponent's peg to send back to
 				start: </label> <select th:field="*{targetBoardPosition}">
-				<!--        <th:block th:each="side:${playerView.board.playerSides}">
- 			 <option th:each="position:${side.mainTrackPositions}"
-       		   th:value="${position.id}" 
-         		 th:text="${position.id}">board position id</option>
-         </th:block>
--->
-				<th:block th:each="player:${playerView.otherPlayerPositions}">
+			<th:block th:each="player:${playerView.otherPlayerPositions}">
 					<option th:each="position : ${player}"
 						th:value="${position.playerBoardPositionId}"
 						th:text="${position.pegColor}+ ' peg# ' + ${position.pegNumber} ">board
@@ -253,38 +245,15 @@
 				</th:block>
 
 			</select>
-			<!--        <input type="text" th:field="*{targetBoardPosition}" /> </p>  -->
 
 			<br />
 			<input type="submit" value="Submit" />
 		</form>
-	  </div>
-	</div>
+	  </div> <!-- end of form col div -->
+	</div>  <!-- end of form row div -->
 <!--  		<button type="button" th:onclick="showAlert()">Show Alert</button>
 		<button type="button" th:onclick="showName(nameJs);">Show Name</button> -->
-		<!--    
- <h2>Current Board</h2>
- <table>
- 	<tr> 
- 	<th>Side Color</th><th>Start 1</th><th>Start 2</th><th>Start 3</th><th>Start 4</th><th>Start 5</th><th>Home 1</th><th>Home 2</th><th>Home 3</th><th>Home 4</th><th>Home 5</th><th>Space 1</th><th>Space 2</th><th>Space 3<br/>ReadyToGoHome</th><th>Space 4</th><th>Space 5</th><th>Space 6</th><th>Space 7</th><th>Space 8<br/>Come Out</th><th>Space 9</th><th>Space 10</th><th>Space 11</th><th>Space 12</th><th>Space 13</th><th>Space 14</th><th>Space 15</th><th>Space 16</th><th>Space 17</th><th>Space 18</th>
- 	</tr> 
- 	<tr th:each="side : ${playerView.board.playerSides}">
- 		<td th:bgcolor="${side.color}" th:text="${side.color}">color</td>
-  		<td th:each="sp : ${side.startPositions}" th:bgcolor="${sp.pegColor}">
- 				<span th:text="${sp.pegNumber}">peg color</span>
-		</td>
- 		<td th:each="hp : ${side.homePositions}" th:bgcolor="${hp.pegColor}">
- 				<span th:text="${hp.pegNumber}">peg color</span>
-		</td>
- 		<td th:each="mp : ${side.mainTrackPositions}" th:bgcolor="${mp.pegColor}">
- 				<span th:text="${mp.pegNumber}">peg color</span>
-		</td>
-	</tr>
- 	
- </table>
- -->
-
-</div>
+</div> <!--  end of body container div -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>

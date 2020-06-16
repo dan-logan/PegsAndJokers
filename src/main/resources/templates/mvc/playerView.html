@@ -57,7 +57,7 @@
 	<div class="row equal-cols">
 		<div class="col-xs" id="board">
 			<h3>Current Board</h3>
-			<table class="table table-bordered">
+			<table class="table table-bordered table-sm">
 				<thead>
  				<tr>
 					<th scope="col">Burnt Cards</th>
@@ -125,11 +125,11 @@
 				</tbody>
 			</table>
 		</div> <!-- end of playerView left hand side board layout column div -->
-		<div class="col">
+		<div class="col-4">
 		<div class="container-fluid">
 		<div class="row">
 		<div class="col" id="drawPile">
-			<table>
+			<table class="table table-sm">
 			<thead>
 			<tr>
 			<th scope="col">Draw Pile</th>
@@ -138,8 +138,9 @@
 			</thead>
 			<tbody>
 			<tr>
-	 		<td><figure><img th:src="@{/cards/Card_back_resized.svg}" alt="Discard Pile" class="img-fluid"><figcaption><span th:text="${playerView.cardsRemaining}">cards remaining</span> cards remaining </figcaption></figure></td> 
-			<td><figure th:if="${playerView.lastCardPlayed}"><img th:src="@{'/cards/Playing_card_'+${playerView.lastCardPlayed.name}+'.svg'}" alt="Last Card Played" class="img-fluid"><figcaption>Last Card Played</figcaption></figure></td> 
+			<td>
+	 		<td><figure><img th:src="@{/cards/Card_back_resized.svg}" alt="Discard Pile" class="img-fluid" ><figcaption><span th:text="${playerView.cardsRemaining}">cards remaining</span> cards remaining </figcaption></figure></td> 
+	 		<td><figure th:if="${playerView.lastCardPlayed}"><img th:src="@{'/cards/Playing_card_'+${playerView.lastCardPlayed.name}+'.svg'}" alt="Last Card Played" class="img-fluid"><figcaption>Last Card Played</figcaption></figure></td> 
 	 		</tr>
 			</tbody>
 			</table>
@@ -149,7 +150,7 @@
 		<div class="col" id="playerHand">
 			<h3>Player Hand</h3>
 
-			<table>
+			<table class="table table-sm">
 			<tbody>
 			<tr>
 			<th:block th:each="card : ${playerView.playerHand.cards}">
@@ -160,12 +161,12 @@
 					/>
 				</td> 
 			</th:block>
-				<th:block th:if="${playerView.playerHand.burnedCardCount > 0}" th:each="i: ${#numbers.sequence(1, playerView.playerHand.burnedCardCount)}">
+<!-- 				<th:block th:if="${playerView.playerHand.burnedCardCount > 0}" th:each="i: ${#numbers.sequence(1, playerView.playerHand.burnedCardCount)}">
 					<td>  
 					<img th:src="@{'/cards/Card_back_resized.svg'}" alt="face-down card" class="img-fluid" />
 			 		</td>
 				</th:block>
-			</tr>
+	 -->	</tr>
 			</tbody>
 			</table>
 		</div> <!-- end of playerhand col div -->

@@ -178,7 +178,7 @@
  	<div class="row">
  	  <div class="col">
  		<p th:if="${playerView.playerColor != playerView.colorOfCurrentTurnPlayer}">
- 			<button  type="button" th:onclick="refreshPage()">Refresh</button>
+ 			<button class="btn btn-primary"  type="button" th:onclick="refreshPage()">Refresh</button>
 		</p>
 		<h3 th:if="${playerView.playerColor == playerView.colorOfCurrentTurnPlayer}">Take a turn</h3>
 
@@ -255,7 +255,7 @@
 			</select>
 
 			<br />
-			<input type="submit" value="Submit" />
+			<input class="btn btn-primary" type="submit" value="Submit" />
 		</form>
 	  </div> <!-- end of form col div -->
 	</div>  <!-- end of form row div -->

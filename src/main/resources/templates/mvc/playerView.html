@@ -89,7 +89,7 @@
 	 					<td rowspan="3">
 						<span th:if="${playerView.burntCardCounts[iterStat.index] > 0}">
 							<th:block th:each="i: ${#numbers.sequence(1, playerView.burntCardCounts[iterStat.index])}">
-								<img th:src="@{'/cards/Card_back_resized.svg'}" alt="face-down card" class="img-fluid" />
+								<img th:src="@{'/cards/Card_back_resized.svg'}" alt="face-down card" class="img-fluid" height="80" width="60"/>
 							</th:block>
 						</span>
 						</td>
@@ -105,8 +105,7 @@
 								color</span><span th:if="${hp.pegNumber==null}" th:text="${'&#x2022'}">bullet</span></td>
 					</tr>
 					<tr>
-	<!-- 				<td>burnt card count for index <span th:text="${iterStat.index}" >index</span> is <span th:text="${playerView.burntCardCounts[iterStat.index]}">count</span></td>  
-	 -->				<td th:bgcolor="${side.color}" th:text="${side.color}">color</td>
+		 				<td th:bgcolor="${side.color}" th:text="${side.color}">color</td>
 						<td align="center" th:each="mp : ${side.mainTrackPositions}"
 							th:bgcolor="${mp.pegColor}"><span th:if="${mp.pegNumber!=null}" th:text="${mp.pegNumber}">peg
 								color</span><span th:if="${mp.pegNumber==null}" th:text="${'&#x2022'}">bullet</span>
@@ -199,7 +198,7 @@
 				<option th:value="MOVE_PEG" th:text="'Move a peg'">second</option>
 				<option th:value="SPLIT_MOVE" th:text="'Split move'">second</option>
 				<option th:value="USE_JOKER" th:text="'Use a joker'">second</option>
-				<option th:value="DISCARD" th:text="Discard">discard</option>
+				<option th:value="DISCARD" th:text="'Burn a Card'">discard</option>
 				<option th:disabled="${playerView.playerHand.burnedCardCount != 2}" th:value="FREE_START" th:text="'Free Start'">free start</option>
 			</select>
 			<!-- 	    <input type="radio" th:field="*{moveType}" th:value="DISCARD" />

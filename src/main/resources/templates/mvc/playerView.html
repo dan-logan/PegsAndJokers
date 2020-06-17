@@ -100,16 +100,17 @@
 						<td style="border: none"></td>
 						<td style="border: none"></td>
 						<td style="border: none"></td>
-						<td th:each="hp : ${side.startPositions}"
-							th:bgcolor="${hp.pegColor}"><span th:text="${hp.pegNumber}">peg
-								color</span></td>
+						<td align="center"  th:each="hp : ${side.startPositions}"
+							th:bgcolor="${hp.pegColor}"><span th:if="${hp.pegNumber!=null}" th:text="${hp.pegNumber}">peg
+								color</span><span th:if="${hp.pegNumber==null}" th:text="${'&#x2022'}">bullet</span></td>
 					</tr>
 					<tr>
 	<!-- 				<td>burnt card count for index <span th:text="${iterStat.index}" >index</span> is <span th:text="${playerView.burntCardCounts[iterStat.index]}">count</span></td>  
 	 -->				<td th:bgcolor="${side.color}" th:text="${side.color}">color</td>
-						<td th:each="mp : ${side.mainTrackPositions}"
-							th:bgcolor="${mp.pegColor}"><span th:text="${mp.pegNumber}">peg
-								color</span></td>
+						<td align="center" th:each="mp : ${side.mainTrackPositions}"
+							th:bgcolor="${mp.pegColor}"><span th:if="${mp.pegNumber!=null}" th:text="${mp.pegNumber}">peg
+								color</span><span th:if="${mp.pegNumber==null}" th:text="${'&#x2022'}">bullet</span>
+						</td>
 					</tr>
 					<tr>
 						<td th:bgcolor="${side.color}" th:text="'Home'">color<br />Home
@@ -117,9 +118,9 @@
 						</td>
 						<td style="border: none"></td>
 						<td style="border: none"></td>
-						<td th:each="hp : ${side.homePositions}"
-							th:bgcolor="${hp.pegColor}"><span th:text="${hp.pegNumber}">peg
-								color</span></td>
+						<td align="center"  th:each="hp : ${side.homePositions}"
+							th:bgcolor="${hp.pegColor}"><span th:if="${hp.pegNumber!=null}" th:text="${hp.pegNumber}">peg
+								color</span><span th:if="${hp.pegNumber==null}" th:text="${'&#x2022'}">bullet</span></td>
 					</tr>
 				</th:block>
 				</tbody>
@@ -138,13 +139,13 @@
 			</thead>
 			<tbody>
 			<tr>
-			<td>
-	 		<td><figure><img th:src="@{/cards/Card_back_resized.svg}" alt="Discard Pile" class="img-fluid" ><figcaption><span th:text="${playerView.cardsRemaining}">cards remaining</span> cards remaining </figcaption></figure></td> 
+			<td><figure><img th:src="@{/cards/Card_back_resized.svg}" alt="Discard Pile" class="img-fluid" ><figcaption><span th:text="${playerView.cardsRemaining}">cards remaining</span> cards remaining </figcaption></figure></td> 
 	 		<td><figure th:if="${playerView.lastCardPlayed}"><img th:src="@{'/cards/Playing_card_'+${playerView.lastCardPlayed.name}+'.svg'}" alt="Last Card Played" class="img-fluid"><figcaption>Last Card Played</figcaption></figure></td> 
 	 		</tr>
 			</tbody>
 			</table>
 		</div>  <!-- end of discard and draw pile col div -->
+		<div class="col-6"></div>
 		</div>  <!-- end of discard and draw pile row div -->
 	<div class="row">
 		<div class="col" id="playerHand">

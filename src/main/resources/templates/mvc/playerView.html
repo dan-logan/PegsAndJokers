@@ -184,67 +184,69 @@
 
 		<form th:if="${playerView.playerColor == playerView.colorOfCurrentTurnPlayer}" action="#" th:action="@{/mvc/taketurn}"
 			th:object="${turnRequest}" method="post">
-			<input type="hidden" th:field="*{playerNumber}" /> <input
+			<input class="form-control" type="hidden" th:field="*{playerNumber}" /> <input
 				type="hidden" th:field="*{gameId}" />
-			<!--        <p>Card Name: <input type="text" th:field="*{cardName}" />  -->
-			<label for="cardName">Which card do you want to play? </label><select
+			<div class="form-group">
+				<label for="cardName">Which card do you want to play? </label><select class="form-control" 
 				th:field="*{cardName}">
 				<option th:each="card : ${playerView.playerHand.cards}"
 					th:value="${card.name}" th:text="${card.name}">card name
-					here</option>
-			</select><p /> <label for="moveType">Which type of move do you want
-				to make? </label> <select th:field="*{moveType}">
+					here</option> 
+				</select>
+			</div>
+				<p /> 
+			<div class="form-group">
+				<label for="moveType">Which type of move do you want to make? </label> 
+				<select class="form-control" th:field="*{moveType}">
 				<option th:value="START_A_PEG" th:text="'Start a peg'">second</option>
 				<option th:value="MOVE_PEG" th:text="'Move a peg'">second</option>
 				<option th:value="SPLIT_MOVE" th:text="'Split move'">second</option>
 				<option th:value="USE_JOKER" th:text="'Use a joker'">second</option>
 				<option th:value="DISCARD" th:text="'Burn a Card'">discard</option>
 				<option th:disabled="${playerView.playerHand.burnedCardCount != 2}" th:value="FREE_START" th:text="'Free Start'">free start</option>
-			</select>
-			<!-- 	    <input type="radio" th:field="*{moveType}" th:value="DISCARD" />
-		<label for="moveType1">Discard</label><br>
- 	    <input type="radio" th:field="*{moveType}" th:value="START_A_PEG" />
-		<label for="moveType2">Start a Peg</label><br>
- 	    <input type="radio" th:field="*{moveType}" th:value="MOVE_PEG" />
-		<label for="moveType3">Move Peg</label><br>
- 	    <input type="radio" th:field="*{moveType}" th:value="SPLIT_MOVE" />
-		<label for="moveType4">Split Move Between Two Pegs</label><br>
-		<input type="radio" th:field="*{moveType}" th:value="USE_JOKER" />
-		<label for="moveType5	">Use A Joker</label><br>
--->
+				</select>
+			</div>
 			<p />
+			<div class="form-group">
 			<label
 				th:text="'Which '+ ${playerView.playerColor} + ' peg do you want to move?'">which
-				peg</label> <select th:field="*{playerPositionNumber}">
+				peg</label> <select class="form-control" th:field="*{playerPositionNumber}">
 				<option th:each="i : ${#numbers.sequence(1, 5)}" th:value="${i}"
 					th:text="${i}"></option>
 			</select>
-			<!--        <p><label>How many spaces do you want to move? </label><input type="number" min="-8" max="13" th:field="*{moveDistance}" /> </p> spaces.  (not needed for starting, discarding, or jokers)  -->
+			</div>
 			<p />
-			<label>How many spaces do you want to move? </label> <select
+			<div class="form-group">
+			<label>How many spaces do you want to move? </label> <select class="form-control" 
 				th:field="*{moveDistance}">
 				<option th:each="i : ${#numbers.sequence(-8, 13)}" th:value="${i}"
 					th:text="${i}"></option>
 			</select> spaces. (not needed for starting, discarding, or jokers)
 			Jacks=11,Queens=12,Kings=13
+			</div>
 			<p>
 				----FOR SPLIT MOVES ONLY---<br />(7s MAY split (both forward), 9s
 				MUST split (one forward, one back) )-
 			</p>
+			<div class="form-group">
 			<label
 				th:text="'If this is a split move, pick another '+${playerView.playerColor}+' peg: '">second
-				peg</label> <select th:field="*{playerPositionNumber2}">
+				peg</label> <select class="form-control" th:field="*{playerPositionNumber2}">
 				<option th:each="i : ${#numbers.sequence(1, 5)}" th:value="${i}"
 					th:text="${i}"></option>
 			</select> <p />
-			<label>How far do you want to move the second peg? </label> <select
-				th:field="*{moveDistance2}">
+			</div>
+			<div class="form-group">
+			<label>How far do you want to move the second peg? </label> 
+			<select	class="form-control" th:field="*{moveDistance2}">
 				<option th:each="i : ${#numbers.sequence(-8, 13)}" th:value="${i}"
 					th:text="${i}"></option>
 			</select> spaces.
+			</div>
 			<p>----FOR JOKER MOVES ONLY----</p>
+			<div class="form-group">
 			<label>For Jokers, pick an opponent's peg to send back to
-				start: </label> <select th:field="*{targetBoardPosition}">
+				start: </label> <select class="form-control" th:field="*{targetBoardPosition}">
 			<th:block th:each="player:${playerView.otherPlayerPositions}">
 					<option th:each="position : ${player}"
 						th:value="${position.playerBoardPositionId}"
@@ -253,7 +255,7 @@
 				</th:block>
 
 			</select>
-
+			</div>
 			<br />
 			<input class="btn btn-primary" type="submit" value="Submit" />
 		</form>

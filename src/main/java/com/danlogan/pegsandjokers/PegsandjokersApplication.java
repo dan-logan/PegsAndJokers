@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.danlogan.pegsandjokers.domain.Board;
 import com.danlogan.pegsandjokers.domain.CannotMoveToAPositionYouOccupyException;
@@ -40,7 +39,6 @@ import com.danlogan.pegsandjokers.infrastructure.GameNotFoundException;
 import com.danlogan.pegsandjokers.infrastructure.GameRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-
 
 @SpringBootApplication
 @Controller
@@ -196,7 +194,7 @@ public class PegsandjokersApplication {
 	}
 	
 	@RequestMapping("/mvc/game/{id}")
-	public String getGameById(String id, Model model) throws JsonMappingException, JsonProcessingException, GameNotFoundException
+	public String getGameById(@PathVariable String id, Model model) throws JsonMappingException, JsonProcessingException, GameNotFoundException
 	{
 		Game game = gameRepository.findGameById(id);
 		model.addAttribute("game", game);

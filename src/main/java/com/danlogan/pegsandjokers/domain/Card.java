@@ -32,6 +32,8 @@ public class Card {
 	{
 		boolean canBeUsedToStart = false;
 		
+		if (this.isJoker()) {return false;}
+		
 		switch(this.rank)
 		{
 		case ACE:

@@ -1409,4 +1409,45 @@ public class GameUnitTests {
 
 	}
 
+	@Test
+	public void testCannotStartAPegWithJoker() throws JsonProcessingException, PlayerNotFoundException, InvalidGameStateException, InvalidMoveException, PlayerPositionNotFoundException, CannotMoveToAPositionYouOccupyException, GameNotFoundException
+	{
+		
+		Card cardToPlay = new Joker();
+		
+		PlayerHand playerHand = PlayerHand.Builder.newInstance(1)
+				.withCard(cardToPlay)
+				.build();
+
+		Game game = Game.Builder.newInstance()
+				.withPlayerHand(playerHand)
+				.build();
+
+		String gameId = game.getId().toString();
+		
+		GameRepository gameRepository = new GameRepository();
+		
+		gameRepository.addGame(game);
+		
+		game = gameRepository.findGameById(gameId);
+		
+		PlayerTurn turn = PlayerTurn.Builder.newInstance()
+				.withCardName(cardToPlay.getName())
+				.withMoveType(MoveType.START_A_PEG)
+				.withPlayerNumber(1)
+				.withPositionNumber(1)
+				.build();
+
+		try
+		{
+			game.takeTurn(turn);
+			assert(false);
+		}
+		catch (InvalidGameStateException ex)
+		{
+			assertThat(ex.getMessage()).contains("JOKER to start a peg");
+		}
+	
+	}
+
 }

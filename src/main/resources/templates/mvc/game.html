@@ -1,13 +1,37 @@
-<html xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Pegs and Jokers</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<!-- Required meta tags always come first -->
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.3/css/bootstrap.min.css">
+<title>Pegs And Jokers - Game Events</title>
 </head>
 <body>
     
-<h1>Game Details</h1>
+<h1>Game Events</h1>
+<table class="table table-bordered">
+	<thead>
+	<tr>
+		<th scope="col">GameID</th>
+		<th scope="col">Event Timestamp</th>
+		<th scope="col">Event Type</th>
+	</tr>
+	</thead>
+	<tbody>
+	<th:block th:each="event : ${gameEvents}">
+	<tr>
+		<td th:text="${event.gameId}">placeholder game id</td>
+		<td th:text="${event.timeStamp}">placeholder event timestamp</td>
+		<td th:text="${event.class}">placeholder event class</td>
+	</tr>
+	</th:block>
+	</tbody>
+</table>
 
-<p> Put game details here </p>
     
 </body>
 </html>

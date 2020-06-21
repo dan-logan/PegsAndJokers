@@ -1,5 +1,6 @@
 package com.danlogan.pegsandjokers.domain.events;
 
+import java.sql.Timestamp;
 import java.util.UUID;
 
 public class GameEvent {
@@ -14,7 +15,17 @@ public class GameEvent {
 	
 	public GameEvent(UUID gameId, long currentTimeMillis)
 	{
+		this.gameId = gameId;
 		this.eventTimeStampMillis = currentTimeMillis;
 	}
 
+	public Timestamp getTimeStamp()
+	{
+		return new Timestamp(eventTimeStampMillis);
+	}
+	
+	public String getGameId()
+	{
+		return gameId.toString();
+	}
 }

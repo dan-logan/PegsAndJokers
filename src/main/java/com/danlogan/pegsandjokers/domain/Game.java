@@ -262,6 +262,11 @@ public class Game {
 		return this.status;
 	}
 	
+	public void attachGameEventListener(IListenToGameEvents listener)
+	{
+		this.eventListener = listener;
+	}
+	
 	private void emitEvent(GameEvent event)
 	{
 		if (eventListener != null)

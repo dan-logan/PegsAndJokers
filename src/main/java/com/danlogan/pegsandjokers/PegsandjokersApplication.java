@@ -35,6 +35,8 @@ import com.danlogan.pegsandjokers.domain.PlayerView;
 
 import java.net.URI;
 import java.util.ArrayList;
+
+import com.danlogan.pegsandjokers.infrastructure.GameEventListener;
 import com.danlogan.pegsandjokers.infrastructure.GameNotFoundException;
 import com.danlogan.pegsandjokers.infrastructure.GameRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -47,6 +49,8 @@ public class PegsandjokersApplication {
 //	private final String allowedCrossOrigin = "http://localhost:4200";
 
 	private static GameRepository gameRepository = new GameRepository();
+	private static GameEventListener gameEventListener = new GameEventListener();
+	
 //	private ArrayList<Game> games = new ArrayList<Game>();
 	
 	public static void main(String[] args) {
@@ -193,11 +197,12 @@ public class PegsandjokersApplication {
 		return "mvc/games";
 	}
 	
-	@RequestMapping("/mvc/game/{id}")
+	@RequestMapping("/mvc/game/{id}/events")
 	public String getGameById(@PathVariable String id, Model model) throws JsonMappingException, JsonProcessingException, GameNotFoundException
 	{
 		Game game = gameRepository.findGameById(id);
-		model.addAttribute("game", game);
+		
+		model.addAttribute("gameEvents",gameEventListener.getEvents());
 		
 		return "mvc/game";
 	}
@@ -205,6 +210,7 @@ public class PegsandjokersApplication {
 	public String newGame(@ModelAttribute("gameRequest") GameRequest gameRequest) throws CannotStartGameWithoutPlayersException, JsonProcessingException 
 	{
 		Game game = Game.Builder.newInstance()
+				.withEventListener(gameEventListener)
 				.withNumberOfPlayers(gameRequest.getNumberOfPlayers())
 				.build();
 		game.start();
@@ -242,6 +248,8 @@ public class PegsandjokersApplication {
 		String gameId = turnRequest.getGameId();
 		
 		Game game = gameRepository.findGameById(gameId);
+		
+		game.attachGameEventListener(gameEventListener);
 		
 		PlayerTurn turn;
 		

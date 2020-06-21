@@ -343,7 +343,10 @@ public class Game {
 			this.discardPileCount = 0;
 		}
 		
-		this.lastCardPlayed = cardBeingPlayed;
+		if (turn.getMoveType() != MoveType.FREE_START)
+		{
+			this.lastCardPlayed = cardBeingPlayed;
+		}
 		
 		Player tempPlayer = playerQueue.remove();
 		playerQueue.add(tempPlayer);

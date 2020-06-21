@@ -1254,11 +1254,14 @@ public class GameUnitTests {
 				.withMoveType(MoveType.FREE_START)
 				.withPlayerNumber(1)
 				.withPositionNumber(1)
+				.withCardName("ACE of CLUBS")
 				.build();
 
 		game.takeTurn(turn);
 		
 		assertThat(game.getPlayerPosition(1,1).getPlayerBoardPositionId()).isEqualTo("Tomato-8");
+		assertThat(game.getPlayerView(1).getLastCardPlayed()).isNull();
+		assertThat(game.getPlayerHand(1).getCard("ACE of CLUBS")).isNotNull();
 
 		
 	}

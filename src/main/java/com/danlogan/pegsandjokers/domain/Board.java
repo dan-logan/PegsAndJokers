@@ -102,38 +102,23 @@ public class Board {
 	public BoardPosition getBoardPositionWithOffset(BoardPosition playerBoardPosition, int step) 
 	{
 
-		BoardPosition newBoardPosition=playerBoardPosition;
+		int stepDistance = 	(step >=0) ? 1 : -1;
+		
+		Side boardPositionSide = this.getBoardPositionSide(playerBoardPosition);
+		int boardSideIndex = this.getSideIndex(boardPositionSide);
+		int sidePositionIndex = this.getBoardPositionSideIndex(boardPositionSide, playerBoardPosition);
 
-		//If on main track move forward accounting for 18 spaces per side
+		int numberOfSides = this.getPlayerSides().size();
+		Side nextSide = boardPositionSide;
 
-		if (playerBoardPosition.isMainTrackPosition())
+		//Change Board position side if move wraps around to a different side
+		if (sidePositionIndex+step > 17 || sidePositionIndex+step < 0)
 		{
-			Side boardPositionSide = this.getBoardPositionSide(playerBoardPosition);
-			int sidePositionIndex = this.getBoardPositionSideIndex(boardPositionSide, playerBoardPosition);
-	
-			if(sidePositionIndex + step < 18)
-			{
-				newBoardPosition = boardPositionSide.getPosition(sidePositionIndex + step);
-			}
-			else
-			{
-				//wrap around to first side when on the last side
-				int boardSideIndex = this.getSideIndex(boardPositionSide);
-				Side nextSide = null;
-
-				if (boardSideIndex < this.getPlayerSides().size()-1)
-				{
-					nextSide = this.getPlayerSides().get(this.getSideIndex(boardPositionSide)+1);
-				}
-				else
-				{
-					nextSide = this.getPlayerSides().get(0);
-				}
-
-				newBoardPosition = nextSide.getPosition(step - (18 - sidePositionIndex));
-
-			}
+			nextSide = this.getPlayerSides().get((numberOfSides + stepDistance + boardSideIndex)%numberOfSides);
 		}
+
+		BoardPosition newBoardPosition = nextSide.getPosition((18+step+sidePositionIndex)%18);
+
 
 		return newBoardPosition;
 	}

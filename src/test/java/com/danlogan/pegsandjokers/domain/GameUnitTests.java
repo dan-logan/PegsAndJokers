@@ -320,7 +320,7 @@ public class GameUnitTests {
 
 		Game game = Game.Builder.newInstance()
 				.withPlayerHand(playerHand)
-				.withPlayerPosition(1,1,"Tomato-8")
+				.withPlayerPosition(1,1,"Tomato-7")
 				.build();
 
 		PlayerTurn turn = PlayerTurn.Builder.newInstance()
@@ -331,11 +331,11 @@ public class GameUnitTests {
 				.withMoveDistance(-8)
 				.build();
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isEqualTo("Tomato-8");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isEqualTo("Tomato-7");
 
 		game.takeTurn(turn);
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isEqualTo("PINK-18");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isEqualTo("PINK-17");
 
 	}
 
@@ -665,6 +665,8 @@ public class GameUnitTests {
 				.withPlayerPosition(1,1,"Tomato-8")
 				.withPlayerPosition(1,2,"Tomato-9")
 				.build();
+		
+		game.start();
 
 		int[] splitMoveArray = {2,3,1,-6};
 		
@@ -682,6 +684,54 @@ public class GameUnitTests {
 
 		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isEqualTo("Tomato-2");
 		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPositionId()).isEqualTo("Tomato-12");
+
+	}
+
+	@Test
+	public void testSplitNineToGoHome() throws PlayerNotFoundException, InvalidMoveException, InvalidGameStateException, CannotMoveToAPositionYouOccupyException,
+	PlayerPositionNotFoundException, JsonProcessingException, GameNotFoundException
+	{
+		Card cardToPlay = new Card(CardRank.NINE, Suit.CLUBS);
+
+		PlayerHand playerHand = PlayerHand.Builder.newInstance(1)
+				.withCard(cardToPlay)
+				.build();
+
+		Game game = Game.Builder.newInstance()
+				.withPlayerHand(playerHand)
+				.withPlayerPosition(1,1,"TomatoHome-5")
+				.withPlayerPosition(1,2,"TomatoHome-4")
+				.withPlayerPosition(1,3,"LightBlue-4")
+				.withPlayerPosition(1,4,"Tomato-3")
+				.build();
+
+		game.start();
+		String gameId = game.getId().toString();
+		
+		GameRepository repository = new GameRepository();
+		
+		repository.addGame(game);
+		
+		game = repository.findGameById(gameId);
+		
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isEqualTo("TomatoHome-5");
+		assertThat(game.getPlayerPosition(1, 2).getPlayerBoardPositionId()).isEqualTo("TomatoHome-4");
+		assertThat(game.getPlayerPosition(1, 4).getPlayerBoardPositionId()).isEqualTo("Tomato-3");
+		assertThat(game.getPlayerPosition(1, 3).getPlayerBoardPositionId()).isEqualTo("LightBlue-4");
+	
+		int[] splitMoveArray = {4,3,3,-6};
+
+		PlayerTurn turn = PlayerTurn.Builder.newInstance()
+				.withCardName(cardToPlay.getName())
+				.withMoveType(MoveType.SPLIT_MOVE)
+				.withPlayerNumber(1)
+				.withSplitMoveArray(splitMoveArray)
+				.build();
+
+		game.takeTurn(turn);
+
+		assertThat(game.getPlayerPosition(1, 4).getPlayerBoardPositionId()).isEqualTo("TomatoHome-3");
+		assertThat(game.getPlayerPosition(1, 3).getPlayerBoardPositionId()).isEqualTo("Tomato-16");
 
 	}
 
@@ -972,7 +1022,7 @@ public class GameUnitTests {
 	
 
 	@Test
-	public void testCannotPassYourselfInHome() throws PlayerNotFoundException, InvalidMoveException, InvalidGameStateException, CannotMoveToAPositionYouOccupyException,
+	public void testCannotPassYourselfInHomeWhenFirstHomeFull() throws PlayerNotFoundException, InvalidMoveException, InvalidGameStateException, CannotMoveToAPositionYouOccupyException,
 	PlayerPositionNotFoundException
 	{
 	Card cardToPlay = new Card(CardRank.THREE, Suit.CLUBS);
@@ -997,17 +1047,9 @@ public class GameUnitTests {
 		
 		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isEqualTo("Tomato-3");
 	
-		try
-		{
-			game.takeTurn(turn);
-			assert(false);
-		}
-		catch (CannotMoveToAPositionYouOccupyException ex)
-		{
-			assert(ex.getMessage()).contains("cannot move over a position with one of your own");
-		}
+		game.takeTurn(turn);
 
-		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isEqualTo("Tomato-3");
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isEqualTo("Tomato-6");
 			
 	}
 
@@ -1265,6 +1307,37 @@ public class GameUnitTests {
 		game.takeTurn(turn);
 		
 		assertThat(game.getPlayerPosition(1, 5).getPlayerBoardPositionId()).isEqualTo("Tomato-6");
+		
+	}
+	
+	@Test
+	public void testMovePastHomeWhenHomePartiallyFull2() throws PlayerNotFoundException, InvalidGameStateException, InvalidMoveException, PlayerPositionNotFoundException, CannotMoveToAPositionYouOccupyException
+	{
+		PlayerHand hand = PlayerHand.Builder.newInstance(1)
+							.withCard(new Card(CardRank.JACK, Suit.HEARTS))
+							.build();
+		
+		Game game = Game.Builder.newInstance()
+					.withNumberOfPlayers(2)
+					.withPlayerPosition(1, 2, "TomatoHome-5")
+					.withPlayerPosition(1, 3, "TomatoHome-4")
+					.withPlayerPosition(1, 5, "LightBlue-14")
+					.withPlayerHand(hand)
+					.build();
+		
+		game.deal();
+		
+		PlayerTurn turn = PlayerTurn.Builder.newInstance()
+							.withCardName("JACK of HEARTS")
+							.withMoveType(MoveType.MOVE_PEG)
+							.withMoveDistance(11)
+							.withPlayerNumber(1)
+							.withPositionNumber(5)
+							.build();
+		
+		game.takeTurn(turn);
+		
+		assertThat(game.getPlayerPosition(1, 5).getPlayerBoardPositionId()).isEqualTo("Tomato-7");
 		
 	}
 	

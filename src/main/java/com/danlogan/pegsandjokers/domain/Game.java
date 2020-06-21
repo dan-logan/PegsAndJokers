@@ -578,7 +578,7 @@ public class Game {
 		int stepsToEndOfHome = -1;
 		int currentHomePositionNumber = 0;
 		String playersReadyToGoHomePositionId = this.board.getReadyToGoHomePositionIdForPlayerNumber(playerNumber);
-		int endOfHome = 1; 
+		int endOfHome = 0; 
 		
 		//determine the "end of home" based on the last spot in home path that is open relative to current player position
 		//If player is on main track.. search thru all home positions
@@ -654,6 +654,7 @@ public class Game {
 			stepsToEndOfHome = endOfHome - currentHomePositionNumber;
 		}
 
+		//Step through all the positions looking to see if will pass own peg
 		for(int step=startStep;step != spacesToMove;step=step+stepDistance)
 		{
 //			System.out.println(String.format("Taking step %d of %d with %d stepsToEndOfHome", step, spacesToMove, stepsToEndOfHome));

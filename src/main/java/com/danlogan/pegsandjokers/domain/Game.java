@@ -3,6 +3,10 @@ import java.util.ArrayList;
 import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 
+import com.danlogan.pegsandjokers.domain.events.GameEvent;
+import com.danlogan.pegsandjokers.domain.events.GameStartedEvent;
+import com.danlogan.pegsandjokers.domain.events.IListenToGameEvents;
+
 public class Game {
 	public static final String NOT_STARTED = "NOT_STARTED";
 	public static final String STARTED = "STARTED";
@@ -20,6 +24,7 @@ public class Game {
 	private ArrayList<ArrayList<PlayerPosition>> playerPositions;
 	private Board board;
 	private Player currentPlayer=null;
+	private IListenToGameEvents eventListener;
 
 	
 	public static class Builder{
@@ -32,6 +37,7 @@ public class Game {
 		private ArrayList<ArrayList<PlayerPosition>> playerPositions = new ArrayList<ArrayList<PlayerPosition>>();
 		private Board board;
 		private int defaultNumberOfPlayers=4;
+		private IListenToGameEvents eventListener;
 		
 		private ArrayList<ArrayList<String>> initialPlayerPositionIds = new ArrayList<ArrayList<String>>();
 		
@@ -207,6 +213,11 @@ public class Game {
 			return defaultPlayers;
 			
 		}
+
+		public Builder withEventListener(IListenToGameEvents listener) {
+			this.eventListener = listener;
+			return this;
+		}
 	}
 
 	public UUID getId() {
@@ -227,6 +238,7 @@ public class Game {
 		playerPositions = builder.playerPositions;
 		this.discardPile = builder.discardPile;
 		this.discardPileCount = this.discardPile.size();
+		this.eventListener = builder.eventListener;
 	}
 
 	public String getStatus() {
@@ -244,8 +256,19 @@ public class Game {
 		//after game is started shuffle the draw pile and deal the cards
 		this.drawPile.shuffle();
 		this.deal();
-				
+		
+		this.emitEvent(new GameStartedEvent(this.id, System.currentTimeMillis()));
+		
 		return this.status;
+	}
+	
+	private void emitEvent(GameEvent event)
+	{
+		if (eventListener != null)
+		{
+			eventListener.eventEmitted(new GameStartedEvent(this.id, System.currentTimeMillis()));
+		}
+		
 	}
 
 	public ArrayList<Player> getPlayers() {

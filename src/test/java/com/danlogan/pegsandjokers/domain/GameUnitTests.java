@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import org.junit.jupiter.api.Test;
 
+import com.danlogan.pegsandjokers.infrastructure.GameEventListener;
 import com.danlogan.pegsandjokers.infrastructure.GameNotFoundException;
 import com.danlogan.pegsandjokers.infrastructure.GameRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -660,10 +661,13 @@ public class GameUnitTests {
 				.withCard(cardToPlay)
 				.build();
 
+		GameEventListener listener = new GameEventListener();
+
 		Game game = Game.Builder.newInstance()
 				.withPlayerHand(playerHand)
 				.withPlayerPosition(1,1,"Tomato-8")
 				.withPlayerPosition(1,2,"Tomato-9")
+				.withEventListener(listener)
 				.build();
 		
 		game.start();
@@ -1347,8 +1351,11 @@ public class GameUnitTests {
 	@Test
 	public void testBasicGameSerializeAndDeserialize() throws JsonProcessingException, PlayerNotFoundException, CannotStartGameWithoutPlayersException
 	{
-		
-		Game game = Game.Builder.newInstance().build();
+
+		GameEventListener listener = new GameEventListener();
+
+		Game game = Game.Builder.newInstance()
+						.withEventListener(listener).build();
 		
 		game.start();
 		
@@ -1362,7 +1369,7 @@ public class GameUnitTests {
 		
 		assertThat(restoredGame.getPlayerHand(1).getCards().get(0)).usingRecursiveComparison().isEqualTo(hand1.getCards().get(0));
 
-		assertThat(restoredGame).usingRecursiveComparison().isEqualTo(game);
+		assertThat(restoredGame).usingRecursiveComparison().ignoringFields("eventListener").isEqualTo(game);
 		
 		assertThat(restoredGame.getPlayerHand(1).getCards().size()).isEqualTo(5);
 	}
@@ -1451,6 +1458,23 @@ public class GameUnitTests {
 			assertThat(ex.getMessage()).contains("JOKER to start a peg");
 		}
 	
+	}
+	
+	@Test 
+	public void testGameStartEventEmitted() throws CannotStartGameWithoutPlayersException
+	{
+		GameEventListener listener = new GameEventListener();
+		
+		Game game = Game.Builder.newInstance()
+					.withEventListener(listener)
+					.build();
+		
+		game.start();
+		
+		assertThat(listener.getEventCount()).isEqualTo(1);
+		assertThat(listener.getEvents().get(listener.getEventCount()-1).getClass()).isEqualTo(com.danlogan.pegsandjokers.domain.events.GameStartedEvent.class);
+		
+		
 	}
 
 }

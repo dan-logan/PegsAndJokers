@@ -28,4 +28,9 @@ public class GameEvent {
 	{
 		return gameId.toString();
 	}
+	
+	public String getDetails()
+	{
+		return this.toString();
+	}
 }

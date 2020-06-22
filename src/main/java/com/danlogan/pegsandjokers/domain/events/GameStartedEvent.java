@@ -14,7 +14,9 @@ public class GameStartedEvent extends GameEvent {
 		super(gameId, eventTimeMillis);
 	}
 	
-	
-	
+	public String toString()
+	{
+		return "GameStartedEvent[]";
+	}
 
 }

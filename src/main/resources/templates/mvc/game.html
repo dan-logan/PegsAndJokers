@@ -13,12 +13,12 @@
 <body>
     
 <h1>Game Events</h1>
-<table class="table table-bordered">
+<table class="table table-bordered table-sm">
 	<thead>
 	<tr>
 		<th scope="col">GameID</th>
 		<th scope="col">Event Timestamp</th>
-		<th scope="col">Event Type</th>
+		<th scope="col">Event Details</th>
 	</tr>
 	</thead>
 	<tbody>
@@ -26,7 +26,7 @@
 	<tr>
 		<td th:text="${event.gameId}">placeholder game id</td>
 		<td th:text="${event.timeStamp}">placeholder event timestamp</td>
-		<td th:text="${event.class}">placeholder event class</td>
+		<td th:text="${event.details}">placeholder event details</td>
 	</tr>
 	</th:block>
 	</tbody>

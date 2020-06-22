@@ -3,9 +3,11 @@ import java.util.ArrayList;
 import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 
+import com.danlogan.pegsandjokers.domain.events.CardPlayedEvent;
 import com.danlogan.pegsandjokers.domain.events.GameEvent;
 import com.danlogan.pegsandjokers.domain.events.GameStartedEvent;
 import com.danlogan.pegsandjokers.domain.events.IListenToGameEvents;
+import com.danlogan.pegsandjokers.domain.events.PegMovedEvent;
 
 public class Game {
 	public static final String NOT_STARTED = "NOT_STARTED";
@@ -271,7 +273,7 @@ public class Game {
 	{
 		if (eventListener != null)
 		{
-			eventListener.eventEmitted(new GameStartedEvent(this.id, System.currentTimeMillis()));
+			eventListener.eventEmitted(event);
 		}
 		
 	}
@@ -309,6 +311,7 @@ public class Game {
 		}
 		
 		Card cardBeingPlayed = playerHand.getCard(turn.getCardName());
+		this.emitEvent(new CardPlayedEvent(this.id, System.currentTimeMillis(), turn.getPlayerNumber(), turn.getCardName()));
 		
 		//Make the requested move
 		switch(turn.getMoveType())
@@ -533,9 +536,15 @@ public class Game {
 		}
 
 		//Make the requested move once the other player has been moved
+		
 		Peg pegToMove = fromBoardPosition.removePeg();
 		toBoardPosition.addPeg(pegToMove);
+		
+		String fromPPBPId = fromPlayerPosition.getPlayerBoardPositionId(); //for event details
+		
 		fromPlayerPosition.moveTo(toBoardPosition.getId());
+		
+		this.emitEvent(new PegMovedEvent(this.id, System.currentTimeMillis(), pegToMove.getNumber(), pegToMove.getColor(), fromPPBPId, toBoardPosition.getId()));
 	}
 	
 	private void handleDiscardRequest(PlayerTurn turn, PlayerHand playerHand) throws InvalidMoveException

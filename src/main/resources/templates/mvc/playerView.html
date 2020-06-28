@@ -3,8 +3,8 @@
 <head>
 	<!-- Required meta tags always come first -->
 	<meta charset="utf-8">
-	<meta name="viewport"
-		content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta th:if="${playerView.playerColor != playerView.colorOfCurrentTurnPlayer}" http-equiv="Refresh" content="5">
 	<!-- Bootstrap CSS -->
 	<meta http-equiv="x-ua-compatible" content="ie=edge">
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
@@ -112,12 +112,20 @@
 	</div> <!-- end of player view row div -->
 
 	<!-- Create Buttons for each card in player hand to trigger modal-->
-	<th:block th:each="card : ${playerView.playerHand.cards}">
-		<button type="button" class="btn" data-toggle="modal" data-target="#exampleModal" th:data-anothervar="${card.pegMovingDistance}" th:data-whatever="${card.name}">
-			<img th:src="@{'/cards/Playing_card_'+${card.name}+'.svg'}"	th:data-cardname="${card.name}"	alt="${card.name}" height="120" width="80" />
-		</button>
-	</th:block>
-
+	<div th:if="${playerView.playerColor == playerView.colorOfCurrentTurnPlayer}">
+		<th:block th:each="card : ${playerView.playerHand.cards}">
+			<button type="button" class="btn" data-toggle="modal" data-target="#exampleModal" th:data-anothervar="${card.pegMovingDistance}" th:data-whatever="${card.name}" >
+				<img th:src="@{'/cards/Playing_card_'+${card.name}+'.svg'}"	th:data-cardname="${card.name}"	alt="${card.name}" height="120" width="80" />
+			</button>
+		</th:block>
+	</div>
+	<div th:if="${playerView.playerColor != playerView.colorOfCurrentTurnPlayer}">
+		<th:block th:each="card : ${playerView.playerHand.cards}">
+				<img th:src="@{'/cards/Playing_card_'+${card.name}+'.svg'}"	th:data-cardname="${card.name}"	alt="${card.name}" height="120" width="80" />
+		</th:block>
+	</div>
+	
+	
  
 	<!-- Modal -->
    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" backdrop="false">

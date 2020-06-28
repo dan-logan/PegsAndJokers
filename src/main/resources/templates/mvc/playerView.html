@@ -118,6 +118,7 @@
 				<img th:src="@{'/cards/Playing_card_'+${card.name}+'.svg'}"	th:data-cardname="${card.name}"	alt="${card.name}" height="120" width="80" />
 			</button>
 		</th:block>
+		<button th:if="${playerView.playerHand.burnedCardCount == 2}" type="button" class="btn-primary" data-toggle="modal" data-target="#exampleModal" data-anothervar="FREE_START" data-whatever="FREE_START">Free Start</button>
 	</div>
 	<div th:if="${playerView.playerColor != playerView.colorOfCurrentTurnPlayer}">
 		<th:block th:each="card : ${playerView.playerHand.cards}">
@@ -272,11 +273,11 @@
 				 </div>
 			   </div>
 			 </div>
-			 <div class="card">
+			 <div class="card" id="burnACardCard">
 			   <div class="card-header" id="headingFive">
 				 <h2 class="mb-0">
 				   <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseFive"
-					 aria-expanded="false" aria-controls="collapseFour">
+					 aria-expanded="false" aria-controls="collapseFive">
 					 Burn a Card
 				   </button>
 				 </h2>
@@ -289,6 +290,32 @@
 					 <input type="hidden" th:field="*{moveType}" id="burnACardFormMoveType" />
 					 <input type="hidden" th:field="*{cardName}" id="burnACardFormCardName" value="ACE of CLUBS" />
 					   <button type="submit" class="btn btn-primary"><img th:src="@{/images/card-burn.svg}">Burn It!</img></button>  
+				   </form>
+				 </div>
+			   </div>
+			 </div>
+			 <div class="card" id="freeStartCard">
+			   <div class="card-header" id="headingSix">
+				 <h2 class="mb-0">
+				   <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseSix"
+					 aria-expanded="false" aria-controls="collapseSix">
+					 Free Start
+				   </button>
+				 </h2>
+			   </div>
+			   <div id="collapseSix" class="collapse" aria-labelledby="headingFive" data-parent="#accordionExample">
+				 <div class="card-body">
+				  <form id="freeStartForm" th:action="@{/mvc/taketurn}" th:object="${turnRequest}" method="post">
+					 <input class="form-control" type="hidden" th:field="*{playerNumber}" />
+					 <input type="hidden" th:field="*{gameId}" />
+					 <input type="hidden" th:field="*{moveType}" id="freeStartFormMoveType" />
+					 <div class="form-group">
+					   <label for="freeStartFormPegNumber">Which peg number do you want to start?</label>
+					   <select class="form-control" id="freeStartFormPegNumber" th:field="*{playerPositionNumber}">
+							<option th:each="i : ${#numbers.sequence(1, 5)}" th:value="${i}" th:text="${i}"></option>
+					   </select>
+					 </div>  
+	     		     <button type="submit" class="btn btn-primary">Free Start!</button>  
 				   </form>
 				 </div>
 			   </div>
@@ -325,9 +352,20 @@
  
 	 $("#burnACardFormCardName").val(cardName.fullname)
 	 $("#burnACardFormMoveType").val("DISCARD")
+	 $("#freeStartFormMoveType").val("FREE_START")
+	 
+	 if(cardName.fullname == "FREE_START")
+	 {
+		$("#freeStartCard").attr("class", "d-block")
+		$('#burnACardCard').attr("class", "d-none")
+	 }
+	 else{
+		 $("#freeStartCard").attr("class", "d-none")
+		 $('#burnACardCard').attr("class", "d-block")
+	 }
 
 	 //Only show the Start a peg menu if card played is an ACE or a FACE
-	 if(cardName.rank == 1 || cardName.rank > 10)
+	 if((cardName.fullname != "FREE_START") && (cardName.rank == 1 || cardName.rank > 10))
 	 {
 	   $("#startAPegCard").attr("class", "d-block")
 	   //setup start a peg form
@@ -339,7 +377,7 @@
 	 }
  
 	 //Show move a peg menu for all cards except Jokers and Nines
-	 if(cardName.rank == 9 || cardName.fullname == "JOKER")
+	 if(cardName.rank == 9 || cardName.fullname == "JOKER"  || cardName.fullname == "FREE_START")
 	 {
 	   $("#moveAPegCard").attr("class", "d-none")
 	 

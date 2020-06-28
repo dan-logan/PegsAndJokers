@@ -6,7 +6,6 @@ public class Joker extends Card {
 	{
 		super(null,null);
 		this.joker=true;
-				
 	}
 	
 	public String getName() {

@@ -5,17 +5,45 @@ public class Card {
 	private String name;
 	private Suit suit;
 	boolean joker=false;
+	String nameAndRankAsJSON;
+	private int pegMovingDistance;
 
 	public Card(CardRank rank, Suit suit) {
 		this.rank = rank;
 		this.suit = suit;
 		this.name = String.format("%s of %s",rank,suit);
+		this.nameAndRankAsJSON = "{\"fullname\": \""+this.name+"\", \"rank\": "+this.rank+"}";
+		if (rank == null)
+		{
+			//set move distance to -99 for jokers
+			this.pegMovingDistance = -99;
+		}
+		else
+		{
+			if(rank.equals(CardRank.EIGHT))
+			{
+				this.pegMovingDistance = -8;
+			}
+			else {
+				this.pegMovingDistance = rank.ordinal() + 1;
+			}
+		}
 	}
 
 	public CardRank getRank() {
 		return rank;
 	}
 
+	public int getPegMovingDistance()
+	{
+		return this.pegMovingDistance;
+	}
+	
+	public String getNameAndRankAsJSON()
+	{
+		return nameAndRankAsJSON; 
+	}
+	
 	public String getName() {
 		return name;
 	}

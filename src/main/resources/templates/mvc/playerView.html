@@ -1,62 +1,23 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-<!-- Required meta tags always come first -->
+	<!-- Required meta tags always come first -->
 	<meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<meta th:if="${playerView.playerColor != playerView.colorOfCurrentTurnPlayer}" http-equiv="Refresh" content="5">
- <!-- Bootstrap CSS -->
- 	<meta http-equiv="x-ua-compatible" content="ie=edge">
- 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">	
-<!--   <link th:href="@{/styles/cssandjs/main.css}" rel="stylesheet" />
- -->  	<title>Pegs and Jokers</title>
-	<script type="text/javascript" th:src="@{/js/cssandjs/actions.js}"></script>
-	<script th:inline="javascript">
-   		 var nameJs = /*[[${playerView.playerColor}]]*/;
-	</script>
-	<style>
-	.row.equal-cols {
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-wrap: wrap;
-  -ms-flex-wrap: wrap;
-  flex-wrap: wrap;
-}
-
-.row.equal-cols:before,
-.row.equal-cols:after {
-  display: block;
-}
-
-.row.equal-cols > [class*='col-'] {
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-}
-
-.row.equal-cols > [class*='col-'] > * {
-  -webkit-flex: 1 1 auto;
-  -ms-flex: 1 1 auto;
-  flex: 1 1 auto; 
-}
-	</style>
+	<meta name="viewport"
+		content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<!-- Bootstrap CSS -->
+	<meta http-equiv="x-ua-compatible" content="ie=edge">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+	<title>Pegs And Jokers</title>
 </head>
 <body>
 	<div class="container-fluid">
-	 <div class="row">
-		<div class = "col" id="message">
-			You are the <span th:text="${playerView.playerColor}">player
-				color</span> player. <span th:text="${playerView.playerMessage}">player
-				message</span><br/>
-		</div>
-	</div>
-	<div class="row equal-cols">
+	  <div class="row">
 		<div class="col-xs" id="board">
-			<h3>Current Board</h3>
+			<h3>Current Board - You are the <span th:text="${playerView.playerColor}">player
+				color</span> player. <span th:text="${playerView.playerMessage}">player
+				message</span>
+			</h3>
 			<table class="table table-bordered table-sm bg-light">
 				<thead>
  				<tr>
@@ -92,7 +53,7 @@
 								<img th:src="@{'/cards/Card_back_resized.svg'}" alt="face-down card" class="img-fluid" height="80" width="60"/>
 							</th:block>
 						</span>
-						</td>
+						</td> 
  						<td rowspan="3"><span th:if="${side.color == playerView.colorOfCurrentTurnPlayer}"><img th:src="@{/images/ltr-grey.svg}" alt="Current Player" class="img-fluid"/></span> </td>
 						<td th:bgcolor="${side.color}" th:text="'Start'" >color<br />Home
 							Track
@@ -125,7 +86,7 @@
 				</tbody>
 			</table>
 		</div> <!-- end of playerView left hand side board layout column div -->
-		<div class="col-4">
+		<div class="col">
 		<div class="container-fluid">
 		<div class="row">
 		<div class="col" id="drawPile">
@@ -138,134 +99,316 @@
 			</thead>
 			<tbody>
 			<tr>
-			<td><figure><img th:src="@{/cards/Card_back_resized.svg}" alt="Discard Pile" class="img-fluid" ><figcaption><span th:text="${playerView.cardsRemaining}">cards remaining</span> cards remaining </figcaption></figure></td> 
-	 		<td><figure th:if="${playerView.lastCardPlayed}"><img th:src="@{'/cards/Playing_card_'+${playerView.lastCardPlayed.name}+'.svg'}" alt="Last Card Played" class="img-fluid"><figcaption>Last Card Played</figcaption></figure></td> 
+			<td><figure><img th:src="@{/cards/Card_back_resized.svg}" alt="Discard Pile" height="90" width="60"/><figcaption><span th:text="${playerView.cardsRemaining}">cards remaining</span> cards remaining </figcaption></figure></td> 
+	 		<td><figure th:if="${playerView.lastCardPlayed}"><img th:src="@{'/cards/Playing_card_'+${playerView.lastCardPlayed.name}+'.svg'}" alt="Last Card Played" height="90" width="60"><figcaption>Last Card Played</figcaption></figure></td> 
 	 		</tr>
 			</tbody>
 			</table>
 		</div>  <!-- end of discard and draw pile col div -->
 		<div class="col-6"></div>
 		</div>  <!-- end of discard and draw pile row div -->
-	<div class="row">
-		<div class="col" id="playerHand">
-			<h3>Player Hand</h3>
-
-			<table class="table table-sm">
-			<tbody>
-			<tr>
-			<th:block th:each="card : ${playerView.playerHand.cards}">
-				<td>   
-				<img th:src="@{'/cards/Playing_card_'+${card.name}+'.svg'}"
-				    th:data-cardname="${card.name}"
-					alt="${card.name}" class="img-fluid" 
-					/>
-				</td> 
-			</th:block>
-<!-- 				<th:block th:if="${playerView.playerHand.burnedCardCount > 0}" th:each="i: ${#numbers.sequence(1, playerView.playerHand.burnedCardCount)}">
-					<td>  
-					<img th:src="@{'/cards/Card_back_resized.svg'}" alt="face-down card" class="img-fluid" />
-			 		</td>
-				</th:block>
-	 -->	</tr>
-			</tbody>
-			</table>
-		</div> <!-- end of playerhand col div -->
-	</div> <!-- end of playerhand row div -->
 	</div> <!-- end of player view right hand side with cards nested container div -->
 	</div> <!-- end of player view right hand side with cards col div -->
 	</div> <!-- end of player view row div -->
-<!--   form section for taking turns -->
- 	<div class="row">
- 	  <div class="col">
- 		<p th:if="${playerView.playerColor != playerView.colorOfCurrentTurnPlayer}">
- 			<button class="btn btn-primary"  type="button" th:onclick="refreshPage()">Refresh</button>
-		</p>
-		<h3 th:if="${playerView.playerColor == playerView.colorOfCurrentTurnPlayer}">Take a turn</h3>
 
-		<form th:if="${playerView.playerColor == playerView.colorOfCurrentTurnPlayer}" action="#" th:action="@{/mvc/taketurn}"
-			th:object="${turnRequest}" method="post">
-			<input class="form-control" type="hidden" th:field="*{playerNumber}" /> <input
-				type="hidden" th:field="*{gameId}" />
-			<div class="form-group">
-				<label for="cardName">Which card do you want to play? </label><select class="form-control" 
-				th:field="*{cardName}">
-				<option th:each="card : ${playerView.playerHand.cards}"
-					th:value="${card.name}" th:text="${card.name}">card name
-					here</option> 
-				</select>
-			</div>
-				<p /> 
-			<div class="form-group">
-				<label for="moveType">Which type of move do you want to make? </label> 
-				<select class="form-control" th:field="*{moveType}">
-				<option th:value="START_A_PEG" th:text="'Start a peg'">second</option>
-				<option th:value="MOVE_PEG" th:text="'Move a peg'">second</option>
-				<option th:value="SPLIT_MOVE" th:text="'Split move'">second</option>
-				<option th:value="USE_JOKER" th:text="'Use a joker'">second</option>
-				<option th:value="DISCARD" th:text="'Burn a Card'">discard</option>
-				<option th:disabled="${playerView.playerHand.burnedCardCount != 2}" th:value="FREE_START" th:text="'Free Start'">free start</option>
-				</select>
-			</div>
-			<p />
-			<div class="form-group">
-			<label
-				th:text="'Which '+ ${playerView.playerColor} + ' peg do you want to move?'">which
-				peg</label> <select class="form-control" th:field="*{playerPositionNumber}">
-				<option th:each="i : ${#numbers.sequence(1, 5)}" th:value="${i}"
-					th:text="${i}"></option>
-			</select>
-			</div>
-			<p />
-			<div class="form-group">
-			<label>How many spaces do you want to move? </label> <select class="form-control" 
-				th:field="*{moveDistance}">
-				<option th:each="i : ${#numbers.sequence(-8, 13)}" th:value="${i}"
-					th:text="${i}"></option>
-			</select> spaces. (not needed for starting, discarding, or jokers)
-			Jacks=11,Queens=12,Kings=13
-			</div>
-			<p>
-				----FOR SPLIT MOVES ONLY---<br />(7s MAY split (both forward), 9s
-				MUST split (one forward, one back) )-
-			</p>
-			<div class="form-group">
-			<label
-				th:text="'If this is a split move, pick another '+${playerView.playerColor}+' peg: '">second
-				peg</label> <select class="form-control" th:field="*{playerPositionNumber2}">
-				<option th:each="i : ${#numbers.sequence(1, 5)}" th:value="${i}"
-					th:text="${i}"></option>
-			</select> <p />
-			</div>
-			<div class="form-group">
-			<label>How far do you want to move the second peg? </label> 
-			<select	class="form-control" th:field="*{moveDistance2}">
-				<option th:each="i : ${#numbers.sequence(-8, 13)}" th:value="${i}"
-					th:text="${i}"></option>
-			</select> spaces.
-			</div>
-			<p>----FOR JOKER MOVES ONLY----</p>
-			<div class="form-group">
-			<label>For Jokers, pick an opponent's peg to send back to
-				start: </label> <select class="form-control" th:field="*{targetBoardPosition}">
-			<th:block th:each="player:${playerView.otherPlayerPositions}">
-					<option th:each="position : ${player}"
-						th:value="${position.playerBoardPositionId}"
-						th:text="${position.pegColor}+ ' peg# ' + ${position.pegNumber} ">board
-						position id</option>
-				</th:block>
+	<!-- Create Buttons for each card in player hand to trigger modal-->
+	<th:block th:each="card : ${playerView.playerHand.cards}">
+		<button type="button" class="btn" data-toggle="modal" data-target="#exampleModal" th:data-anothervar="${card.pegMovingDistance}" th:data-whatever="${card.name}">
+			<img th:src="@{'/cards/Playing_card_'+${card.name}+'.svg'}"	th:data-cardname="${card.name}"	alt="${card.name}" height="120" width="80" />
+		</button>
+	</th:block>
 
-			</select>
-			</div>
-			<br />
-			<input class="btn btn-primary" type="submit" value="Submit" />
-		</form>
-	  </div> <!-- end of form col div -->
-	</div>  <!-- end of form row div -->
-<!--  		<button type="button" th:onclick="showAlert()">Show Alert</button>
-		<button type="button" th:onclick="showName(nameJs);">Show Name</button> -->
-</div> <!--  end of body container div -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
-</body>
-</html>
+ 
+	<!-- Modal -->
+   <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" backdrop="false">
+	 <div class="modal-dialog" role="document">
+	   <div class="modal-content">
+		 <div class="modal-header">
+		   <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+		   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			 <span aria-hidden="true">&times;</span>
+		   </button>
+		 </div>
+		 <div class="modal-body">
+		   <div class="accordion" id="accordionExample">
+			 <div class="card" id="startAPegCard">
+			   <div class="card-header" id="headingOne">
+				 <h2 class="mb-0">
+				   <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne"
+					 aria-expanded="true" aria-controls="collapseOne">
+					 Start a peg
+				   </button>
+				 </h2>
+			   </div>
+			   <div id="collapseOne" class="collapse collapsed" aria-labelledby="headingOne" data-parent="#accordionExample">
+				 <div class="card-body">
+				   <form id="startAPegForm" th:action="@{/mvc/taketurn}" th:object="${turnRequest}" method="post">
+					 <input class="form-control" type="hidden" th:field="*{playerNumber}" />
+					 <input type="hidden" th:field="*{gameId}" />
+					 <input type="hidden" th:field="*{moveType}" id="startAPegFormMoveType"/>
+					 <input type="hidden" th:field="*{cardName}" id="startAPegFormCardName" value="ACE of CLUBS" />
+						   <div class="form-group">
+					   <label for="startAPegFormPegNumber">Which peg number do you want to start?</label>
+					   <select class="form-control" id="startAPegFormPegNumber" th:field="*{playerPositionNumber}">
+							<option th:each="i : ${#numbers.sequence(1, 5)}" th:value="${i}" th:text="${i}"></option>
+					   </select>
+					 </div>  
+					 <button type="submit" class="btn btn-primary"><img th:src="@{/images/fall-down.svg}">Start It!</img></button>  
+				   </form>
+				 </div>
+			   </div>
+			 </div>
+			 <div class="card" id="moveAPegCard">
+			   <div class="card-header" id="headingTwo">
+				 <h2 class="mb-0">
+				   <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo"
+					 aria-expanded="false" aria-controls="collapseTwo">
+					 Move a single peg
+				   </button>
+				 </h2>
+			   </div>
+			   <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+				 <div class="card-body">
+				   <form id="MoveAPegForm" th:action="@{/mvc/taketurn}" th:object="${turnRequest}" method="post">
+					<input class="form-control" type="hidden" th:field="*{playerNumber}" />
+					<input type="hidden" th:field="*{gameId}" />
+					<input type="hidden" th:field="*{moveType}" id="moveAPegFormMoveType" />
+					<input type="hidden" th:field="*{cardName}" id="moveAPegFormCardName" value="ACE of CLUBS" />
+				   <div class="form-group">
+					   <label for="moveAPegFormPegNumber">Which peg number do you want to move?</label>
+					   <select class="form-control" id="moveAPegFormPegNumber" th:field="*{playerPositionNumber}">
+							<option th:each="i : ${#numbers.sequence(1, 5)}" th:value="${i}" th:text="${i}"></option>
+					   </select>
+					   <label for="moveAPegFormMoveDistance">How many spaces?</label>
+					   <select class="form-control" id="moveAPegFormMoveDistance" th:field="*{moveDistance}">
+						 <option class="form-control" selected="true" value="7">7</option>
+					   </select>
+					 </div>  
+					 <button type="submit" class="btn btn-primary"><img th:src="@{/images/move.svg}">Move It!</img></button>  
+				   </form>
+				 </div>
+			   </div>
+			 </div>
+			 <div class="card" id="splitMoveCard">
+			   <div class="card-header" id="headingThree">
+				 <h2 class="mb-0">
+				   <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree"
+					 aria-expanded="false" aria-controls="collapseThree">
+					 Split a move between two pegs
+				   </button>
+				 </h2>
+			   </div>
+			   <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+				 <div class="card-body">
+				   <form id="splitMoveForm" th:action="@{/mvc/taketurn}" th:object="${turnRequest}" method="post">
+					 <input class="form-control" type="hidden" th:field="*{playerNumber}" />
+					 <input type="hidden" th:field="*{gameId}" />
+					 <input type="hidden" th:field="*{moveType}" id="splitMoveFormMoveType" />
+					 <input type="hidden" th:field="*{cardName}" id="splitMoveFormCardName" value="ACE of CLUBS" />
+					  <div class="form-group">
+					   <label for="splitMoveFormPegNumber1">What is the first peg number do you want to move?</label>
+					   <select class="form-control" id="splitMoveFormPegNumber1" th:field="*{playerPositionNumber}">
+							<option th:each="i : ${#numbers.sequence(1, 5)}" th:value="${i}" th:text="${i}"></option>
+						</select>
+					   <label for="splitMoveFormMoveDistance1">How many spaces do you want to move the first peg?</label>
+					   <select class="form-control" id="splitMoveFormMoveDistance1" th:field="*{moveDistance}">
+					   </select>
+					 </div>  
+					 <div class="form-group">
+					   <label for="splitMoveFormPegNumber2">What is the second peg number do you want to move?</label>
+					   <select class="form-control" id="splitMoveFormPegNumber2" th:field="*{playerPositionNumber2}">
+							<option th:each="i : ${#numbers.sequence(1, 5)}" th:value="${i}" th:text="${i}"></option>
+					   </select>
+					   <label for="splitMoveFormMoveDistance1">How many spaces do you want to move the second peg?</label>
+					   <select class="form-control" id="splitMoveFormMoveDistance2" th:field="*{moveDistance2}">
+						 <option class="form-control" value="-8">-8</option>
+						 <option class="form-control" value="1" selected="true">1</option>
+						 <option class="form-control" value="13">13</option>
+					   </select>
+					 </div>  
+					 <button type="submit" class="btn btn-primary"><img th:src="@{/images/van-damme-split.svg}">Split 'em!</img></button>  
+				   </form>
+				 </div>
+			   </div>
+			 </div>
+			 <div class="card" id="useAJokerCard">
+			   <div class="card-header" id="headingFour">
+				 <h2 class="mb-0">
+				   <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseFour"
+					 aria-expanded="false" aria-controls="collapseFour">
+					 Use a joker
+				   </button>
+				 </h2>
+			   </div>
+			   <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordionExample">
+				 <div class="card-body">
+				   <form id="useAJokerForm" th:action="@{/mvc/taketurn}" th:object="${turnRequest}" method="post">
+					 <input class="form-control" type="hidden" th:field="*{playerNumber}" />
+					 <input type="hidden" th:field="*{gameId}" />
+					 <input type="hidden" th:field="*{moveType}" id="useAJokerFormMoveType" />
+					 <input type="hidden" th:field="*{cardName}" id="useAJokerFormCardName" value="ACE of CLUBS" />
+					 <div class="form-group">
+					   <label for="useAJokerFormPegNumber">What peg number will the joker move?</label>
+					   <select class="form-control" id="useAJokerFormPegNumber" th:field="*{playerPositionNumber}">
+							<option th:each="i : ${#numbers.sequence(1, 5)}" th:value="${i}" th:text="${i}"></option>
+					   </select>
+					   <label for="useAJokerFormPegToReplace">Which peg will the joker replace?</label>
+					   <select class="form-control" id="useAJokerFormPEgToReplace" th:field="*{targetBoardPosition}">
+						 <th:block th:each="player:${playerView.otherPlayerPositions}">
+							<option class="form-control" th:each="position : ${player}" th:value="${position.playerBoardPositionId}" th:text="${position.pegColor}+ ' peg# ' + ${position.pegNumber} ">board	position id</option>
+						</th:block>
+					   </select>
+					 </div>  
+					 <button type="submit" class="btn btn-primary"><img th:src="@{/images/card-joker.svg}">Use It!</img></button>  
+				   </form>
+				 </div>
+			   </div>
+			 </div>
+			 <div class="card">
+			   <div class="card-header" id="headingFive">
+				 <h2 class="mb-0">
+				   <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseFive"
+					 aria-expanded="false" aria-controls="collapseFour">
+					 Burn a Card
+				   </button>
+				 </h2>
+			   </div>
+			   <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#accordionExample">
+				 <div class="card-body">
+				  <form id="burnACardForm" th:action="@{/mvc/taketurn}" th:object="${turnRequest}" method="post">
+					 <input class="form-control" type="hidden" th:field="*{playerNumber}" />
+					 <input type="hidden" th:field="*{gameId}" />
+					 <input type="hidden" th:field="*{moveType}" id="burnACardFormMoveType" />
+					 <input type="hidden" th:field="*{cardName}" id="burnACardFormCardName" value="ACE of CLUBS" />
+					   <button type="submit" class="btn btn-primary"><img th:src="@{/images/card-burn.svg}">Burn It!</img></button>  
+				   </form>
+				 </div>
+			   </div>
+			 </div>
+		   </div>
+		 </div>
+	   </div>
+   <!--      <div class="modal-footer">
+		   <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+		   <button type="button" class="btn btn-primary">Save changes</button>
+		 </div> -->
+	   </div>
+	 </div>
+   </div>
+   <!-- jQuery first, then Bootstrap JS. All Inclusive Plug-in -->
+   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
+	
+ 
+	 <!-- Modal dialog script-->
+ <script>
+   $('#exampleModal').on('show.bs.modal', function (event) {
+ 
+	 var button = $(event.relatedTarget) // Button that triggered the modal
+	 var whatevername = button.data('whatever') // Extract info from data-* attributes
+	 // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+	 // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+	 var modal = $(this)
+	 var someothervar = button.data('anothervar')
+
+	 var cardName= {"fullname": whatevername, "rank": someothervar}
+	 
+	 modal.find('.modal-title').text('Playing ' + cardName.fullname)
+ 
+	 $("#burnACardFormCardName").val(cardName.fullname)
+	 $("#burnACardFormMoveType").val("DISCARD")
+
+	 //Only show the Start a peg menu if card played is an ACE or a FACE
+	 if(cardName.rank == 1 || cardName.rank > 10)
+	 {
+	   $("#startAPegCard").attr("class", "d-block")
+	   //setup start a peg form
+	   $("#startAPegFormCardName").val(cardName.fullname)
+	   $("#startAPegFormMoveType").val("START_A_PEG")
+	 }
+	 else{
+	   $("#startAPegCard").attr("class", "d-none")
+	 }
+ 
+	 //Show move a peg menu for all cards except Jokers and Nines
+	 if(cardName.rank == 9 || cardName.fullname == "JOKER")
+	 {
+	   $("#moveAPegCard").attr("class", "d-none")
+	 
+	 }
+	 else
+	 {
+	   $("#moveAPegCard").attr("class", "d-block")
+	   
+	   //setup start a peg form
+	   $("#moveAPegFormCardName").val(cardName.fullname)
+ 	   $("#moveAPegFormMoveType").val("MOVE_PEG")
+
+	   //set move distance for single peg move based on card rank
+	   $("#moveAPegFormMoveDistance option").text(cardName.rank)
+	   $("#moveAPegFormMoveDistance option").val(cardName.rank)
+	   $("#moveAPegFormMoveDistance option").attr("selected", "true")
+	 }
+ 
+	 //Show split move card only for 7s and 9s
+	 if(cardName.rank == 7 || cardName.rank == 9)
+	 {
+	   $("#splitMoveCard").attr("class", "d-block")
+	   //setup start a peg form
+	   $("#splitMoveFormCardName").val(cardName.fullname)
+	   $("#splitMoveFormMoveType").val("SPLIT_MOVE")
+ 
+	   //if seven being played, add move distance options from 1 to 7
+	   if(cardName.rank == 7)
+	   {
+		 var moveDistanceOne = $("#splitMoveFormMoveDistance1")
+		 var moveDistanceTwo = $("#splitMoveFormMoveDistance2")
+		 
+		 moveDistanceOne.children().remove()
+		 moveDistanceTwo.children().remove()
+ 
+		 for (let index = 1; index < 8; index++) {
+		   moveDistanceOne.append('<option value="'+index+'"class="form-control">'+index+'</option>')
+		   moveDistanceTwo.append('<option value="'+index+'"class="form-control">'+index+'</option>')
+		 }
+	   }
+	   //if nine is being played, add move distance options from -8 to positive 8
+	   if(cardName.rank == 9)
+	   {
+		 var moveDistanceOne = $("#splitMoveFormMoveDistance1")
+		 var moveDistanceTwo = $("#splitMoveFormMoveDistance2")
+		 
+		 moveDistanceOne.children().remove()
+		 moveDistanceTwo.children().remove()
+ 
+		 for (let index = -8; index < 9; index++) {
+		   if (index != 0)
+		   {
+			 moveDistanceOne.append('<option value="'+index+'"class="form-control">'+index+'</option>')
+			 moveDistanceTwo.append('<option value="'+index+'"class="form-control">'+index+'</option>')
+		   }
+		 }
+	   }
+	 }
+	 else
+	 {
+	   $("#splitMoveCard").attr("class", "d-none")
+	 }
+ 
+	 //Show Use a Joker menue only for Jokers
+	 if(cardName.fullname == "JOKER")
+	 {
+	   $("#useAJokerCard").attr("class", "d-block")
+	   $("#useAJokerFormCardName").val(cardName.fullname)
+	   $("#useAJokerFormMoveType").val("USE_JOKER")
+	 }
+	 else
+	 {
+	   $("#useAJokerCard").attr("class", "d-none")
+ 
+	 }
+	 
+   })
+   </script>
+ </body>
+ </html>

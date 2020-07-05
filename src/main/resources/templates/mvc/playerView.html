@@ -9,6 +9,9 @@
 	<meta http-equiv="x-ua-compatible" content="ie=edge">
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
 	<title>Pegs And Jokers</title>
+	<script th:inline="javascript">
+    	var playerView = [[${playerView}]];
+	</script>
 </head>
 <body>
 	<div class="container-fluid">
@@ -18,6 +21,8 @@
 				color</span> player. <span th:text="${playerView.playerMessage}">player
 				message</span>
 			</h3>
+			<canvas></canvas>
+<!-- 			
 			<table class="table table-bordered table-sm bg-light">
 				<thead>
  				<tr>
@@ -85,6 +90,7 @@
 				</th:block>
 				</tbody>
 			</table>
+ -->
 		</div> <!-- end of playerView left hand side board layout column div -->
 		<div class="col">
 		<div class="container-fluid">
@@ -334,6 +340,7 @@
    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
 	
+   <script th:src="@{/js/canvas.js}"></script>
  
 	 <!-- Modal dialog script-->
  <script>

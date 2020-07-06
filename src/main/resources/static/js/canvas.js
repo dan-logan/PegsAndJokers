@@ -30,6 +30,30 @@ var c = canvas.getContext('2d');
 
  })
 
+  class BurnCard {
+
+    constructor(x,y) {
+
+      this.x =x;
+      this.y=y;
+      this.width = 3*BOARD.holeRadius;
+      this.height = 1.5*this.width;
+
+        this.draw = function() {
+        c.save();
+        c.fillStyle = "Blue"
+        c.shadowColor + "Black";
+        c.fillRect(this.x, this.y, this.width, this.height);
+        c.rect(this.x, this.y, this.width, this.height);
+        c.strokeStyle = "White";
+        c.lineWidth = this.width/10;
+        c.stroke()
+        c.restore();
+      } 
+    }
+
+ }
+
  class PegHole {
 
     constructor(x, y, hasPeg, pegColor, pegNumber,rotateText) {
@@ -101,6 +125,52 @@ function init( )
    c.setTransform(1,0,0,1,0,0);
 }
 
+function drawBurnCards(numberBurned, dx)
+{
+  
+  c.fillStyle = "Grey";
+  c.strokeStyle = "Black";
+  let burnRectX = BOARD.centerX-BOARD.holeRadius;
+  let burnRectY =BOARD.centerY+BOARD.apothem+1.5*BOARD.holeRadius
+  let burnRectWidth = 8.5*BOARD.holeRadius;
+  let burnRectHeight = 0.75*burnRectWidth;
+
+  c.save();
+  let rotateAngle = 0;
+  if (dx == -1)
+  {
+    rotateAngle = Math.PI;
+  }
+
+  c.translate((burnRectX+BOARD.holeRadius),(burnRectY-1.5*BOARD.holeRadius));
+  c.rotate(rotateAngle);
+  c.translate(-(burnRectX+BOARD.holeRadius),-(burnRectY-1.5*BOARD.holeRadius));
+
+  c.fillRect(burnRectX,burnRectY,burnRectWidth, burnRectHeight);
+ 
+  c.fillStyle = "White";
+  c.textBaseline = "top";
+  c.font = BOARD.holeRadius+"px Arial";
+  c.fillText("Burned Cards", burnRectX, burnRectY);
+  
+  if (numberBurned > 0)
+  {
+    let cardX = burnRectX + BOARD.holeRadius;
+    let cardY = burnRectY + 1.2*BOARD.holeRadius;
+
+    burnCard = new BurnCard(cardX,cardY);
+    burnCard.draw();
+
+    if (numberBurned > 1)
+    {
+      burnCard = new BurnCard(cardX+4*BOARD.holeRadius,cardY);
+      burnCard.draw();
+    }
+  }
+  c.restore();
+  
+}
+
 
 function drawBoard()
 {
@@ -113,7 +183,7 @@ function drawBoard()
   y = BOARD.centerY;
  
   drawSideFromCenter(x,y,a,l,1); //side 1 track
- 
+
   //loop thru remaining sides up to side n to draw track
   for (let s = 2; s <= n; s++) {
    
@@ -129,7 +199,7 @@ function drawBoard()
     c.rotate(Math.PI*2-(180 - (360/n))*Math.PI/180);
     c.translate(-x-(dx*l)/2, -y-a);
     drawSideFromCenter(x,y,a,l,dx);
-
+ 
   }
 
   c.setTransform(1,0,0,1,0,0);
@@ -142,6 +212,7 @@ function drawBoard()
   
   //draw first side
   drawHolesFromCenter(x,y,a,l,1,playerView.board.playerSides[0]); //holes for side 1
+  drawBurnCards(playerView.burntCardCounts[0],1);
   //loop thru remaining sides up to side n to draw holes
   for (let s = 2; s <= n; s++) {
    
@@ -157,6 +228,7 @@ function drawBoard()
     c.rotate(Math.PI*2-(180 - (360/n))*Math.PI/180);
     c.translate(-x-(dx*l)/2, -y-a);
     drawHolesFromCenter(x,y,a,l,dx,playerView.board.playerSides[s-1]);
+    drawBurnCards(playerView.burntCardCounts[s-1],dx);
 
   }
 
@@ -165,8 +237,10 @@ function drawBoard()
 
 init();
 
+
 function drawSideFromCenter(x, y, a, l,dx)
 {
+  c.strokeStyle = "black";
   //using x, y as cooridinates of ceter draw line of length l
   c.font = "30px Arial";
   c.beginPath();

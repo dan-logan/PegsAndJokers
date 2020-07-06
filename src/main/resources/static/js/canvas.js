@@ -1,15 +1,16 @@
 var canvas = document.querySelector('canvas');
+console.log("canvas: " + canvas.width+","+canvas.height);
+console.log("window: " + window.innerWidth+","+window.innerHeight);
 
 if (window.innerHeight < window.innerWidth)
-{
-  canvas.width = window.innerHeight;
-  canvas.height = window.innerHeight;
-}
-else{
-  canvas.width = window.innerwidth;
-  canvas.height = window.innerwidth;
-}  
-
+  {
+    canvas.width = window.innerHeight*0.75;
+    canvas.height = window.innerHeight*0.75;
+  }
+  else{
+    canvas.width = window.innerWidth*0.75;
+    canvas.height = window.innerWidth*0.75;
+  }
 
 var c = canvas.getContext('2d');
 
@@ -17,12 +18,12 @@ var c = canvas.getContext('2d');
  window.addEventListener('resize', function (event) {
   if (window.innerHeight < window.innerWidth)
   {
-    canvas.width = window.innerHeight;
-    canvas.height = window.innerHeight;
+    canvas.width = window.innerHeight*0.75;
+    canvas.height = window.innerHeight*0.75;
   }
   else{
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerWidth;
+    canvas.width = window.innerWidth*0.75;
+    canvas.height = window.innerWidth*0.75;
   }  
 
   init();

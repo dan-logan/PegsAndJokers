@@ -58,7 +58,7 @@ var c = canvas.getContext('2d');
             c.fillStyle = "Black";
             c.fill();
           }
-          c.lineWidth = 5;
+          c.lineWidth = this.radius*0.2;
           c.stroke();
   
       }
@@ -120,6 +120,14 @@ function drawBoard()
   }
 
   c.setTransform(1,0,0,1,0,0);
+
+  //rotate to show current player on bottom
+  bottomSide = playerView.playerNumber;
+  c.translate(BOARD.centerX,BOARD.centerY);
+  c.rotate(-Math.PI*2*(bottomSide-1)/n);
+  c.translate(-BOARD.centerX,-BOARD.centerY);
+  
+  //draw first side
   drawHolesFromCenter(x,y,a,l,1,playerView.board.playerSides[0]); //holes for side 1
   //loop thru remaining sides up to side n to draw holes
   for (let s = 2; s <= n; s++) {

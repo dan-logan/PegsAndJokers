@@ -32,7 +32,7 @@ var c = canvas.getContext('2d');
 
  class PegHole {
 
-    constructor(x, y, hasPeg, pegColor, pegNumber) {
+    constructor(x, y, hasPeg, pegColor, pegNumber,rotateText) {
       this.x = x;
       this.y = y;
       this.pegColor = pegColor;
@@ -47,11 +47,23 @@ var c = canvas.getContext('2d');
           {
             c.fillStyle = this.pegColor;
             c.fill();
+            c.save();
+            let textAngle =0;
+            if (rotateText == true)
+            { 
+              textAngle=Math.PI;
+            }
+
+            c.translate(this.x,this.y);
+            c.rotate(textAngle);
+            c.translate(-this.x,-this.y);
+
             c.font = this.radius*1.5+ "px Arial";
             c.textAlign = "center";
             c.textBaseline = "middle";
             c.fillStyle = "Black";
             c.fillText(this.pegNumber,this.x,this.y);
+            c.restore();
           }
           else
           {
@@ -65,6 +77,7 @@ var c = canvas.getContext('2d');
       
     }
   }
+
   
 function init( )
 {
@@ -185,13 +198,19 @@ function drawSideFromCenter(x, y, a, l,dx)
 function drawHolesFromCenter(x, y, a, l,dx,side)
 {
   let holeSpacing = dx*BOARD.holeRadius*2.5;
+  //rotate text on even number sides
+  let rotateText = false;
+  if (dx == -1)  
+  {
+    rotateText=true;
+  }
   
-   //add main track holes to side
+  //add main track holes to side
   pegx = x+(dx*l/2) - holeSpacing;
   side.mainTrackPositions.forEach(pos => {
 
     c.lineWidth = 1;
-    pegHole = new PegHole(pegx,y+a,pos.hasPeg, pos.pegColor,pos.pegNumber);
+    pegHole = new PegHole(pegx,y+a,pos.hasPeg, pos.pegColor,pos.pegNumber,rotateText);
     pegHole.draw();
     pegx = pegx - holeSpacing;
   
@@ -200,37 +219,37 @@ function drawHolesFromCenter(x, y, a, l,dx,side)
   //add start position holes
    pegx = pegx + 11*holeSpacing;
    let startHole = side.startPositions[0];
-   pegHole = new PegHole(pegx,y+a-holeSpacing, startHole.hasPeg,startHole.pegColor,startHole.pegNumber);
+   pegHole = new PegHole(pegx,y+a-holeSpacing, startHole.hasPeg,startHole.pegColor,startHole.pegNumber,rotateText);
    pegHole.draw();
    startHole = side.startPositions[1];
-   pegHole = new PegHole(pegx,y+a-2*holeSpacing, startHole.hasPeg,startHole.pegColor,startHole.pegNumber);
+   pegHole = new PegHole(pegx,y+a-2*holeSpacing, startHole.hasPeg,startHole.pegColor,startHole.pegNumber,rotateText);
    pegHole.draw();
    startHole = side.startPositions[2]
-   pegHole = new PegHole(pegx,y+a-3*holeSpacing, startHole.hasPeg,startHole.pegColor,startHole.pegNumber);
+   pegHole = new PegHole(pegx,y+a-3*holeSpacing, startHole.hasPeg,startHole.pegColor,startHole.pegNumber,rotateText);
    pegHole.draw();
    startHole = side.startPositions[3];
-   pegHole = new PegHole(pegx-holeSpacing,y+a-2*holeSpacing,startHole.hasPeg,startHole.pegColor,startHole.pegNumber);
+   pegHole = new PegHole(pegx-holeSpacing,y+a-2*holeSpacing,startHole.hasPeg,startHole.pegColor,startHole.pegNumber,rotateText);
    pegHole.draw();
    startHole = side.startPositions[4];
-   pegHole = new PegHole(pegx+holeSpacing,y+a-2*holeSpacing, startHole.hasPeg,startHole.pegColor,startHole.pegNumber);
+   pegHole = new PegHole(pegx+holeSpacing,y+a-2*holeSpacing, startHole.hasPeg,startHole.pegColor,startHole.pegNumber,rotateText);
    pegHole.draw();
 
    //add home positionholes
    pegx = pegx + 5*holeSpacing;
    let homeHole = side.homePositions[0];
-   pegHole = new PegHole(pegx,y+a-holeSpacing, homeHole.hasPeg,homeHole.pegColor,homeHole.pegNumber);
+   pegHole = new PegHole(pegx,y+a-holeSpacing, homeHole.hasPeg,homeHole.pegColor,homeHole.pegNumber,rotateText);
    pegHole.draw();
    homeHole = side.homePositions[1];
-   pegHole = new PegHole(pegx,y+a-2*holeSpacing, homeHole.hasPeg,homeHole.pegColor,homeHole.pegNumber);
+   pegHole = new PegHole(pegx,y+a-2*holeSpacing, homeHole.hasPeg,homeHole.pegColor,homeHole.pegNumber,rotateText);
    pegHole.draw();
    homeHole = side.homePositions[2];
-   pegHole = new PegHole(pegx,y+a-3*holeSpacing,homeHole.hasPeg,homeHole.pegColor,homeHole.pegNumber);
+   pegHole = new PegHole(pegx,y+a-3*holeSpacing,homeHole.hasPeg,homeHole.pegColor,homeHole.pegNumber,rotateText);
    pegHole.draw();
    homeHole = side.homePositions[3];
-   pegHole = new PegHole(pegx-holeSpacing,y+a-3*holeSpacing,homeHole.hasPeg,homeHole.pegColor,homeHole.pegNumber);
+   pegHole = new PegHole(pegx-holeSpacing,y+a-3*holeSpacing,homeHole.hasPeg,homeHole.pegColor,homeHole.pegNumber,rotateText);
    pegHole.draw();
    homeHole = side.homePositions[4];
-   pegHole = new PegHole(pegx-2*holeSpacing,y+a-3*holeSpacing,homeHole.hasPeg,homeHole.pegColor,homeHole.pegNumber);
+   pegHole = new PegHole(pegx-2*holeSpacing,y+a-3*holeSpacing,homeHole.hasPeg,homeHole.pegColor,homeHole.pegNumber,rotateText);
    pegHole.draw();
   
 }

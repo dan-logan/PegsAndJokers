@@ -103,35 +103,73 @@ var c = canvas.getContext('2d');
   }
 
  function autosize() {
-	 if (window.innerHeight < window.innerWidth)
-	  {
-	    canvas.width = window.innerHeight*0.75;
-	    canvas.height = window.innerHeight*0.75;
-	  }
-	  else{
-	    canvas.width = window.innerWidth*0.75;
-	    canvas.height = window.innerWidth*0.75;
-	  }
-	  init();
+	 document.cookie = "sizePreference=auto";
+	 init();
  }
  
  function largeSize() {
-	 canvas.width = 768;
-	 canvas.height = 768;
+	 document.cookie = "sizePreference=large";
 	 init();
  }
  
  function extraLargeSize() {
-	 
-	 canvas.width = 1024;
-	 canvas.height = 1024;
+
+	 document.cookie = "sizePreference=xl";
 	 init();
 	 
  }
  
+ function getCookie(cname) {
+	  var name = cname + "=";
+	  var decodedCookie = decodeURIComponent(document.cookie);
+	  var ca = decodedCookie.split(';');
+	  for(var i = 0; i <ca.length; i++) {
+	    var c = ca[i];
+	    while (c.charAt(0) == ' ') {
+	      c = c.substring(1);
+	    }
+	    if (c.indexOf(name) == 0) {
+	      return c.substring(name.length, c.length);
+	    }
+	  }
+	  return "";
+}
+ 
+function setCanvasSize()
+{
+	var size = getCookie("sizePreference")
+
+
+	if(!size && size=="auto")
+		{
+		 if (window.innerHeight < window.innerWidth)
+		  {
+		    canvas.width = window.innerHeight*0.75;
+		    canvas.height = window.innerHeight*0.75;
+		  }
+		  else{
+		    canvas.width = window.innerWidth*0.75;
+		    canvas.height = window.innerWidth*0.75;
+		  }
+
+		}
+	else if (size == "large")
+		{
+		 canvas.width = 768;
+		 canvas.height = 768;
+		}
+	else if (size == "xl")
+		{
+		 canvas.width = 1024;
+		 canvas.height = 1024;
+		}
+	
+}
 function init( )
 {
   var numberOfSides = playerView.board.playerSides.length;
+  
+  setCanvasSize();
   
   this.BOARD = {
     centerX: canvas.width/2,

@@ -102,7 +102,33 @@ var c = canvas.getContext('2d');
     }
   }
 
-  
+ function autosize() {
+	 if (window.innerHeight < window.innerWidth)
+	  {
+	    canvas.width = window.innerHeight*0.75;
+	    canvas.height = window.innerHeight*0.75;
+	  }
+	  else{
+	    canvas.width = window.innerWidth*0.75;
+	    canvas.height = window.innerWidth*0.75;
+	  }
+	  init();
+ }
+ 
+ function largeSize() {
+	 canvas.width = 768;
+	 canvas.height = 768;
+	 init();
+ }
+ 
+ function extraLargeSize() {
+	 
+	 canvas.width = 1024;
+	 canvas.height = 1024;
+	 init();
+	 
+ }
+ 
 function init( )
 {
   var numberOfSides = playerView.board.playerSides.length;

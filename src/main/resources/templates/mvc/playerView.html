@@ -123,6 +123,7 @@
 	 		</tr>
 			</tbody>
 			</table>
+			Waiting for <span th:text="${playerView.colorOfCurrentTurnPlayer}">current player</span> to play.
 		</div>  <!-- end of discard and draw pile col div -->
 		<div class="col-6"></div>
 		</div>  <!-- end of discard and draw pile row div -->
@@ -148,6 +149,7 @@
 	<button id="auto-size" class ="btn-primary" onClick="autosize()">Auto Size</button>
 	<button id="large-size" class ="btn-primary" onClick="largeSize()">Large</button>
 	<button id="xl-size" class ="btn-primary" onClick="extraLargeSize()">Extra Large</button>
+	<button id="refresh-btn" class="btn-secondary" onClick="window.location.reload(true);">Refresh</button>
  
 	<!-- Modal -->
    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" backdrop="false">

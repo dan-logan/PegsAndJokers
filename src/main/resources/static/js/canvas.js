@@ -59,10 +59,9 @@ mc.on("doubletap", function(ev) {
         c.fillStyle = "Blue"
         c.shadowColor + "Black";
         c.fillRect(this.x, this.y, this.width, this.height);
-        c.rect(this.x, this.y, this.width, this.height);
         c.strokeStyle = "White";
         c.lineWidth = this.width/10;
-        c.stroke()
+        c.strokeRect(this.x, this.y, this.width, this.height)
         c.restore();
       } 
     }

@@ -15,6 +15,21 @@ if (window.innerHeight < window.innerWidth)
 var c = canvas.getContext('2d');
 
 
+var scaleToggle =false;
+var zoom = {x: 0, y:0};
+
+var mc = new Hammer.Manager(canvas);
+
+mc.add(new Hammer.Tap({event: 'doubletap', taps: 2}));
+
+mc.on("doubletap", function(ev) {
+  zoom.x = ev.center.x;
+  zoom.y = ev.center.y;
+  scaleToggle = !scaleToggle;
+  init();
+});
+
+
  window.addEventListener('resize', function (event) {
   if (window.innerHeight < window.innerWidth)
   {
@@ -167,7 +182,19 @@ function setCanvasSize()
 }
 function init( )
 {
-  var numberOfSides = playerView.board.playerSides.length;
+	if(scaleToggle)
+	  {
+	    c.translate(zoom.x,zoom.y);
+	    c.scale(2,2);
+	    c.translate(-zoom.x,-zoom.y);
+	  }
+	  else
+	  {
+	    //c.scale(1,1);
+	    c.setTransform(1,0,0,1,0,0);
+	  }
+	   
+	var numberOfSides = playerView.board.playerSides.length;
   
   setCanvasSize();
   
@@ -238,6 +265,7 @@ function drawBurnCards(numberBurned, dx)
 
 function drawBoard()
 {
+  c.save();
   n=BOARD.numberOfSides;  //number of sides
  
   r = BOARD.radius;
@@ -266,7 +294,8 @@ function drawBoard()
  
   }
 
-  c.setTransform(1,0,0,1,0,0);
+  c.restore();
+  //c.setTransform(1,0,0,1,0,0);
 
   //rotate to show current player on bottom
   bottomSide = playerView.playerNumber;

@@ -1,6 +1,4 @@
 var canvas = document.querySelector('canvas');
-console.log("canvas: " + canvas.width+","+canvas.height);
-console.log("window: " + window.innerWidth+","+window.innerHeight);
 
 if (window.innerHeight < window.innerWidth)
   {

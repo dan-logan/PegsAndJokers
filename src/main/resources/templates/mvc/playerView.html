@@ -27,7 +27,7 @@
 	</script>
     <script src="https://hammerjs.github.io/dist/hammer.js"></script></head>
 </head>
-<body>
+<body onLoad="pageLoadInit()">
 	<div class="container-fluid">
 	  <div class="row">
 		<div class="col-xs" id="board">
@@ -64,20 +64,20 @@
 	</div> <!-- end of player view row div -->
 
 	<!-- Create Buttons for each card in player hand to trigger modal-->
-	<div th:if="${playerView.playerColor == playerView.colorOfCurrentTurnPlayer}">
-		<th:block th:each="card : ${playerView.playerHand.cards}">
-			<button type="button" class="btn" data-toggle="modal" data-target="#exampleModal" th:data-anothervar="${card.pegMovingDistance}" th:data-whatever="${card.name}" >
-				<img th:src="@{'/cards/Playing_card_'+${card.name}+'.svg'}"	th:data-cardname="${card.name}"	th:alt="${card.name}" height="120" width="80" />
+<!-- 	<div th:if="${playerView.playerColor == playerView.colorOfCurrentTurnPlayer}">  -->
+		<th:block th:each="card, iStat : ${playerView.playerHand.cards}">
+			<button th:id="${'cardButton-'+iStat.index}" type="button" class="btn" data-toggle="modal" data-target="#exampleModal" th:data-anothervar="${card.pegMovingDistance}" th:data-whatever="${card.name}" >
+				<img th:id="${'card-'+iStat.index}" th:src="@{'/cards/Playing_card_'+${card.name}+'.svg'}"	th:data-cardname="${card.name}"	th:alt="${card.name}" height="120" width="80" />
 			</button>
 		</th:block>
 		<button th:if="${playerView.playerHand.burnedCardCount == 2}" type="button" class="btn-primary" data-toggle="modal" data-target="#exampleModal" data-anothervar="FREE_START" data-whatever="FREE_START">Free Start</button>
-	</div>
-	<div th:if="${playerView.playerColor != playerView.colorOfCurrentTurnPlayer}">
-		<th:block th:each="card : ${playerView.playerHand.cards}">
-				<img th:src="@{'/cards/Playing_card_'+${card.name}+'.svg'}"	th:data-cardname="${card.name}"	alt="${card.name}" height="120" width="80" />
+<!--  	</div> -->
+<!-- 	<div th:if="${playerView.playerColor != playerView.colorOfCurrentTurnPlayer}">
+		<th:block th:each="card, iStat : ${playerView.playerHand.cards}">
+				<img th:id="${'card-'+iStat.index}" th:src="@{'/cards/Playing_card_'+${card.name}+'.svg'}"	th:data-cardname="${card.name}"	th:alt="${card.name}" height="120" width="80" />
 		</th:block>
 	</div>
-	
+	 -->
 	<button id="auto-size" class ="btn-primary" onClick="autosize()">Auto Size</button>
 	<button id="large-size" class ="btn-primary" onClick="largeSize()">Large</button>
 	<button id="xl-size" class ="btn-primary" onClick="extraLargeSize()">Extra Large</button>
@@ -414,6 +414,12 @@
    })
    </script>
    <script th:inline="javascript">
+   
+    function pageLoadInit()
+    {
+    	setInterval(ajaxRefresh, 5000);
+    	ajaxRefresh();
+    }
 	function ajaxRefresh() {
 			$.get("/game/"+[[${turnRequest.gameId}]]+"/playerView/"+[[${playerView.playerNumber}]], function(data, status){
 				playerView = data;
@@ -421,6 +427,7 @@
 				updateCardsRemaining();
 				updateLastCardPlayed();
 				updateColorOfCurrentTurnPlayer();
+				updatePlayerHand();
 			  });
 
 		}
@@ -442,6 +449,28 @@
 		var colorOfCurrentTurnPlayerSpan = document.getElementById("colorOfCurrentTurnPlayer");
 		colorOfCurrentTurnPlayerSpan.innerText = playerView.colorOfCurrentTurnPlayer;
 	}
+	
+	function updatePlayerHand()
+	{
+		for (let c=0;c<5;c++)
+			{
+				card = document.getElementById("card-"+c);
+				card.src = "/cards/Playing_card_"+playerView.playerHand.cards[c].name+".svg";
+				card.setAttribute("data-cardname", playerView.playerHand.cards[c].name);
+				card.alt = playerView.playerHand.cards[c].name;
+				
+				cardButton = document.getElementById("cardButton-"+c);
+				if (playerView.playerColor == playerView.colorOfCurrentTurnPlayer)
+					{
+						cardButton.disabled=false;
+					}
+				else
+					{
+						cardButton.disabled=true;
+					}
+			}
+	}
+	
    </script>
   </body>
  </html>

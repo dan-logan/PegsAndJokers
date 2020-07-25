@@ -4,7 +4,7 @@
 	<!-- Required meta tags always come first -->
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<meta th:if="${playerView.playerColor != playerView.colorOfCurrentTurnPlayer}" http-equiv="Refresh" content="5">
+<!-- 	<meta th:if="${playerView.playerColor != playerView.colorOfCurrentTurnPlayer}" http-equiv="Refresh" content="5">  -->
 	<!-- Bootstrap CSS -->
 	<meta http-equiv="x-ua-compatible" content="ie=edge">
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
@@ -36,75 +36,6 @@
 				message</span>
 			</h3>
  -->			<canvas></canvas>
-<!-- 			
-			<table class="table table-bordered table-sm bg-light">
-				<thead>
- 				<tr>
-					<th scope="col">Burnt Cards</th>
-					<th scope="col">Current<br/>Player</th>
-					<th scope="col">Side Color</th>
-					<th scope="col"></th>
-					<th scope="col"></th>
-					<th scope="col">Go Home</th>
-					<th scope="col"></th>
-					<th scope="col"></th>
-					<th scope="col"></th>
-					<th scope="col"></th>
-					<th scope="col">Come Out</th>
-					<th scope="col"></th>
-					<th scope="col"></th>
-					<th scope="col"></th>
-					<th scope="col"></th>
-					<th scope="col"></th>
-					<th scope="col"></th>
-					<th scope="col"></th>
-					<th scope="col"></th>
-					<th scope="col"></th>
-					<th scope="col"></th>
-				</tr>
-				<thead>
-				<tbody>
-				<th:block th:each="side, iterStat : ${playerView.board.playerSides}">
-					<tr>
-	 					<td rowspan="3">
-						<span th:if="${playerView.burntCardCounts[iterStat.index] > 0}">
-							<th:block th:each="i: ${#numbers.sequence(1, playerView.burntCardCounts[iterStat.index])}">
-								<img th:src="@{'/cards/Card_back_resized.svg'}" alt="face-down card" class="img-fluid" height="80" width="60"/>
-							</th:block>
-						</span>
-						</td> 
- 						<td rowspan="3"><span th:if="${side.color == playerView.colorOfCurrentTurnPlayer}"><img th:src="@{/images/ltr-grey.svg}" alt="Current Player" class="img-fluid"/></span> </td>
-						<td th:bgcolor="${side.color}" th:text="'Start'" >color<br />Home
-							Track
-						</td>
-						<td style="border: none"></td>
-						<td style="border: none"></td>
-						<td style="border: none"></td>
-						<td align="center"  th:each="hp : ${side.startPositions}"
-							th:bgcolor="${hp.pegColor}"><span th:if="${hp.pegNumber!=null}" th:text="${hp.pegNumber}">peg
-								color</span><span th:if="${hp.pegNumber==null}" th:text="${'&#x2022'}">bullet</span></td>
-					</tr>
-					<tr>
-		 				<td th:bgcolor="${side.color}" th:text="${side.color}">color</td>
-						<td align="center" th:each="mp : ${side.mainTrackPositions}"
-							th:bgcolor="${mp.pegColor}"><span th:if="${mp.pegNumber!=null}" th:text="${mp.pegNumber}">peg
-								color</span><span th:if="${mp.pegNumber==null}" th:text="${'&#x2022'}">bullet</span>
-						</td>
-					</tr>
-					<tr>
-						<td th:bgcolor="${side.color}" th:text="'Home'">color<br />Home
-							Track
-						</td>
-						<td style="border: none"></td>
-						<td style="border: none"></td>
-						<td align="center"  th:each="hp : ${side.homePositions}"
-							th:bgcolor="${hp.pegColor}"><span th:if="${hp.pegNumber!=null}" th:text="${hp.pegNumber}">peg
-								color</span><span th:if="${hp.pegNumber==null}" th:text="${'&#x2022'}">bullet</span></td>
-					</tr>
-				</th:block>
-				</tbody>
-			</table>
- -->
 		</div> <!-- end of playerView left hand side board layout column div -->
 		<div class="col">
 		<div class="container-fluid">
@@ -119,12 +50,12 @@
 			</thead>
 			<tbody>
 			<tr>
-			<td><figure><img th:src="@{/cards/Card_back_resized.svg}" alt="Discard Pile" height="90" width="60"/><figcaption><span th:text="${playerView.cardsRemaining}">cards remaining</span> cards remaining </figcaption></figure></td> 
-	 		<td><figure th:if="${playerView.lastCardPlayed}"><img th:src="@{'/cards/Playing_card_'+${playerView.lastCardPlayed.name}+'.svg'}" alt="Last Card Played" height="90" width="60"><figcaption>Last Card Played</figcaption></figure></td> 
+			<td><figure><img th:src="@{/cards/Card_back_resized.svg}" alt="Discard Pile" height="90" width="60"/><figcaption><span id="cardsRemaining" th:text="${playerView.cardsRemaining}">cards remaining</span> cards remaining </figcaption></figure></td> 
+	 		<td><figure th:if="${playerView.lastCardPlayed}"><img id="lastCardPlayed" th:src="@{'/cards/Playing_card_'+${playerView.lastCardPlayed.name}+'.svg'}" alt="Last Card Played" height="90" width="60"><figcaption>Last Card Played</figcaption></figure></td> 
 	 		</tr>
 			</tbody>
 			</table>
-			Waiting for <span th:text="${playerView.colorOfCurrentTurnPlayer}">current player</span> to play.
+			Waiting for <span id="colorOfCurrentTurnPlayer" th:text="${playerView.colorOfCurrentTurnPlayer}">current player</span> to play.
 		</div>  <!-- end of discard and draw pile col div -->
 		<div class="col-6"></div>
 		</div>  <!-- end of discard and draw pile row div -->
@@ -136,7 +67,7 @@
 	<div th:if="${playerView.playerColor == playerView.colorOfCurrentTurnPlayer}">
 		<th:block th:each="card : ${playerView.playerHand.cards}">
 			<button type="button" class="btn" data-toggle="modal" data-target="#exampleModal" th:data-anothervar="${card.pegMovingDistance}" th:data-whatever="${card.name}" >
-				<img th:src="@{'/cards/Playing_card_'+${card.name}+'.svg'}"	th:data-cardname="${card.name}"	alt="${card.name}" height="120" width="80" />
+				<img th:src="@{'/cards/Playing_card_'+${card.name}+'.svg'}"	th:data-cardname="${card.name}"	th:alt="${card.name}" height="120" width="80" />
 			</button>
 		</th:block>
 		<button th:if="${playerView.playerHand.burnedCardCount == 2}" type="button" class="btn-primary" data-toggle="modal" data-target="#exampleModal" data-anothervar="FREE_START" data-whatever="FREE_START">Free Start</button>
@@ -484,11 +415,33 @@
    </script>
    <script th:inline="javascript">
 	function ajaxRefresh() {
-			console.log("refreshing");
 			$.get("/game/"+[[${turnRequest.gameId}]]+"/playerView/"+[[${playerView.playerNumber}]], function(data, status){
-			    alert("Player Message: " + data.playerMessage + "\nStatus: " + status);
+				playerView = data;
+				init();
+				updateCardsRemaining();
+				updateLastCardPlayed();
+				updateColorOfCurrentTurnPlayer();
 			  });
+
 		}
+	
+	function updateCardsRemaining()
+	{
+		var cardsRemainingSpan = document.getElementById("cardsRemaining");
+		cardsRemainingSpan.innerText = playerView.cardsRemaining;
+	}
+	
+	function updateLastCardPlayed()
+	{
+		var lastCardPlayedImg = document.getElementById("lastCardPlayed");
+		lastCardPlayedImg.src = "/cards/Playing_card_"+playerView.lastCardPlayed.name+".svg";
+	}
+	
+	function updateColorOfCurrentTurnPlayer()
+	{
+		var colorOfCurrentTurnPlayerSpan = document.getElementById("colorOfCurrentTurnPlayer");
+		colorOfCurrentTurnPlayerSpan.innerText = playerView.colorOfCurrentTurnPlayer;
+	}
    </script>
   </body>
  </html>

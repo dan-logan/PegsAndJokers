@@ -50,8 +50,10 @@
 			</thead>
 			<tbody>
 			<tr>
-			<td><figure><img th:src="@{/cards/Card_back_resized.svg}" alt="Discard Pile" height="90" width="60"/><figcaption><span id="cardsRemaining" th:text="${playerView.cardsRemaining}">cards remaining</span> cards remaining </figcaption></figure></td> 
-	 		<td><figure th:if="${playerView.lastCardPlayed}"><img id="lastCardPlayed" th:src="@{'/cards/Playing_card_'+${playerView.lastCardPlayed.name}+'.svg'}" alt="Last Card Played" height="90" width="60"><figcaption>Last Card Played</figcaption></figure></td> 
+			<td><figure><img th:src="@{/cards/Card_back_resized.svg}" alt="Discard Pile" height="90" width="60"/><figcaption><span id="cardsRemaining" th:text="${playerView.cardsRemaining}">cards remaining</span> cards remaining </figcaption></figure></td>
+	 		<td><figure th:if="${playerView.lastCardPlayed}"><img id="lastCardPlayed" th:src="@{'/cards/Playing_card_'+${playerView.lastCardPlayed.name}+'.svg'}" alt="Last Card Played" height="90" width="60"><figcaption>Last Card Played</figcaption></figure>
+	 			<figure th:if="${playerView.lastCardPlayed==null}"><img id="lastCardPlayed" th:src="@{'/images/blank.svg'}" alt="Last Card Played" height="90" width="60"><figcaption>Last Card Played</figcaption></figure>
+	 		</td> 
 	 		</tr>
 			</tbody>
 			</table>
@@ -107,17 +109,19 @@
 			   </div>
 			   <div id="collapseOne" class="collapse collapsed" aria-labelledby="headingOne" data-parent="#accordionExample">
 				 <div class="card-body">
-				   <form id="startAPegForm" th:action="@{/mvc/taketurn}" th:object="${turnRequest}" method="post">
+<!--  			   <form id="startAPegForm" th:action="@{/game/{id}/turns(id=${turnRequest.gameId})}" th:object="${turnRequest}" method="post">
+-->				   <form id="startAPegForm" th:action="@{/api/taketurn}" th:object="${turnRequest}" method="post">
 					 <input class="form-control" type="hidden" th:field="*{playerNumber}" />
 					 <input type="hidden" th:field="*{gameId}" />
 					 <input type="hidden" th:field="*{moveType}" id="startAPegFormMoveType"/>
 					 <input type="hidden" th:field="*{cardName}" id="startAPegFormCardName" value="ACE of CLUBS" />
-						   <div class="form-group">
+					 <div class="form-group">
 					   <label for="startAPegFormPegNumber">Which peg number do you want to start?</label>
 					   <select class="form-control" id="startAPegFormPegNumber" th:field="*{playerPositionNumber}">
 							<option th:each="i : ${#numbers.sequence(1, 5)}" th:value="${i}" th:text="${i}"></option>
 					   </select>
-					 </div>  
+					 </div>
+					 <div id="startAPegFormErrorMessage" class="alert alert-danger" role="alert" hidden="true"></div>
 					 <button type="submit" class="btn btn-primary"><img th:src="@{/images/fall-down.svg}">Start It!</img></button>  
 				   </form>
 				 </div>
@@ -295,7 +299,8 @@
 	 <!-- Modal dialog script-->
  <script>
    $('#exampleModal').on('show.bs.modal', function (event) {
- 
+ 	
+	 setupForms();
 	 var button = $(event.relatedTarget) // Button that triggered the modal
 	 var whatevername = button.data('whatever') // Extract info from data-* attributes
 	 // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
@@ -412,6 +417,35 @@
 	 }
 	 
    })
+   
+   function setupForms() {
+ 	  //Process submit for startAPegForm
+  	 $('#startAPegForm').submit(function (event) {
+	   
+	    event.preventDefault(); //prevent default action 
+		var post_url = $(this).attr("action"); //get form action url
+		var request_method = $(this).attr("method"); //get form GET/POST method
+		var form_data = $(this).serialize(); //Encode form elements for submission
+		var errorMessageDiv = document.getElementById("startAPegFormErrorMessage");
+		errorMessageDiv.hidden=true;
+		$.ajax({
+			url : post_url,
+			type: request_method,
+			data : form_data
+		}).done(function(response){ //
+			playerView = response;
+			updateDisplay();
+			$('#exampleModal').modal('hide');
+			}).fail(function(response) {
+				//document.getElementById("startAPegFormErrorMessage").innerText=response.responseJSON.message;
+				errorMessageDiv.innerText = response.responseJSON.message;
+				errorMessageDiv.hidden=false;
+				});
+	   
+   	})
+   }
+ 
+   
    </script>
    <script th:inline="javascript">
    
@@ -423,14 +457,20 @@
 	function ajaxRefresh() {
 			$.get("/game/"+[[${turnRequest.gameId}]]+"/playerView/"+[[${playerView.playerNumber}]], function(data, status){
 				playerView = data;
-				init();
-				updateCardsRemaining();
-				updateLastCardPlayed();
-				updateColorOfCurrentTurnPlayer();
-				updatePlayerHand();
+				updateDisplay();
 			  });
 
 		}
+	
+	function updateDisplay()
+	{
+		init();
+		updateCardsRemaining();
+		updateLastCardPlayed();
+		updateColorOfCurrentTurnPlayer();
+		updatePlayerHand();
+	
+	}
 	
 	function updateCardsRemaining()
 	{
@@ -440,8 +480,11 @@
 	
 	function updateLastCardPlayed()
 	{
-		var lastCardPlayedImg = document.getElementById("lastCardPlayed");
-		lastCardPlayedImg.src = "/cards/Playing_card_"+playerView.lastCardPlayed.name+".svg";
+		if(playerView.lastCardPlayed != null)
+			{
+				var lastCardPlayedImg = document.getElementById("lastCardPlayed");
+				lastCardPlayedImg.src = "/cards/Playing_card_"+playerView.lastCardPlayed.name+".svg";
+			}
 	}
 	
 	function updateColorOfCurrentTurnPlayer()

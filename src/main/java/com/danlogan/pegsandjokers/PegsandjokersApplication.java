@@ -111,7 +111,72 @@ public class PegsandjokersApplication {
 			
 		return new ResponseEntity<Game>(game, HttpStatus.OK);
 	}
-	
+	@PostMapping("/api/taketurn")
+	@ResponseBody
+	public ResponseEntity<PlayerView> apiTakeTurn(@ModelAttribute("turnRequest") TurnRequest turnRequest) throws GameNotFoundException, PlayerNotFoundException, InvalidGameStateException, InvalidMoveException, PlayerPositionNotFoundException, CannotMoveToAPositionYouOccupyException, JsonMappingException, JsonProcessingException
+	{
+		System.out.println("got api turn request: " + turnRequest.toString());
+		
+		String gameId = turnRequest.getGameId();
+		
+		Game game = gameRepository.findGameById(gameId);
+		
+		game.attachGameEventListener(gameEventListener);
+		
+		PlayerTurn turn;
+		
+		switch(turnRequest.getMoveType())
+		{
+		
+		case SPLIT_MOVE:
+			
+			int[] splitMoveArray = {turnRequest.getPlayerPositionNumber(), turnRequest.getMoveDistance(), turnRequest.getPlayerPositionNumber2(), turnRequest.getMoveDistance2()};
+			
+			turn = PlayerTurn.Builder.newInstance()
+			.withCardName(turnRequest.getCardName())
+			.withMoveType(turnRequest.getMoveType())
+			.withPlayerNumber(turnRequest.getPlayerNumber())
+			.withSplitMoveArray(splitMoveArray)
+			.build();
+			
+			break;
+		
+		case USE_JOKER:
+			
+			turn = PlayerTurn.Builder.newInstance()
+			.withCardName(turnRequest.getCardName())
+			.withMoveType(turnRequest.getMoveType())
+			.withPlayerNumber(turnRequest.getPlayerNumber())
+			.withPositionNumber(turnRequest.getPlayerPositionNumber())
+			.withTargetBoardPositionId(turnRequest.getTargetBoardPosition())
+			.build();
+			
+			break;
+			
+		default:
+			
+			turn = PlayerTurn.Builder.newInstance()
+			.withCardName(turnRequest.getCardName())
+			.withMoveType(turnRequest.getMoveType())
+			.withPlayerNumber(turnRequest.getPlayerNumber())
+			.withPositionNumber(turnRequest.getPlayerPositionNumber())
+			.withMoveDistance(turnRequest.getMoveDistance())
+			.build();
+			
+			break;
+		
+		}
+		
+		game.takeTurn(turn);
+		
+		gameRepository.saveGame(game);
+		
+		PlayerView playerView = game.getPlayerView(turnRequest.getPlayerNumber());
+		
+		return new ResponseEntity<PlayerView>(playerView, HttpStatus.OK);
+	}
+
+
 	//Post a new turn to a game -  this is how players take turns
 	@PostMapping("/game/{id}/turns")
 	@ResponseBody
@@ -239,7 +304,6 @@ public class PegsandjokersApplication {
 
 		return "mvc/playerView";
 	}
-
 	@PostMapping("/mvc/taketurn")
 	public String takeTurn(@ModelAttribute("turnRequest") TurnRequest turnRequest) throws GameNotFoundException, PlayerNotFoundException, InvalidGameStateException, InvalidMoveException, PlayerPositionNotFoundException, CannotMoveToAPositionYouOccupyException, JsonMappingException, JsonProcessingException
 	{

@@ -138,7 +138,7 @@
 			   </div>
 			   <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
 				 <div class="card-body">
-				   <form id="MoveAPegForm" th:action="@{/mvc/taketurn}" th:object="${turnRequest}" method="post">
+				   <form id="MoveAPegForm" th:action="@{/api/taketurn}" th:object="${turnRequest}" method="post">
 					<input class="form-control" type="hidden" th:field="*{playerNumber}" />
 					<input type="hidden" th:field="*{gameId}" />
 					<input type="hidden" th:field="*{moveType}" id="moveAPegFormMoveType" />
@@ -153,6 +153,7 @@
 						 <option class="form-control" selected="true" value="7">7</option>
 					   </select>
 					 </div>  
+					 <div id="moveAPegFormErrorMessage" class="alert alert-danger" role="alert" hidden="true"></div>
 					 <button type="submit" class="btn btn-primary"><img th:src="@{/images/move.svg}">Move It!</img></button>  
 				   </form>
 				 </div>
@@ -300,7 +301,6 @@
  <script>
    $('#exampleModal').on('show.bs.modal', function (event) {
  	
-	 setupForms();
 	 var button = $(event.relatedTarget) // Button that triggered the modal
 	 var whatevername = button.data('whatever') // Extract info from data-* attributes
 	 // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
@@ -422,27 +422,41 @@
  	  //Process submit for startAPegForm
   	 $('#startAPegForm').submit(function (event) {
 	   
-	    event.preventDefault(); //prevent default action 
-		var post_url = $(this).attr("action"); //get form action url
-		var request_method = $(this).attr("method"); //get form GET/POST method
-		var form_data = $(this).serialize(); //Encode form elements for submission
-		var errorMessageDiv = document.getElementById("startAPegFormErrorMessage");
-		errorMessageDiv.hidden=true;
-		$.ajax({
-			url : post_url,
-			type: request_method,
-			data : form_data
-		}).done(function(response){ //
-			playerView = response;
-			updateDisplay();
-			$('#exampleModal').modal('hide');
-			}).fail(function(response) {
-				//document.getElementById("startAPegFormErrorMessage").innerText=response.responseJSON.message;
-				errorMessageDiv.innerText = response.responseJSON.message;
-				errorMessageDiv.hidden=false;
-				});
+		handleFormSubmit(this, "startAPegForm");
 	   
    	})
+	 
+   	$('#MoveAPegForm').submit(function (event) {
+		   
+   		handleFormSubmit(this,"moveAPegFormErrorMessage");
+
+	})
+
+	function handleFormSubmit(form, formErrorMsgName)
+ 	  {
+		    event.preventDefault(); //prevent default action 
+			var post_url = $(form).attr("action"); //get form action url
+			var request_method = $(form).attr("method"); //get form GET/POST method
+			var form_data = $(form).serialize(); //Encode form elements for submission
+			var errorMessageDiv = document.getElementById(formErrorMsgName);
+			errorMessageDiv.hidden=true;
+			$.ajax({
+				url : post_url,
+				type: request_method,
+				data : form_data
+			}).done(function(response){ //
+				playerView = response;
+				updateDisplay();
+				$('#exampleModal').modal('hide');
+				}).fail(function(response) {
+					errorMessageDiv.innerText = response.responseJSON.message;
+					errorMessageDiv.hidden=false;
+					});
+
+ 		  
+ 	  }
+	
+	
    }
  
    
@@ -451,6 +465,7 @@
    
     function pageLoadInit()
     {
+    	setupForms();
     	setInterval(ajaxRefresh, 5000);
     	ajaxRefresh();
     }
@@ -502,7 +517,11 @@
 				card.setAttribute("data-cardname", playerView.playerHand.cards[c].name);
 				card.alt = playerView.playerHand.cards[c].name;
 				
-				cardButton = document.getElementById("cardButton-"+c);
+				cardButtonName = "cardButton-"+c;
+				cardButton = document.getElementById(cardButtonName);
+				$('#'+cardButtonName).data('whatever', playerView.playerHand.cards[c].name);
+				$('#'+cardButtonName).data('anothervar', playerView.playerHand.cards[c].pegMovingDistance);
+//				cardButton.setAttribute("data-whatever", playerView.playerHand.cards[c].name);
 				if (playerView.playerColor == playerView.colorOfCurrentTurnPlayer)
 					{
 						cardButton.disabled=false;

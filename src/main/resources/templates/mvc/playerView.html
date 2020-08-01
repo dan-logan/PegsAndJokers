@@ -72,7 +72,9 @@
 				<img th:id="${'card-'+iStat.index}" th:src="@{'/cards/Playing_card_'+${card.name}+'.svg'}"	th:data-cardname="${card.name}"	th:alt="${card.name}" height="120" width="80" />
 			</button>
 		</th:block>
-		<button th:if="${playerView.playerHand.burnedCardCount == 2}" type="button" class="btn-primary" data-toggle="modal" data-target="#exampleModal" data-anothervar="FREE_START" data-whatever="FREE_START">Free Start</button>
+		<button id="freeStartButton" type="button" class="btn" data-toggle="modal" data-target="#exampleModal" data-anothervar="FREE_START" data-whatever="FREE_START">
+			<img id="freeStartImg" src="/cards/free_start_card.svg" alt="free start" height="120" width="80" />
+		</button>
 <!--  	</div> -->
 <!-- 	<div th:if="${playerView.playerColor != playerView.colorOfCurrentTurnPlayer}">
 		<th:block th:each="card, iStat : ${playerView.playerHand.cards}">
@@ -170,7 +172,7 @@
 			   </div>
 			   <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
 				 <div class="card-body">
-				   <form id="splitMoveForm" th:action="@{/mvc/taketurn}" th:object="${turnRequest}" method="post">
+				   <form id="splitMoveForm" th:action="@{/api/taketurn}" th:object="${turnRequest}" method="post">
 					 <input class="form-control" type="hidden" th:field="*{playerNumber}" />
 					 <input type="hidden" th:field="*{gameId}" />
 					 <input type="hidden" th:field="*{moveType}" id="splitMoveFormMoveType" />
@@ -196,6 +198,7 @@
 						 <option class="form-control" value="13">13</option>
 					   </select>
 					 </div>  
+					 <div id="splitMoveFormErrorMessage" class="alert alert-danger" role="alert" hidden="true"></div>
 					 <button type="submit" class="btn btn-primary"><img th:src="@{/images/van-damme-split.svg}">Split 'em!</img></button>  
 				   </form>
 				 </div>
@@ -212,7 +215,7 @@
 			   </div>
 			   <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordionExample">
 				 <div class="card-body">
-				   <form id="useAJokerForm" th:action="@{/mvc/taketurn}" th:object="${turnRequest}" method="post">
+				   <form id="useAJokerForm" th:action="@{/api/taketurn}" th:object="${turnRequest}" method="post">
 					 <input class="form-control" type="hidden" th:field="*{playerNumber}" />
 					 <input type="hidden" th:field="*{gameId}" />
 					 <input type="hidden" th:field="*{moveType}" id="useAJokerFormMoveType" />
@@ -229,6 +232,7 @@
 						</th:block>
 					   </select>
 					 </div>  
+					 <div id="useAJokerFormErrorMessage" class="alert alert-danger" role="alert" hidden="true"></div>
 					 <button type="submit" class="btn btn-primary"><img th:src="@{/images/card-joker.svg}">Use It!</img></button>  
 				   </form>
 				 </div>
@@ -245,12 +249,13 @@
 			   </div>
 			   <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#accordionExample">
 				 <div class="card-body">
-				  <form id="burnACardForm" th:action="@{/mvc/taketurn}" th:object="${turnRequest}" method="post">
+				  <form id="burnACardForm" th:action="@{/api/taketurn}" th:object="${turnRequest}" method="post">
 					 <input class="form-control" type="hidden" th:field="*{playerNumber}" />
 					 <input type="hidden" th:field="*{gameId}" />
 					 <input type="hidden" th:field="*{moveType}" id="burnACardFormMoveType" />
 					 <input type="hidden" th:field="*{cardName}" id="burnACardFormCardName" value="ACE of CLUBS" />
-					   <button type="submit" class="btn btn-primary"><img th:src="@{/images/card-burn.svg}">Burn It!</img></button>  
+					 <div id="burnACardFormErrorMessage" class="alert alert-danger" role="alert" hidden="true"></div>
+					 <button type="submit" class="btn btn-primary"><img th:src="@{/images/card-burn.svg}">Burn It!</img></button>  
 				   </form>
 				 </div>
 			   </div>
@@ -266,7 +271,7 @@
 			   </div>
 			   <div id="collapseSix" class="collapse" aria-labelledby="headingFive" data-parent="#accordionExample">
 				 <div class="card-body">
-				  <form id="freeStartForm" th:action="@{/mvc/taketurn}" th:object="${turnRequest}" method="post">
+				  <form id="freeStartForm" th:action="@{/api/taketurn}" th:object="${turnRequest}" method="post">
 					 <input class="form-control" type="hidden" th:field="*{playerNumber}" />
 					 <input type="hidden" th:field="*{gameId}" />
 					 <input type="hidden" th:field="*{moveType}" id="freeStartFormMoveType" />
@@ -276,6 +281,7 @@
 							<option th:each="i : ${#numbers.sequence(1, 5)}" th:value="${i}" th:text="${i}"></option>
 					   </select>
 					 </div>  
+					 <div id="freeStartFormErrorMessage" class="alert alert-danger" role="alert" hidden="true"></div>
 	     		     <button type="submit" class="btn btn-primary">Free Start!</button>  
 				   </form>
 				 </div>
@@ -432,6 +438,30 @@
 
 	})
 
+	$('#splitMoveForm').submit(function (event) {
+		   
+   		handleFormSubmit(this,"splitMoveFormErrorMessage");
+
+	})
+
+	$('#useAJokerForm').submit(function (event) {
+		   
+   		handleFormSubmit(this,"useAJokerFormErrorMessage");
+
+	})
+
+	$('#burnACardForm').submit(function (event) {
+		   
+   		handleFormSubmit(this,"burnACardFormErrorMessage");
+
+	})
+
+	$('#freeStartForm').submit(function (event) {
+		   
+   		handleFormSubmit(this,"freeStartFormErrorMessage");
+
+	})
+	
 	function handleFormSubmit(form, formErrorMsgName)
  	  {
 		    event.preventDefault(); //prevent default action 
@@ -484,6 +514,7 @@
 		updateLastCardPlayed();
 		updateColorOfCurrentTurnPlayer();
 		updatePlayerHand();
+		updateFreeStartButton();
 	
 	}
 	
@@ -530,6 +561,19 @@
 					{
 						cardButton.disabled=true;
 					}
+			}
+	}
+	
+	function updateFreeStartButton()
+	{
+		fsButton = document.getElementById('freeStartButton');
+		if ((playerView.playerColor == playerView.colorOfCurrentTurnPlayer) && (playerView.playerHand.burnedCardCount == 2))
+			{
+				fsButton.disabled = false;
+			}
+		else
+			{
+				fsButton.disabled = true;
 			}
 	}
 	

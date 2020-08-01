@@ -422,7 +422,12 @@
 	   		
 		  player.forEach(function (position)
    			{
+			  if(position.playerBoardPositionId.includes("Start") || position.playerBoardPositionId.includes("Home"))
+				  { // don't include start and home positions in list
+				  }
+			  else {
    				otherPlayerOptions.append('<option value="'+position.playerBoardPositionId+'"class="form-control">'+position.pegColor+' peg# '+ position.pegNumber +'</option>');
+			  }
    			})		  
 	  })
 		   

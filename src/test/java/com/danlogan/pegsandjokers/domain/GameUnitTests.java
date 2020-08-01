@@ -850,6 +850,44 @@ public class GameUnitTests {
 	}
 
 	@Test
+	public void testCannotMoveJokerToStartPosition() throws PlayerNotFoundException, InvalidMoveException, InvalidGameStateException, CannotMoveToAPositionYouOccupyException,
+	PlayerPositionNotFoundException
+	{
+		Card cardToPlay = new Joker();
+
+		PlayerHand playerHand = PlayerHand.Builder.newInstance(1)
+				.withCard(cardToPlay)
+				.build();
+
+		Game game = Game.Builder.newInstance()
+				.withPlayerHand(playerHand)
+				.withNumberOfPlayers(3)
+				.build();
+
+		PlayerTurn turn = PlayerTurn.Builder.newInstance()
+				.withCardName(cardToPlay.getName())
+				.withMoveType(MoveType.USE_JOKER)
+				.withPlayerNumber(1)
+				.withPositionNumber(1)
+				.withTargetBoardPositionId("LightBlueStart-1")
+				.build();
+
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isEqualTo("TomatoStart-1");
+	
+		try {
+			game.takeTurn(turn);
+			assert(false);
+		}
+		catch (InvalidMoveException e)
+		{
+			assertThat(e.getMessage()).contains("Cannot replace opponent peg if it is not on main track");
+		}
+
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isEqualTo("TomatoStart-1");
+	
+	}
+
+	@Test
 	public void testCannotUseJokerToReplaceYourOwnPeg() throws PlayerNotFoundException, InvalidMoveException, InvalidGameStateException, CannotMoveToAPositionYouOccupyException,
 	PlayerPositionNotFoundException
 	{

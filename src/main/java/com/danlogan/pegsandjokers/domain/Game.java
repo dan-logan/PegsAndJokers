@@ -428,6 +428,12 @@ public class Game {
 			}
 		}
 		
+		//Verify that position is on the main track
+		if (!targetBoardPosition.isMainTrackPosition())
+		{
+			throw new InvalidMoveException("Cannot replace opponent peg if it is not on main track");
+		}
+		
 		PlayerPosition fromPlayerPosition = this.getPlayerPositions(turn.getPlayerNumber()).get(turn.getPlayerPositionNumber()-1);
 		this.movePeg(fromPlayerPosition, targetBoardPosition); //FIX
 

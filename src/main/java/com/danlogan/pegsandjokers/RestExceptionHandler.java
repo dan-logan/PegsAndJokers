@@ -24,9 +24,13 @@ import com.danlogan.pegsandjokers.domain.InvalidMoveException;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
+import java.util.logging.Logger;
+
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
+	
+	Logger LOG = Logger.getLogger(RestExceptionHandler.class.getName());
 
    @Override
    protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
@@ -79,7 +83,16 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 	   return buildResponseEntity(apiError);
 	   
    }
-
+   
+   @ExceptionHandler(RuntimeException.class)
+   protected ResponseEntity<Object> handleRuntimeException(RuntimeException ex){
+	   ApiError apiError = new ApiError(BAD_REQUEST);
+	   apiError.setMessage(ex.getMessage());
+	   LOG.warning(ex.toString());
+	   return buildResponseEntity(apiError);
+	   
+   }
+ 
    @ExceptionHandler(InvalidMoveException.class)
    protected ResponseEntity<Object> handleInvalidMoveException(InvalidMoveException ex){
 	   ApiError apiError = new ApiError(BAD_REQUEST);

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.danlogan.pegsandjokers.commands.JoinGameCommand;
 import com.danlogan.pegsandjokers.domain.Roster;
 import com.danlogan.pegsandjokers.infrastructure.RosterRepository;
 
@@ -52,6 +53,25 @@ public class GameRosterController {
 		return new ResponseEntity<Roster>(roster, HttpStatus.CREATED);
 		
 	}
+	
+	@PostMapping("/api/roster/{id}/player/")
+	@ResponseBody
+	public ResponseEntity<Roster> joinGame(@PathVariable String id, @RequestBody JoinGameCommand cmd)
+	{
+		LOG.info(String.format("Received joinGameRequest with command: %s", cmd.toString()));
+		
+		Roster roster = rosterRespository.findRosterById(id);
+		
+		if (roster == null)
+		{
+			throw new RuntimeException(String.format("Roster with gameID %s is not found.", id));
+		}
+		
+		roster.assignSeat(cmd.getPlayerNumber(), cmd.getPlayerName());
+		
+		return new ResponseEntity<Roster>(roster, HttpStatus.OK);
+	}
+	
 
 }
 

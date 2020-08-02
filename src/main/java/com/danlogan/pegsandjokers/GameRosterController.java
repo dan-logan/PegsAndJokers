@@ -1,5 +1,7 @@
 package com.danlogan.pegsandjokers;
 
+import java.util.logging.Logger;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +15,8 @@ import com.danlogan.pegsandjokers.infrastructure.RosterRepository;
 @Controller
 public class GameRosterController {
 	
+	private static final Logger LOG = Logger.getLogger(GameRosterController.class.getName());
+
 	@Autowired
 	private RosterRepository rosterRespository;
 	
@@ -20,6 +24,7 @@ public class GameRosterController {
 	@ResponseBody
 	public ResponseEntity<Roster> roster()
 	{
+		LOG.info("Recieve roster request");
 		Roster roster = rosterRespository.getRoster();
 		return new ResponseEntity<Roster>(roster, HttpStatus.OK);
 	}

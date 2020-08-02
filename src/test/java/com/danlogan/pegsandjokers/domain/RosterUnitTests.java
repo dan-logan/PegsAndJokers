@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 
+import com.danlogan.pegsandjokers.infrastructure.RosterRepository;
+
 public class RosterUnitTests {
 	
 	@Test
@@ -103,6 +105,26 @@ public class RosterUnitTests {
 			assertThat(e.getMessage()).isEqualTo("Player name cannot be blank");
 		}
 
+		
+	}
+	
+	@Test
+	public void testRosterRespositorySaveAndFind()
+	{
+		RosterRepository repo = new RosterRepository();
+		
+		Roster roster = Roster.Builder.newInstance()
+				.withGameId("myGameID")
+				.withNumberOfPlayers(3)
+				.build();
+
+		repo.save(roster);
+		
+		Roster roster2 = repo.findRosterById("myGameID");
+		
+		assertThat(roster2).isNotNull();
+
+		assertThat(roster).isEqualToComparingFieldByField(roster2);
 		
 	}
 

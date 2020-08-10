@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import com.danlogan.pegsandjokers.domain.Roster;
+import com.danlogan.pegsandjokers.domain.events.RosterEvent;
 
 import lombok.extern.java.Log;
 
@@ -39,12 +40,12 @@ public class SSEController {
   }
 
   @EventListener
-  public void onRoster(Roster roster) {
-	log.info("Received roster event: " + roster.toString());
+  public void onRoster(RosterEvent rosterEvent) {
+	log.info("Received roster event: " + rosterEvent.toString());
     List<SseEmitter> deadEmitters = new ArrayList<>();
     this.emitters.forEach(emitter -> {
       try {
-        emitter.send(roster);
+        emitter.send(rosterEvent);
 
         // close connnection, browser automatically reconnects
         // emitter.complete();

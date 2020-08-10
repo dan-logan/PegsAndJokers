@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.danlogan.pegsandjokers.commands.JoinGameCommand;
 import com.danlogan.pegsandjokers.domain.Roster;
+import com.danlogan.pegsandjokers.domain.events.PlayerJoinedGameEvent;
+import com.danlogan.pegsandjokers.domain.events.RosterCreatedEvent;
 import com.danlogan.pegsandjokers.infrastructure.RosterRepository;
 
 @Controller
@@ -52,7 +54,7 @@ public class GameRosterController {
 		
 		rosterRespository.save(roster);
 		
-		applicationEventPublisher.publishEvent(roster);
+		applicationEventPublisher.publishEvent(new RosterCreatedEvent(roster));
 		
 		return new ResponseEntity<Roster>(roster, HttpStatus.CREATED);
 		
@@ -72,6 +74,8 @@ public class GameRosterController {
 		}
 		
 		roster.assignSeat(cmd.getPlayerNumber(), cmd.getPlayerName());
+		
+		applicationEventPublisher.publishEvent(new PlayerJoinedGameEvent(roster, cmd.getPlayerNumber(), cmd.getPlayerName()));
 		
 		return new ResponseEntity<Roster>(roster, HttpStatus.OK);
 	}

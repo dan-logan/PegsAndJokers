@@ -11,6 +11,8 @@ function initialize() {
     document.getElementById("gameId").innerHTML = msg.gameId;
     document.getElementById("numberOfPlayers").innerHTML = msg.numberOfPlayers;
     document.getElementById("playerNames").innerHTML = "";
+    var audio = new Audio('/sounds/door_opening.mp3');
+    audio.play();
     for(let p=0;p<msg.numberOfPlayers;p++)
     	{
     		htmlSoFar = document.getElementById("playerNames").innerHTML;

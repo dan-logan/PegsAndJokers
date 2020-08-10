@@ -3,8 +3,10 @@ package com.danlogan.pegsandjokers.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
+import org.w3c.dom.events.Event;
 
 import com.danlogan.pegsandjokers.infrastructure.RosterRepository;
+import com.sun.tools.javac.util.List;
 
 public class RosterUnitTests {
 	
@@ -127,5 +129,22 @@ public class RosterUnitTests {
 		assertThat(roster).isEqualToComparingFieldByField(roster2);
 		
 	}
-
+/*	
+	@Test
+	public void testCreateRosterCommand()
+	{
+		RosterEventSource es = new RosterEventSource();
+		
+		RosterService service = new RosterService(es);
+		
+		CreateRosterCommand cmd = new CreateRosterCommand("myGameID", 3);
+		
+		List<Event> events = service.handleCreateRosterCommand(cmd);
+		
+		assertThat(events).isNotNull();
+		assertThat(events.size()).isEqualTo(1);
+		assertThat(events.get(0)).isInstanceOf(RosterCreatedEvent.class);
+		assertThat(es.getEventsForRosterId("myGameID").size()).isEqualTo(1);
+	}
+*/
 }

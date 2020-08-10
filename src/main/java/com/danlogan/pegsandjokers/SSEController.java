@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import com.danlogan.pegsandjokers.domain.Roster;
@@ -22,14 +23,14 @@ public class SSEController {
 
   private final CopyOnWriteArrayList<SseEmitter> emitters = new CopyOnWriteArrayList<>();
 
-  @GetMapping("/rosters/events/subscribe")
-  public SseEmitter handle(HttpServletResponse response) {
-	log.info("Received rosters subscription request.");
+  @GetMapping("/roster/{id}/events/subscribe")
+  public SseEmitter handle(@PathVariable String id, HttpServletResponse response) {
+	log.info("Received rosters subscription request for game id: " + id);
     response.setHeader("Cache-Control", "no-store");
 
     //SseEmitter emitter = new SseEmitter();
     //SseEmitter emitter = new SseEmitter(180_000L);
-    SseEmitter emitter = new SseEmitter(Long.MAX_VALUE);
+    SseEmitter emitter = new RosterEventSseEmitter(Long.MAX_VALUE, id);
 
     this.emitters.add(emitter);
 
@@ -43,7 +44,7 @@ public class SSEController {
   public void onRoster(RosterEvent rosterEvent) {
 	log.info("Received roster event: " + rosterEvent.toString());
     List<SseEmitter> deadEmitters = new ArrayList<>();
-    this.emitters.forEach(emitter -> {
+    this.emitters.stream().filter(e -> e.getClass() == RosterEventSseEmitter.class && ((RosterEventSseEmitter) e).getGameId().equals(rosterEvent.getGameId())).forEach(emitter -> {
       try {
         emitter.send(rosterEvent);
 

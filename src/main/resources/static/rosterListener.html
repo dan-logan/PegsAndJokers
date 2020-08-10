@@ -4,7 +4,7 @@
 <title>Roster Monitor</title>
 <script>
 function initialize() {
-  const eventSource = new EventSource('http://localhost:8080/rosters/events/subscribe');
+  const eventSource = new EventSource('http://localhost:8080/roster/myGameID/events/subscribe');
 
   eventSource.onmessage = e => {
     const msg = JSON.parse(e.data);    

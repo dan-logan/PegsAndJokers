@@ -24,6 +24,7 @@
 	
 	<script th:inline="javascript">
     	var playerView = [[${playerView}]];
+    	var roster = null;
 	</script>
     <script src="https://hammerjs.github.io/dist/hammer.js"></script></head>
 </head>
@@ -58,6 +59,12 @@
 			</tbody>
 			</table>
 			Waiting for <span id="colorOfCurrentTurnPlayer" th:text="${playerView.colorOfCurrentTurnPlayer}">current player</span> to play.
+			<br/>
+			<h4>Players</h4>
+			<ul id="playerList">
+				<li>Player 1: </li>
+				<li>Player 2: </li>
+			</ul>
 		</div>  <!-- end of discard and draw pile col div -->
 		<div class="col-6"></div>
 		</div>  <!-- end of discard and draw pile row div -->
@@ -514,6 +521,7 @@
     	setupForms();
     	setInterval(ajaxRefresh, 5000);
     	ajaxRefresh();
+    	updateRoster();
     }
 	function ajaxRefresh() {
 			$.get("/game/"+[[${turnRequest.gameId}]]+"/playerView/"+[[${playerView.playerNumber}]], function(data, status){
@@ -522,6 +530,33 @@
 			  });
 
 		}
+	
+	function updateRoster() {
+		$.get("/api/roster/"+[[${turnRequest.gameId}]], function(data, status) {
+			roster = data;
+			updatePlayerNameList();
+		});
+	}
+	
+	function updatePlayerNameList()
+	{
+		 var playerListElement = document.getElementById("playerList");
+		 
+		 while(playerListElement.hasChildNodes()){
+			 playerListElement.removeChild(playerListElement.childNodes[0]);
+			 };
+		 
+		 let i = 1;
+		 var li;
+		 roster.playerNames.forEach( function(name){
+			 
+			 li=document.createElement('li');
+			 li.appendChild(document.createTextNode('Player '+i+': '+name));
+			 playerListElement.appendChild(li);
+			 i++;
+			 
+		 });
+	}
 	
 	function resetModal()
 	{

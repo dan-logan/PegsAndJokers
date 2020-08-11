@@ -552,7 +552,7 @@
 		 roster.playerNames.forEach( function(name){
 			 
 			 li=document.createElement('li');
-			 li.appendChild(document.createTextNode('Player '+i+': '+name));
+			 li.appendChild(document.createTextNode('Player '+i+'('+playerView.board.playerSides[i-1].color+'): '+name));
 			 playerListElement.appendChild(li);
 			 i++;
 			 
@@ -639,7 +639,18 @@
 	function updateColorOfCurrentTurnPlayer()
 	{
 		var colorOfCurrentTurnPlayerSpan = document.getElementById("colorOfCurrentTurnPlayer");
-		colorOfCurrentTurnPlayerSpan.innerText = playerView.colorOfCurrentTurnPlayer;
+		var waitingForName = playerView.colorOfCurrentTurnPlayer;
+		var colors = [];
+		for (let i=0;i<playerView.board.playerSides.length;i++)
+			{
+				colors[i] = playerView.board.playerSides[i].color;
+			}
+		var waitingFor = colors.indexOf(playerView.colorOfCurrentTurnPlayer);
+		if (roster.playerNames[waitingFor]!="")
+			{
+				waitingForName = roster.playerNames[waitingFor];
+			}
+		colorOfCurrentTurnPlayerSpan.innerText = waitingForName;
 	}
 	
 	function updatePlayerHand()

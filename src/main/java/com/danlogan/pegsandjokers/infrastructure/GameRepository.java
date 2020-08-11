@@ -3,11 +3,15 @@ package com.danlogan.pegsandjokers.infrastructure;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
+
+import org.springframework.stereotype.Service;
+
 import com.danlogan.pegsandjokers.domain.Game;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+@Service
 public class GameRepository {
 	
 	private ConcurrentHashMap<String,String> gamesAsStrings = new ConcurrentHashMap<String,String>();

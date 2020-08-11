@@ -1,5 +1,6 @@
 package com.danlogan.pegsandjokers;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpHeaders;
@@ -48,7 +49,8 @@ public class PegsandjokersApplication {
 
 //	private final String allowedCrossOrigin = "http://localhost:4200";
 
-	private static GameRepository gameRepository = new GameRepository();
+	@Autowired
+	private GameRepository gameRepository;
 	private static GameEventListener gameEventListener = new GameEventListener();
 	
 //	private ArrayList<Game> games = new ArrayList<Game>();
@@ -271,6 +273,7 @@ public class PegsandjokersApplication {
 		
 		return "mvc/game";
 	}
+	
 	@PostMapping("/mvc/newGame")
 	public String newGame(@ModelAttribute("gameRequest") GameRequest gameRequest) throws CannotStartGameWithoutPlayersException, JsonProcessingException 
 	{
@@ -281,7 +284,7 @@ public class PegsandjokersApplication {
 		game.start();
 		gameRepository.addGame(game);
 
-		return "redirect:/mvc/games";
+		return "redirect:/mvc/game/"+game.getId().toString()+"/join";
 	}
 	@RequestMapping("/mvc/game/{id}/playerView/{playerNumber}")
 	public String getPlayerViewByGameAndPlayerNumber(@PathVariable String id, @PathVariable int playerNumber, Model model) throws GameNotFoundException, PlayerNotFoundException, JsonMappingException, JsonProcessingException 

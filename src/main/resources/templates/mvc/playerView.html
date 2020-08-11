@@ -522,6 +522,7 @@
     	setInterval(ajaxRefresh, 5000);
     	ajaxRefresh();
     	updateRoster();
+    	initializeRosterListener();
     }
 	function ajaxRefresh() {
 			$.get("/game/"+[[${turnRequest.gameId}]]+"/playerView/"+[[${playerView.playerNumber}]], function(data, status){
@@ -558,6 +559,33 @@
 		 });
 	}
 	
+	function initializeRosterListener() {
+		  const eventSource = new EventSource('http://localhost:8080/roster/'+[[${turnRequest.gameId}]]+'/events/subscribe');
+
+		  eventSource.onmessage = e => {
+		    const msg = JSON.parse(e.data);
+		    roster.playerNames=msg.playerNames;
+		    var audio = new Audio('/sounds/door_opening.mp3');
+		    audio.play();
+			updatePlayerNameList();
+		  };
+		  
+		  eventSource.onopen = e => console.log('open');
+
+		  eventSource.onerror = e => {
+		    if (e.readyState == EventSource.CLOSED) {
+		      console.log('close');
+		    }
+		    else {
+		      console.log(e);
+		    }
+		  };
+		  
+		  eventSource.addEventListener('second', function(e) {
+		      console.log('second', e.data);
+		    }, false);  
+	}
+
 	function resetModal()
 	{
 		document.getElementById("startAPegFormErrorMessage").innerText = "";

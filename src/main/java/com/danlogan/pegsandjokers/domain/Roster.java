@@ -103,4 +103,18 @@ public class Roster {
 	
 	}
 
+	public int assignNextAvailableSeat(String playerName) {
+		
+		for(int i=0;i<this.playerNames.size();i++)
+		{
+			if (this.playerNames.get(i).equals(""))
+			{
+				this.playerNames.set(i, playerName);
+				return i+1;
+			}
+		}
+		
+		return -1;
+	}
+
 }

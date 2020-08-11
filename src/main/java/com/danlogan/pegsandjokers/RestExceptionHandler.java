@@ -94,6 +94,15 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 	   
    }
  
+   @ExceptionHandler(NoSeatsAvailableException.class)
+   protected ResponseEntity<Object> handleNoSeatsAvailableException(NoSeatsAvailableException ex){
+	   ApiError apiError = new ApiError(BAD_REQUEST);
+	   apiError.setMessage(ex.getMessage());
+	   return buildResponseEntity(apiError);
+	   
+   }
+
+   
    @ExceptionHandler(InvalidMoveException.class)
    protected ResponseEntity<Object> handleInvalidMoveException(InvalidMoveException ex){
 	   ApiError apiError = new ApiError(BAD_REQUEST);

@@ -88,6 +88,30 @@ public class RosterUnitTests {
 		}
 	}
 	
+	@Test
+	public void testAssignNextAvailableSeat()
+	{
+		Roster roster = Roster.Builder.newInstance()
+				.withGameId("myGameID")
+				.withNumberOfPlayers(3)
+				.build();
+		
+		assertThat(roster.getPlayerNames().size()).isEqualTo(3);
+	
+		int assignedSeat = 0;
+		assignedSeat = roster.assignNextAvailableSeat("Bubba");
+		assertThat(assignedSeat).isEqualTo(1);
+		assertThat(roster.getPlayerName(1)).isEqualTo("Bubba");	
+		assignedSeat = roster.assignNextAvailableSeat("Gump");
+		assertThat(assignedSeat).isEqualTo(2);
+		assertThat(roster.getPlayerName(2)).isEqualTo("Gump");	
+		assignedSeat = roster.assignNextAvailableSeat("Jenny");
+		assertThat(assignedSeat).isEqualTo(3);
+		assertThat(roster.getPlayerName(3)).isEqualTo("Jenny");	
+		assignedSeat = roster.assignNextAvailableSeat("Lt. Dan");
+		assertThat(assignedSeat).isEqualTo(-1);
+	}
+	
 	@Test 
 	public void testPlayerNameCannotBeBlank()
 	{

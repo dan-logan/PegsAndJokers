@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.danlogan.pegsandjokers.commands.JoinGameCommand;
+import com.danlogan.pegsandjokers.commands.JoinGameNextAvailableSeatCommand;
 import com.danlogan.pegsandjokers.domain.Game;
 import com.danlogan.pegsandjokers.domain.Roster;
 import com.danlogan.pegsandjokers.domain.events.PlayerJoinedGameEvent;
@@ -71,9 +72,9 @@ public class GameRosterController {
 	}
 	
 	@PostMapping("/mvc/roster/join")
-	public String handleJoinGameCommand(@ModelAttribute("joinGameCommand") JoinGameCommand cmd)
+	public String handleJoinGameNextAvailableSeatCommand(@ModelAttribute("joinGameNextAvailableSeatCommand") JoinGameNextAvailableSeatCommand cmd)
 	{
-		LOG.info(String.format("Received joinGameRequest with command: %s", cmd.toString()));
+		LOG.info(String.format("Received joinGameNextAvailableSeatRequest with command: %s", cmd.toString()));
 		
 		String id = cmd.getGameId();
 		Roster roster = rosterRepository.findRosterById(id);
@@ -83,11 +84,16 @@ public class GameRosterController {
 			throw new RuntimeException(String.format("Roster with gameID %s is not found.", id));
 		}
 		
-		roster.assignSeat(cmd.getPlayerNumber(), cmd.getPlayerName());
+		int playerNumber = roster.assignNextAvailableSeat(cmd.getPlayerName());
 		
-		applicationEventPublisher.publishEvent(new PlayerJoinedGameEvent(roster, cmd.getPlayerNumber(), cmd.getPlayerName()));
+		if (playerNumber < 0)
+		{
+			throw new NoSeatsAvailableException("No seats available in game: "+ cmd.getGameId());
+		}
 		
-		return "redirect:/mvc/game/"+id+"/playerView/"+cmd.getPlayerNumber();
+		applicationEventPublisher.publishEvent(new PlayerJoinedGameEvent(roster, playerNumber, cmd.getPlayerName()));
+		
+		return "redirect:/mvc/game/"+id+"/playerView/"+playerNumber;
 	}
 	
 	@PostMapping("/api/roster/{id}/player/")
@@ -134,7 +140,7 @@ public class GameRosterController {
 		}
 		
 		model.addAttribute("roster",roster);
-		model.addAttribute("joinGameCommand", new JoinGameCommand(id,1,"Your name here"));
+		model.addAttribute("joinGameNextAvailableSeatCommand", new JoinGameNextAvailableSeatCommand(id,"Your name here"));
 		
 		return "mvc/joinGame";
 	}

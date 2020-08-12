@@ -520,9 +520,9 @@
     {
     	setupForms();
     	setInterval(ajaxRefresh, 5000);
-    	ajaxRefresh();
-    	updateRoster();
-    	initializeRosterListener();
+       	updateRoster();
+	   	ajaxRefresh();
+     	initializeRosterListener();
     }
 	function ajaxRefresh() {
 			$.get("/game/"+[[${turnRequest.gameId}]]+"/playerView/"+[[${playerView.playerNumber}]], function(data, status){

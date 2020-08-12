@@ -560,7 +560,7 @@
 	}
 	
 	function initializeRosterListener() {
-		  const eventSource = new EventSource('http://localhost:8080/roster/'+[[${turnRequest.gameId}]]+'/events/subscribe');
+		  const eventSource = new EventSource('/roster/'+[[${turnRequest.gameId}]]+'/events/subscribe');
 
 		  eventSource.onmessage = e => {
 		    const msg = JSON.parse(e.data);

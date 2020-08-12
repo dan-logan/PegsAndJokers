@@ -25,6 +25,7 @@
 	<script th:inline="javascript">
     	var playerView = [[${playerView}]];
     	var roster = null;
+    	var lastPlayerColor="none";
 	</script>
     <script src="https://hammerjs.github.io/dist/hammer.js"></script></head>
 </head>
@@ -557,7 +558,6 @@
 			 var newName = 'Player '+i+'('+playerView.board.playerSides[i-1].color+'): '+name;
 			 if (priorNames[i-1] != null && priorNames[i-1].trim() != newName.trim())
 				 {
-				 	console.log(priorNames[i-1].trim() + "is different than " + newName.trim());
 				    var audio = new Audio('/sounds/door_opening.mp3');
 				    audio.play();
 				 }
@@ -630,6 +630,22 @@
 		updateColorOfCurrentTurnPlayer();
 		updatePlayerHand();
 		updateFreeStartButton();
+		announceLastCardPlayed();
+	}
+	
+	function announceLastCardPlayed()
+	{
+		if(lastPlayerColor != playerView.colorOfCurrentTurnPlayer)
+			{
+				if (playerView.lastCardPlayed != null)
+					{
+						var audio = new Audio('/sounds/'+playerView.lastCardPlayed.name+'.mp3');
+			    		audio.play();				
+					}
+		   		console.log(lastPlayerColor + " just played " + playerView.colorOfCurrentTurnPlayer + " just started their turn.");
+				lastPlayerColor = playerView.colorOfCurrentTurnPlayer;
+				
+			}
 	}
 	
 	function updateCardsRemaining()

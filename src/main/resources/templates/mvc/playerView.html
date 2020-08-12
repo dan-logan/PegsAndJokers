@@ -543,8 +543,10 @@
 	function updatePlayerNameList()
 	{
 		 var playerListElement = document.getElementById("playerList");
+		 var priorNames = [];
 		 
 		 while(playerListElement.hasChildNodes()){
+			 priorNames.push(playerListElement.childNodes[0].innerText);
 			 playerListElement.removeChild(playerListElement.childNodes[0]);
 			 };
 		 
@@ -552,8 +554,15 @@
 		 var li;
 		 roster.playerNames.forEach( function(name){
 			 
+			 var newName = 'Player '+i+'('+playerView.board.playerSides[i-1].color+'): '+name;
+			 if (priorNames[i-1] != null && priorNames[i-1].trim() != newName.trim())
+				 {
+				 	console.log(priorNames[i-1].trim() + "is different than " + newName.trim());
+				    var audio = new Audio('/sounds/door_opening.mp3');
+				    audio.play();
+				 }
 			 li=document.createElement('li');
-			 li.appendChild(document.createTextNode('Player '+i+'('+playerView.board.playerSides[i-1].color+'): '+name));
+			 li.appendChild(document.createTextNode(newName));
 			 playerListElement.appendChild(li);
 			 i++;
 			 

@@ -520,9 +520,10 @@
     {
     	setupForms();
     	setInterval(ajaxRefresh, 5000);
-       	updateRoster();
+       	setInterval(updateRoster, 5000);
+    	updateRoster();
 	   	ajaxRefresh();
-     	initializeRosterListener();
+  //   	initializeRosterListener();
     }
 	function ajaxRefresh() {
 			$.get("/game/"+[[${turnRequest.gameId}]]+"/playerView/"+[[${playerView.playerNumber}]], function(data, status){
@@ -561,20 +562,21 @@
 	
 	function initializeRosterListener() {
 		  const eventSource = new EventSource('/roster/'+[[${turnRequest.gameId}]]+'/events/subscribe');
-
+		 console.log("Connected to EventSource: " + eventSource.url);
 		  eventSource.onmessage = e => {
 		    const msg = JSON.parse(e.data);
+		    console.log('received event source data '+ msg);
 		    roster.playerNames=msg.playerNames;
 		    var audio = new Audio('/sounds/door_opening.mp3');
 		    audio.play();
 			updatePlayerNameList();
 		  };
 		  
-		  eventSource.onopen = e => console.log('open');
+		  eventSource.onopen = e => console.log('opened event source ');
 
 		  eventSource.onerror = e => {
 		    if (e.readyState == EventSource.CLOSED) {
-		      console.log('close');
+		      console.log('closed event source');
 		    }
 		    else {
 		      console.log(e);
@@ -646,7 +648,7 @@
 				colors[i] = playerView.board.playerSides[i].color;
 			}
 		var waitingFor = colors.indexOf(playerView.colorOfCurrentTurnPlayer);
-		if (roster.playerNames[waitingFor]!="")
+		if (roster !=null && roster.playerNames[waitingFor]!="")
 			{
 				waitingForName = roster.playerNames[waitingFor];
 			}

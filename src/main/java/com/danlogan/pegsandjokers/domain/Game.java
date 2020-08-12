@@ -684,7 +684,7 @@ public class Game {
 
 			}
 
-		if (playersReadyToGoHomePositionId.equals(playerBoardPosition.getId()))
+		if (stepDistance > 0 && playersReadyToGoHomePositionId.equals(playerBoardPosition.getId())) //only applies when moving forwards
 		{
 			//player is on the ready to go home spot so set step number to 0 and stepsToEndOfHome = 5
 			readyToGoHomeStep = 0;
@@ -706,7 +706,7 @@ public class Game {
 //			System.out.println(String.format("Taking step %d of %d with %d stepsToEndOfHome", step, spacesToMove, stepsToEndOfHome));
 			BoardPosition stepPosition = null;
 
-			if (readyToGoHomeStep < 0)
+			if (readyToGoHomeStep < 0 )
 			{//get the next main track position
 				stepPosition = board.getBoardPositionWithOffset(playerBoardPosition, step);
 			}

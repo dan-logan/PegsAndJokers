@@ -199,6 +199,38 @@ public class GameUnitTests {
 		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isEqualTo("Tomato-8");
 		
 	}
+	
+	@Test
+	public void testUseEightFromReadyToGoHomeSpot() throws PlayerNotFoundException, InvalidMoveException, InvalidMoveException, InvalidGameStateException, CannotMoveToAPositionYouOccupyException,
+	PlayerPositionNotFoundException
+	{
+		Card cardToPlay = new Card(CardRank.EIGHT, Suit.CLUBS);
+		
+		PlayerHand playerHand = PlayerHand.Builder.newInstance(1)
+				.withCard(cardToPlay)
+				.build();
+
+		Game game = Game.Builder.newInstance()
+				.withPlayerHand(playerHand)
+				.withPlayerPosition(1,1,"TomatoHome-5")
+				.withPlayerPosition(1, 2, "TomatoHome-4")
+				.withPlayerPosition(1, 3, "Tomato-3")
+				.withPlayerPosition(1, 4, "TomatoHome-3")
+				.build();
+
+		PlayerTurn turn = PlayerTurn.Builder.newInstance()
+				.withCardName(cardToPlay.getName())
+				.withMoveType(MoveType.MOVE_PEG)
+				.withPlayerNumber(1)
+				.withPositionNumber(3)
+				.withMoveDistance(-8)
+				.build();
+		
+		game.takeTurn(turn);
+		assertThat(game.getPlayerPosition(1, 3).getPlayerBoardPositionId()).isEqualTo("PINK-13");
+
+
+	}
 
 	@Test
 	public void testCantLandOnOwnPeg() throws PlayerNotFoundException, InvalidMoveException, InvalidMoveException, InvalidGameStateException, CannotMoveToAPositionYouOccupyException,

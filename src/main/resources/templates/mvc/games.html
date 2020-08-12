@@ -18,6 +18,7 @@
 	<thead>
 	<tr>
 		<th scope="col">GameID</th>
+		<th scope="col">Join</th>
 		<th scope="col">Status</th>
 	</tr>
 	</thead>
@@ -25,11 +26,13 @@
 	<th:block th:each="game : ${games}">
 	<tr>
 		<td th:text="${game.id}">placeholder game id</td>
+		<td> <a th:href="@{/mvc/game/{id}/join(id=${game.id})}">Join</a></td>
 		<td th:text="${game.status}">placeholder game status</td>
-		<td> <a th:href="@{/mvc/game/{id}/events(id=${game.id})}">Game Events</a> </td>
+<!--  		<td> <a th:href="@{/mvc/game/{id}/events(id=${game.id})}">Game Events</a> </td>
 		<th:block th:each="player : ${game.players}">
 			<td> <a th:href="@{/mvc/game/{id}/playerView/{number}(id=${game.id},number=${player.number})}" th:text="'Player '+${player.number}+' View'">Player View</a> </td>
 		</th:block>
+-->
 	</tr>
 	</th:block>
 	</tbody>

@@ -284,7 +284,8 @@ public class PegsandjokersApplication {
 		game.start();
 		gameRepository.addGame(game);
 
-		return "redirect:/mvc/game/"+game.getId().toString()+"/join";
+		return "redirect:/mvc/games";
+//		return "redirect:/mvc/game/"+game.getId().toString()+"/join";
 	}
 	@RequestMapping("/mvc/game/{id}/playerView/{playerNumber}")
 	public String getPlayerViewByGameAndPlayerNumber(@PathVariable String id, @PathVariable int playerNumber, Model model) throws GameNotFoundException, PlayerNotFoundException, JsonMappingException, JsonProcessingException 

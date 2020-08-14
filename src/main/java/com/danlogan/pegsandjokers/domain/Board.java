@@ -151,4 +151,11 @@ public class Board {
 		
 	}
 
+	public BoardPosition getComeOutPositionForPlayerNumber(int playerNumber) {
+		
+		Side playerSide = this.playerSides.get(playerNumber - 1);
+		
+		return playerSide.comeOutPosition();
+	}
+
 }

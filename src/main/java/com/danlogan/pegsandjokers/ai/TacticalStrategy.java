@@ -41,6 +41,11 @@ public class TacticalStrategy {
 			case START_ZONE:
 				
 				strategy = new StartZoneTacticalStrategy(this);
+				break;
+				
+			case BACKWARD_ZONE:
+				strategy = new BackwardZoneTacticalStrategy(this);
+				break;
 			}
 			
 			return strategy;
@@ -58,6 +63,8 @@ public class TacticalStrategy {
 			
 			if (game.getBoard().getBoardPositionById(boardPositionId).isStartPosition())
 				{zone = TacticalZone.START_ZONE;}
+			else if (game.getBoard().getBoardPositionById(boardPositionId).isMainTrackPosition())
+				{zone = TacticalZone.BACKWARD_ZONE;}//fix this code... need to examine where it is on main track
 					
 			return zone;
 		}

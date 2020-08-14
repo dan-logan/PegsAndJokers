@@ -4,16 +4,22 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 
+import com.danlogan.pegsandjokers.domain.CannotMoveToAPositionYouOccupyException;
 import com.danlogan.pegsandjokers.domain.Card;
 import com.danlogan.pegsandjokers.domain.CardRank;
 import com.danlogan.pegsandjokers.domain.Game;
+import com.danlogan.pegsandjokers.domain.InvalidGameStateException;
+import com.danlogan.pegsandjokers.domain.InvalidMoveException;
 import com.danlogan.pegsandjokers.domain.PlayerHand;
+import com.danlogan.pegsandjokers.domain.PlayerNotFoundException;
+import com.danlogan.pegsandjokers.domain.PlayerPositionNotFoundException;
+import com.danlogan.pegsandjokers.domain.PlayerTurn;
 import com.danlogan.pegsandjokers.domain.Suit;
 
 public class AITests {
 
 	@Test
-	public void testStartZoneOptionsAtBeginningofGameWithOnlyOneStartableCard()
+	public void testStartZoneOptionsAtBeginningofGameWithOnlyOneStartableCard() throws PlayerNotFoundException, InvalidGameStateException, InvalidMoveException, PlayerPositionNotFoundException, CannotMoveToAPositionYouOccupyException
 	{
 		//create default game (default is 4 players)
 		//use a hand that has only one startable card
@@ -36,6 +42,13 @@ public class AITests {
 		
 		assertThat(ai.moveOptions().get(0).getResultingBoardPositionID()).isEqualTo("Tomato-8");
 		assertThat(ai.moveOptions().get(0).getSuggestedCard()).isEqualTo("QUEEN of HEARTS");
+		
+		//make sure suggested turn is playable
+		PlayerTurn turn = ai.moveOptions().get(0).getPlayerTurn();
+		
+		game.takeTurn(turn);
+		
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isEqualTo("Tomato-8");
 
 	}
 }

@@ -21,4 +21,8 @@ public class MoveOption {
 		return this.playerTurn.getCardName();
 	}
 
+	public PlayerTurn getPlayerTurn() {
+		return this.playerTurn;
+	}
+
 }

@@ -967,4 +967,8 @@ public class Game {
 		
 	}
 
+	public Color getPlayerColor(int playerNumber) {
+		return this.players.get(playerNumber-1).getColor();
+	}
+
 }

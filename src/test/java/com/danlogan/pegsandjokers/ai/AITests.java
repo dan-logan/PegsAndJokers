@@ -95,7 +95,7 @@ public class AITests {
 	}
 
 	@Test
-	public void testStartZoneOptionsWithPlayerInComeOutSpot() throws PlayerNotFoundException, InvalidGameStateException, InvalidMoveException, PlayerPositionNotFoundException, CannotMoveToAPositionYouOccupyException
+	public void testStartZoneOptionsWithOwnPegInComeOutSpot() throws PlayerNotFoundException, InvalidGameStateException, InvalidMoveException, PlayerPositionNotFoundException, CannotMoveToAPositionYouOccupyException
 	{
 		//create default game (default is 4 players)
 		//use a hand that has only one startable card
@@ -116,6 +116,37 @@ public class AITests {
 		TacticalAI ai = new TacticalAI(game,1,1); //create tactical AI for player 1, peg 1
 		
 		assertThat(ai.moveOptions().size()).isEqualTo(0);  //starting is not an option
+		
+	}
+
+	@Test
+	public void testStartZoneOptionsWithOpponentInComeOutSpot() throws PlayerNotFoundException, InvalidGameStateException, InvalidMoveException, PlayerPositionNotFoundException, CannotMoveToAPositionYouOccupyException
+	{
+		//create default game (default is 4 players)
+		//use a hand that has only one startable card
+		PlayerHand playerHand = PlayerHand.Builder.newInstance(1)
+				.withCard(new Card(CardRank.QUEEN, Suit.HEARTS))
+				.withCard(new Card(CardRank.TWO, Suit.HEARTS))
+				.withCard(new Card(CardRank.THREE, Suit.HEARTS))
+				.withCard(new Card(CardRank.FOUR, Suit.HEARTS))
+				.withCard(new Card(CardRank.FIVE, Suit.HEARTS))
+				.build();
+
+		
+		Game game = Game.Builder.newInstance()
+					.withPlayerHand(playerHand)
+					.withPlayerPosition(2, 1, "Tomato-8")
+					.build();
+		
+		TacticalAI ai = new TacticalAI(game,1,1); //create tactical AI for player 1, peg 1
+		
+		assertThat(ai.moveOptions().size()).isEqualTo(1);  
+		
+		assertThat(game.getPlayerPosition(2, 1).getPlayerBoardPositionId()).isEqualTo("Tomato-8");
+		
+		game.takeTurn(ai.moveOptions().get(0).getPlayerTurn());
+		
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isEqualTo("Tomato-8");
 		
 	}
 	
@@ -147,6 +178,37 @@ public class AITests {
 		game.takeTurn(turn);
 		
 		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isEqualTo("Tomato-8");
+		
+	}
+
+	@Test
+	public void testStrategicAIBurnsACardIfCantStartAtBeginningOfGame() throws PlayerNotFoundException, InvalidGameStateException, InvalidMoveException, PlayerPositionNotFoundException, CannotMoveToAPositionYouOccupyException
+	{
+		//create default game (default is 4 players)
+		//use a hand that has only one startable card
+		PlayerHand playerHand = PlayerHand.Builder.newInstance(1)
+				.withCard(new Card(CardRank.EIGHT, Suit.HEARTS))
+				.withCard(new Card(CardRank.FOUR, Suit.DIAMONDS))
+				.withCard(new Card(CardRank.THREE, Suit.HEARTS))
+				.withCard(new Card(CardRank.FIVE, Suit.HEARTS))
+				.withCard(new Card(CardRank.TWO, Suit.HEARTS))
+				.build();
+
+		
+		Game game = Game.Builder.newInstance()
+					.withPlayerHand(playerHand)
+					.build();
+		
+		StrategicAI ai = new StrategicAI(game, 1); //create strategic AI for player 1
+		
+		PlayerTurn turn = ai.getNextTurn();
+		assertThat(turn.getCardName()).isEqualTo("FIVE of HEARTS");
+		assertThat(turn.getMoveType()).isEqualTo(MoveType.DISCARD);
+		
+		//make sure turn can actually be taken
+		game.takeTurn(turn);
+		
+		assertThat(game.getLastCardPlayed().getName()).isEqualTo("FIVE of HEARTS");
 		
 	}
 

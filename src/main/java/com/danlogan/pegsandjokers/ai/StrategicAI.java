@@ -1,13 +1,19 @@
 package com.danlogan.pegsandjokers.ai;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import com.danlogan.pegsandjokers.domain.Card;
+import com.danlogan.pegsandjokers.domain.CardRank;
 import com.danlogan.pegsandjokers.domain.Game;
 import com.danlogan.pegsandjokers.domain.MoveType;
+import com.danlogan.pegsandjokers.domain.PlayerHand;
 import com.danlogan.pegsandjokers.domain.PlayerNotFoundException;
 import com.danlogan.pegsandjokers.domain.PlayerTurn;
+
+import jdk.internal.org.jline.utils.Log;
 
 public class StrategicAI {
 	
@@ -15,6 +21,10 @@ public class StrategicAI {
 	private int playerNumber;
 	
 	private ArrayList<TacticalAI> tacticalAIs = new ArrayList<TacticalAI>();
+	private List<CardRank> burnCardPriority = List.of(CardRank.SIX, CardRank.SEVEN, CardRank.FIVE, CardRank.FOUR,
+			CardRank.THREE, CardRank.TWO, CardRank.NINE, CardRank.EIGHT, CardRank.JACK, CardRank.QUEEN, CardRank.KING, 
+			CardRank.ACE);
+	
 
 	public StrategicAI(Game game, int playerNumber) {
 		
@@ -45,21 +55,25 @@ public class StrategicAI {
 
 	private PlayerTurn getBurnACardTurn() {
 		
-		PlayerTurn turn = null;
-		//to do.. prioritize cards
-		try 
-		{
-		 turn = PlayerTurn.Builder.newInstance()
-					.withMoveType(MoveType.DISCARD)
-					.withCardName(this.game.getPlayerHand(this.playerNumber).getCard(1).getName())
-					.withPlayerNumber(this.playerNumber)
-					.build();
-		}
-		catch (PlayerNotFoundException ex)
-		{
-			throw new RuntimeException("Strategic AI failed to generate BurnACard turn due to invalid player number.");
+		PlayerHand hand=null;
+		try {
+			hand = this.game.getPlayerHand(this.playerNumber);
+		} catch (PlayerNotFoundException e) {
+			Log.warn("AI could not get player hand for player number: " + playerNumber);
+			e.printStackTrace();
 		}
 		
+		//prioritize cards to burn
+		Stream<Card> playableCards = hand.getCards().stream().sorted(new CardPriorityComparator(burnCardPriority));
+		Card burnCard = playableCards.findFirst().get();
+		
+		PlayerTurn turn = null;
+		 turn = PlayerTurn.Builder.newInstance()
+					.withMoveType(MoveType.DISCARD)
+					.withCardName(burnCard.getName())
+					.withPlayerNumber(this.playerNumber)
+					.build();
+
 		return turn;
 	}
 

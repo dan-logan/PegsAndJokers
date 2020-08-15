@@ -14,6 +14,8 @@ import com.danlogan.pegsandjokers.domain.PlayerPosition;
 import com.danlogan.pegsandjokers.domain.PlayerTurn;
 
 public class StartZoneTacticalStrategy extends TacticalStrategy {
+	
+	private List<CardRank> startZoneCardPriority = List.of(CardRank.JACK, CardRank.QUEEN, CardRank.KING, CardRank.ACE);
 
 	public StartZoneTacticalStrategy(Builder builder) {
 		super(builder);
@@ -27,7 +29,8 @@ public class StartZoneTacticalStrategy extends TacticalStrategy {
 	
 		BoardPosition comeOutPosition = ai.getGame().getBoard().getComeOutPositionForPlayerNumber(ai.getPlayerNumber());
 		
-		if (! comeOutPosition.getHasPeg()) //if come out spot available check cards to see if startable card available
+		//if come out spot empty or has opponent peg check cards to see if startable card available
+		if (! comeOutPosition.getHasPeg() || comeOutPosition.getPegColor() != ai.getGame().getPlayerColor(ai.getPlayerNumber())) 
 		{
 			PlayerHand hand = null;
 			try {
@@ -38,7 +41,7 @@ public class StartZoneTacticalStrategy extends TacticalStrategy {
 				throw new RuntimeException("Cannot get moveOptions since Tactical AI has invalid player");
 			}
 			
-			Stream<Card> playableCards = hand.getCards().stream().filter(card -> card.canBeUsedToStart()).sorted(new StartZoneCardPriorityComparator());
+			Stream<Card> playableCards = hand.getCards().stream().filter(card -> card.canBeUsedToStart()).sorted(new CardPriorityComparator(startZoneCardPriority));
 			
 			playableCards.forEachOrdered(card ->{
 			
@@ -59,13 +62,4 @@ public class StartZoneTacticalStrategy extends TacticalStrategy {
 		return moveOptions;
 	}
 
-	static class StartZoneCardPriorityComparator implements Comparator<Card> {
-		static List<CardRank> cardRankPriority = List.of(CardRank.JACK, CardRank.QUEEN, CardRank.KING, CardRank.ACE);
-
-		@Override
-		public int compare(Card card1, Card card2) {
-			
-			return Integer.valueOf(cardRankPriority.indexOf(card1.getRank()))
-					.compareTo(Integer.valueOf(cardRankPriority.indexOf(card2.getRank())));
-		}}
 }

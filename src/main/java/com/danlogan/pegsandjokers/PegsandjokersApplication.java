@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -47,6 +48,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import lombok.extern.java.Log;
 
 @Log
+@EnableAsync
 @SpringBootApplication
 @Controller
 public class PegsandjokersApplication {

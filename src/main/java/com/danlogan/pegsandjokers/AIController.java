@@ -3,6 +3,7 @@ package com.danlogan.pegsandjokers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Controller;
 
 import com.danlogan.pegsandjokers.ai.StrategicAI;
@@ -36,6 +37,7 @@ public class AIController {
 	@Autowired
 	private ApplicationEventPublisher applicationEventPublisher;
 	
+	@Async
 	@EventListener
 	public void onTurnTakenEvent(TurnTakenEvent turnTakenEvent)
 	{

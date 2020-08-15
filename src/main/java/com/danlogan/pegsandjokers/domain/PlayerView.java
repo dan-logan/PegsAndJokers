@@ -121,4 +121,8 @@ public class PlayerView {
 			return allowedMoves;
 	}
 
+	public int getCurrentPlayerNumber() {
+		return this.game.getCurrentPlayer().getNumber();
+	}
+
 }

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 
@@ -43,6 +44,9 @@ import com.danlogan.pegsandjokers.infrastructure.GameRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
+import lombok.extern.java.Log;
+
+@Log
 @SpringBootApplication
 @Controller
 public class PegsandjokersApplication {
@@ -52,6 +56,9 @@ public class PegsandjokersApplication {
 	@Autowired
 	private GameRepository gameRepository;
 	private static GameEventListener gameEventListener = new GameEventListener();
+	
+	@Autowired
+	ApplicationEventPublisher applicationEventPublisher;
 	
 //	private ArrayList<Game> games = new ArrayList<Game>();
 	
@@ -117,7 +124,7 @@ public class PegsandjokersApplication {
 	@ResponseBody
 	public ResponseEntity<PlayerView> apiTakeTurn(@ModelAttribute("turnRequest") TurnRequest turnRequest) throws GameNotFoundException, PlayerNotFoundException, InvalidGameStateException, InvalidMoveException, PlayerPositionNotFoundException, CannotMoveToAPositionYouOccupyException, JsonMappingException, JsonProcessingException
 	{
-		System.out.println("got api turn request: " + turnRequest.toString());
+		log.info("got api turn request: " + turnRequest.toString());
 		
 		String gameId = turnRequest.getGameId();
 		
@@ -174,7 +181,9 @@ public class PegsandjokersApplication {
 		gameRepository.saveGame(game);
 		
 		PlayerView playerView = game.getPlayerView(turnRequest.getPlayerNumber());
-		
+
+		applicationEventPublisher.publishEvent(new TurnTakenEvent(game.getId().toString(), turn.getPlayerNumber(), playerView.getCurrentPlayerNumber()));
+
 		return new ResponseEntity<PlayerView>(playerView, HttpStatus.OK);
 	}
 
@@ -311,7 +320,7 @@ public class PegsandjokersApplication {
 	@PostMapping("/mvc/taketurn")
 	public String takeTurn(@ModelAttribute("turnRequest") TurnRequest turnRequest) throws GameNotFoundException, PlayerNotFoundException, InvalidGameStateException, InvalidMoveException, PlayerPositionNotFoundException, CannotMoveToAPositionYouOccupyException, JsonMappingException, JsonProcessingException
 	{
-		System.out.println("got turn request: " + turnRequest.toString());
+		log.info("got turn request: " + turnRequest.toString());
 		
 		String gameId = turnRequest.getGameId();
 		
@@ -364,6 +373,8 @@ public class PegsandjokersApplication {
 		}
 		
 		game.takeTurn(turn);
+		
+		applicationEventPublisher.publishEvent(turn);
 		
 		gameRepository.saveGame(game);
 		

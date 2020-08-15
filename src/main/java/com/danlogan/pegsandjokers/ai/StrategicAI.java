@@ -51,7 +51,8 @@ public class StrategicAI {
 		{
 		 turn = PlayerTurn.Builder.newInstance()
 					.withMoveType(MoveType.DISCARD)
-					.withCardName(this.game.getPlayerHand(this.playerNumber).getCard(1).getName()) 
+					.withCardName(this.game.getPlayerHand(this.playerNumber).getCard(1).getName())
+					.withPlayerNumber(this.playerNumber)
 					.build();
 		}
 		catch (PlayerNotFoundException ex)

@@ -1,7 +1,17 @@
 package com.danlogan.pegsandjokers.domain;
 
+import java.util.Arrays;
+
 public class PlayerTurn {
 	
+	@Override
+	public String toString() {
+		return "PlayerTurn [playerNumber=" + playerNumber + ", cardName=" + cardName + ", moveType=" + moveType
+				+ ", playerPositionNumber=" + playerPositionNumber + ", moveDistance=" + moveDistance
+				+ ", splitMoveArray=" + Arrays.toString(splitMoveArray) + ", targetBoardPositionId="
+				+ targetBoardPositionId + "]";
+	}
+
 	private int playerNumber;
 	private String cardName;
 	private MoveType moveType;

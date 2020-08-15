@@ -45,7 +45,7 @@ public class StartZoneTacticalStrategy extends TacticalStrategy {
 				PlayerTurn turn = PlayerTurn.Builder.newInstance()
 						.withCardName(card.getName())
 						.withMoveType(MoveType.START_A_PEG)
-						.withPlayerNumber(ai.getPegNumber())
+						.withPlayerNumber(ai.getPlayerNumber())
 						.withPositionNumber(ai.getPegNumber())
 						.build();
 			

@@ -44,7 +44,7 @@ public class GameRosterController {
 	@ResponseBody
 	public ResponseEntity<Roster> getRosterById(@PathVariable String id)
 	{
-		LOG.info("Recieve find Roster request for gameID: " + id);
+		LOG.info("Receive find Roster request for gameID: " + id);
 		Roster roster = rosterRepository.findRosterById(id);
 	
 		HttpStatus status = roster != null ? HttpStatus.OK : HttpStatus.NOT_FOUND;

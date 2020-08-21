@@ -4,7 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.danlogan.pegsandjokers.domain.Game;
+import com.danlogan.pegsandjokers.domain.PlayerHand;
+import com.danlogan.pegsandjokers.domain.PlayerNotFoundException;
 import com.danlogan.pegsandjokers.domain.PlayerPosition;
+
+import jdk.internal.org.jline.utils.Log;
 
 public class TacticalStrategy {
 
@@ -83,6 +87,20 @@ public class TacticalStrategy {
 		ArrayList<MoveOption> moveOptions = new ArrayList<MoveOption>();
 		
 		return moveOptions;
+	}
+	
+	protected PlayerHand getPlayerHand()
+	{
+		PlayerHand playerHand = null;
+		
+		try {
+			playerHand = this.tacticalAI.getGame().getPlayerHand(this.tacticalAI.getPlayerNumber());
+		} catch (PlayerNotFoundException e) {
+			Log.warn("AI could not get player hand for playerNumber: " + this.tacticalAI.getPlayerNumber());
+			e.printStackTrace();
+		}
+		
+		return playerHand;
 	}
 
 }

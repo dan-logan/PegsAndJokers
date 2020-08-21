@@ -4,6 +4,12 @@ import java.util.ArrayList;
 
 public class PlayerHand {
 
+	@Override
+	public String toString() {
+		return "PlayerHand [playerNumber=" + playerNumber + ", cards=" + cards + ", burnedCardCount=" + burnedCardCount
+				+ "]";
+	}
+
 	private int playerNumber;
 	private ArrayList<Card> cards;
 	private int burnedCardCount;

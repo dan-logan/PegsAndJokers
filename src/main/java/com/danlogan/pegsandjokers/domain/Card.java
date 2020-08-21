@@ -1,6 +1,11 @@
 package com.danlogan.pegsandjokers.domain;
 
 public class Card {
+	@Override
+	public String toString() {
+		return "Card [name=" + name + "]";
+	}
+
 	private CardRank rank;
 	private String name;
 	private Suit suit;

@@ -151,6 +151,37 @@ public class AITests {
 	}
 	
 	@Test
+	public void testBackwardZoneOptionsWithAnEightInHand() throws PlayerNotFoundException, InvalidGameStateException, InvalidMoveException, PlayerPositionNotFoundException, CannotMoveToAPositionYouOccupyException
+	{
+		//create default game (default is 4 players)
+		//use a hand that has only one startable card
+		PlayerHand playerHand = PlayerHand.Builder.newInstance(1)
+				.withCard(new Card(CardRank.EIGHT, Suit.HEARTS))
+				.withCard(new Card(CardRank.TWO, Suit.HEARTS))
+				.withCard(new Card(CardRank.THREE, Suit.HEARTS))
+				.withCard(new Card(CardRank.FOUR, Suit.HEARTS))
+				.withCard(new Card(CardRank.FIVE, Suit.HEARTS))
+				.build();
+
+		
+		Game game = Game.Builder.newInstance()
+					.withPlayerHand(playerHand)
+					.withPlayerPosition(1, 1, "Tomato-8")
+					.build();
+		
+		TacticalAI ai = new TacticalAI(game,1,1); //create tactical AI for player 1, peg 1
+		
+		assertThat(ai.moveOptions().size()).isEqualTo(1);  
+		
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isEqualTo("Tomato-8");
+		
+		game.takeTurn(ai.moveOptions().get(0).getPlayerTurn());
+		
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isEqualTo("PINK-18");
+		
+	}
+	
+	@Test
 	public void testStrategicAIStartsAPegAtBeginningOfGame() throws PlayerNotFoundException, InvalidGameStateException, InvalidMoveException, PlayerPositionNotFoundException, CannotMoveToAPositionYouOccupyException
 	{
 		//create default game (default is 4 players)
@@ -209,6 +240,35 @@ public class AITests {
 		game.takeTurn(turn);
 		
 		assertThat(game.getLastCardPlayed().getName()).isEqualTo("FIVE of HEARTS");
+		
+	}
+
+	@Test
+	public void testStrategicAIPlaysEightinBackwardZone() throws PlayerNotFoundException, InvalidGameStateException, InvalidMoveException, PlayerPositionNotFoundException, CannotMoveToAPositionYouOccupyException
+	{
+		//create default game (default is 4 players)
+		//use a hand that has only one startable card
+		PlayerHand playerHand = PlayerHand.Builder.newInstance(1)
+				.withCard(new Card(CardRank.EIGHT, Suit.HEARTS))
+				.withCard(new Card(CardRank.TWO, Suit.HEARTS))
+				.withCard(new Card(CardRank.THREE, Suit.HEARTS))
+				.withCard(new Card(CardRank.FOUR, Suit.HEARTS))
+				.withCard(new Card(CardRank.FIVE, Suit.HEARTS))
+				.build();
+
+		
+		Game game = Game.Builder.newInstance()
+					.withPlayerHand(playerHand)
+					.withPlayerPosition(1, 1, "Tomato-8")
+					.build();
+		
+		StrategicAI ai = new StrategicAI(game,1); //create tactical AI for player 1, peg 1
+		
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isEqualTo("Tomato-8");
+		
+		game.takeTurn(ai.getNextTurn());
+		
+		assertThat(game.getPlayerPosition(1, 1).getPlayerBoardPositionId()).isEqualTo("PINK-18");
 		
 	}
 

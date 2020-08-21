@@ -182,6 +182,8 @@ public class PegsandjokersApplication {
 		
 		gameRepository.saveGame(game);
 		
+		game = gameRepository.findGameById(gameId);
+		
 		PlayerView playerView = game.getPlayerView(turnRequest.getPlayerNumber());
 
 		applicationEventPublisher.publishEvent(new TurnTakenEvent(game.getId().toString(), turn.getPlayerNumber(), playerView.getCurrentPlayerNumber()));

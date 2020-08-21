@@ -13,6 +13,9 @@ import com.danlogan.pegsandjokers.domain.PlayerNotFoundException;
 import com.danlogan.pegsandjokers.domain.PlayerPosition;
 import com.danlogan.pegsandjokers.domain.PlayerTurn;
 
+import lombok.extern.java.Log;
+
+@Log
 public class StartZoneTacticalStrategy extends TacticalStrategy {
 	
 	private List<CardRank> startZoneCardPriority = List.of(CardRank.JACK, CardRank.QUEEN, CardRank.KING, CardRank.ACE);
@@ -32,14 +35,9 @@ public class StartZoneTacticalStrategy extends TacticalStrategy {
 		//if come out spot empty or has opponent peg check cards to see if startable card available
 		if (! comeOutPosition.getHasPeg() || comeOutPosition.getPegColor() != ai.getGame().getPlayerColor(ai.getPlayerNumber())) 
 		{
-			PlayerHand hand = null;
-			try {
-				hand = ai.getGame().getPlayerHand(ai.getPlayerNumber());
-			}
-			catch (PlayerNotFoundException ex)
-			{
-				throw new RuntimeException("Cannot get moveOptions since Tactical AI has invalid player");
-			}
+			PlayerHand hand = getPlayerHand();
+
+			log.info("Evaluating player hand in start zone: " + hand.toString());
 			
 			Stream<Card> playableCards = hand.getCards().stream().filter(card -> card.canBeUsedToStart()).sorted(new CardPriorityComparator(startZoneCardPriority));
 			

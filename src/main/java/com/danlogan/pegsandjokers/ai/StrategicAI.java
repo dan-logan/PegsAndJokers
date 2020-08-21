@@ -64,7 +64,9 @@ public class StrategicAI {
 		}
 		
 		//prioritize cards to burn
-		Stream<Card> playableCards = hand.getCards().stream().sorted(new CardPriorityComparator(burnCardPriority));
+		Stream<Card> playableCards = hand.getCards().stream()
+				.filter(card -> !card.getName().equals("JOKER")) // don't burn jokers
+				.sorted(new CardPriorityComparator(burnCardPriority));
 		Card burnCard = playableCards.findFirst().get();
 		
 		PlayerTurn turn = null;

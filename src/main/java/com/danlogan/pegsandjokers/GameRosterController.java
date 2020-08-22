@@ -140,7 +140,7 @@ public class GameRosterController {
 		}
 		
 		model.addAttribute("roster",roster);
-		model.addAttribute("joinGameNextAvailableSeatCommand", new JoinGameNextAvailableSeatCommand(id,"Your name here"));
+		model.addAttribute("joinGameNextAvailableSeatCommand", new JoinGameNextAvailableSeatCommand(id,""));
 		
 		return "mvc/joinGame";
 	}

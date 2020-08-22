@@ -18,7 +18,7 @@
  <input type="hidden" th:field="*{gameId}" />
  <div class="form-group">
    <label for="playerName">What name do you want to show in the game?</label>
-   <input class="form-control" id="joinGameFormPlayerName=" type="text" th:field="*{playerName}"/>
+   <input class="form-control" id="joinGameFormPlayerName=" type="text" placeholder="Your name here" th:field="*{playerName}" required/>
  </div>
 <button type="submit" class="btn btn-primary">Join</button>  
 </form>

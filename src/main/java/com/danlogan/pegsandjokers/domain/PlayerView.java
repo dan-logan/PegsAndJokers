@@ -72,16 +72,35 @@ public class PlayerView {
 	public String getPlayerMessage()
 	{
 		String message;
-		if (this.game.getCurrentPlayer().getNumber() == this.playerNumber)
+		
+		if (this.game.getStatus().equals("OVER"))
 		{
-			message =  "It's your turn";
+			if (this.playerNumber == this.game.getWinningPlayer())
+			{
+				message = "You win!";
+			}
+			else
+			{
+				message = "Player " + this.game.getWinningPlayer() + " wins!";
+			}
 		}
 		else
 		{
-			message = "It's not your turn";
-		}
-		
+			if (this.game.getCurrentPlayer().getNumber() == this.playerNumber)
+			{
+				message =  "It's your turn";
+			}
+			else
+			{
+				message = "It's not your turn";
+			}
+		}		
 		return message;
+	}
+	
+	public String getGameStatus()
+	{
+		return this.game.getStatus();
 	}
 	
 	public ArrayList<PlayerPosition> getPlayerPositions()

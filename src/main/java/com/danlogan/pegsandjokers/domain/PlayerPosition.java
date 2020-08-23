@@ -1,5 +1,8 @@
 package com.danlogan.pegsandjokers.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties({ "atHome"})
 public class PlayerPosition {
 	
 	private String playerBoardPositionId;
@@ -65,5 +68,10 @@ public class PlayerPosition {
 	public PlayerPosition()
 	{
 		
+	}
+
+	public boolean isAtHome() {
+		
+		return this.getPlayerBoardPositionId().contains("Home");
 	}
 }

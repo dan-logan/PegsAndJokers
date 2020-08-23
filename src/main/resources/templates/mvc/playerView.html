@@ -10,26 +10,59 @@
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
 	<title>Pegs And Jokers</title>
     <style>
-        canvas {
-            border: 1px solid black;
-        }
+canvas {
+	border: 1px solid black;
+}
 
-        body {
-            margin-left: 15% auto;
-            margin-right: 15% auto;
-            margin-top: 10px;
-            margin-bottom: 10% auto;
-        }
-    </style>
+body {
+	margin-left: 15% auto;
+	margin-right: 15% auto;
+	margin-top: 10px;
+	margin-bottom: 10% auto;
+}
+
+#gameOverScreen {
+  position: fixed; /* Sit on top of the page content */
+  display: none; /* Hidden by default */
+  width: 100%; /* Full width (cover the whole page) */
+  height: 100%; /* Full height (cover the whole page) */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.5); /* Black background with opacity */
+  z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
+  cursor: pointer; /* Add a pointer on hover */
+}
+#gameOverBody{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  font-size: 50px;
+  color: white;
+  transform: translate(-50%,-50%);
+  -ms-transform: translate(-50%,-50%);
+}
+
+</style>
 	
 	<script th:inline="javascript">
     	var playerView = [[${playerView}]];
     	var roster = null;
     	var lastPlayerColor="none";
+    	var gameRefreshVar = null;
+    	var rosterRefreshVar = null;
 	</script>
     <script src="https://hammerjs.github.io/dist/hammer.js"></script></head>
 </head>
 <body onLoad="pageLoadInit()">
+<!-- GAME OVER overlay -->
+<div id="gameOverScreen">
+<div id="gameOverBody">Game Over</div>
+</div>
+
+
+<!--  MAIN Content -->
 	<div class="container-fluid">
 	  <div class="row">
 		<div class="col-xs" id="board">
@@ -520,8 +553,8 @@
     function pageLoadInit()
     {
     	setupForms();
-    	setInterval(ajaxRefresh, 5000);
-       	setInterval(updateRoster, 5000);
+    	gameRefreshVar = setInterval(ajaxRefresh, 5000);
+       	rosterRefreshVar = setInterval(updateRoster, 5000);
     	updateRoster();
 	   	ajaxRefresh();
   //   	initializeRosterListener();
@@ -631,6 +664,16 @@
 		updatePlayerHand();
 		updateFreeStartButton();
 		announceLastCardPlayed();
+		updateGameStatus();
+	}
+	
+	function updateGameStatus()
+	{
+		if (playerView.gameStatus == "OVER")
+			{
+				openGameOverScreen();
+	
+			}
 	}
 	
 	function announceLastCardPlayed()
@@ -642,7 +685,6 @@
 						var audio = new Audio('/sounds/'+playerView.lastCardPlayed.name+'.mp3');
 			    		audio.play();				
 					}
-		   		console.log(lastPlayerColor + " just played " + playerView.colorOfCurrentTurnPlayer + " just started their turn.");
 				lastPlayerColor = playerView.colorOfCurrentTurnPlayer;
 				
 			}
@@ -716,6 +758,23 @@
 			{
 				fsButton.disabled = true;
 			}
+	}
+	/* Open */
+	function openGameOverScreen() {
+	  document.getElementById("gameOverScreen").style.display = "block";
+	  var winnerText = document.getElementById("gameOverBody");
+	  winnerText.innerText = playerView.playerMessage;
+  	  var audio = new Audio('/sounds/cheer.mp3');
+	  audio.play();
+	  //stop polling for changes
+ 	  clearInterval(gameRefreshVar);
+   	  clearInterval(rosterRefreshVar);
+
+	}
+
+	/* Close */
+	function closeGameOverScreen() {
+	  document.getElementById("gameOverScreen").style.display = "none";
 	}
 	
    </script>

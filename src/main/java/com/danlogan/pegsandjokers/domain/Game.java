@@ -12,6 +12,7 @@ import com.danlogan.pegsandjokers.domain.events.PegMovedEvent;
 public class Game {
 	public static final String NOT_STARTED = "NOT_STARTED";
 	public static final String STARTED = "STARTED";
+	public static final String OVER = "OVER";
 	
 	private final UUID id = java.util.UUID.randomUUID();
 	private String status = Game.NOT_STARTED;	
@@ -27,6 +28,7 @@ public class Game {
 	private Board board;
 	private Player currentPlayer=null;
 	private IListenToGameEvents eventListener;
+	private int winningPlayer = 0;
 
 	
 	public static class Builder{
@@ -382,6 +384,29 @@ public class Game {
 		Player tempPlayer = playerQueue.remove();
 		playerQueue.add(tempPlayer);
 		currentPlayer=playerQueue.peek();
+		
+		//change game status to OVER if someone has moved all pegs home
+		this.checkForWinner();
+	}
+	
+	private void checkForWinner()
+	{
+		boolean winnerFound = false;
+		
+		for (ArrayList<PlayerPosition> playerPositions : this.playerPositions)
+		{
+			if (playerPositions.stream().filter(position -> position.isAtHome()).count()==5)
+			{
+				winnerFound= true;
+				this.winningPlayer = playerPositions.get(0).getPlayerNumber();
+				break;
+			}
+		}
+		
+		if (winnerFound)
+		{
+			this.status = Game.OVER;
+		}
 	}
 	
 	private void validatePosition(int playerPositionNumber) throws PlayerPositionNotFoundException
@@ -969,6 +994,10 @@ public class Game {
 
 	public Color getPlayerColor(int playerNumber) {
 		return this.players.get(playerNumber-1).getColor();
+	}
+
+	public int getWinningPlayer() {
+		return winningPlayer;
 	}
 
 }

@@ -1547,4 +1547,54 @@ public class GameUnitTests {
 		
 	}
 
+	@Test
+	public void testWinningAfterAllPegsGoHome() throws JsonProcessingException, PlayerNotFoundException, InvalidGameStateException, InvalidMoveException, PlayerPositionNotFoundException, CannotMoveToAPositionYouOccupyException, GameNotFoundException
+	{
+		
+		Card cardToPlay = new Card(CardRank.ACE, Suit.CLUBS);
+		
+		PlayerHand playerHand = PlayerHand.Builder.newInstance(1)
+				.withCard(cardToPlay)
+				.build();
+
+		Game game = Game.Builder.newInstance()
+				.withPlayerHand(playerHand)
+				.withPlayerPosition(1, 1, "TomatoHome-5")
+				.withPlayerPosition(1,2, "TomatoHome-4")
+				.withPlayerPosition(1,3, "TomatoHome-3")
+				.withPlayerPosition(1, 4, "TomatoHome-2")
+				.withPlayerPosition(1, 5, "Tomato-3")
+				.build();
+
+		String gameId = game.getId().toString();
+		
+		GameRepository gameRepository = new GameRepository();
+		
+		gameRepository.addGame(game);
+		
+		game = gameRepository.findGameById(gameId);
+		
+		PlayerTurn turn = PlayerTurn.Builder.newInstance()
+				.withCardName(cardToPlay.getName())
+				.withMoveType(MoveType.MOVE_PEG)
+				.withPlayerNumber(1)
+				.withPositionNumber(5)
+				.withMoveDistance(1)
+				.build();
+
+		assertThat(game.getStatus()).isEqualTo("NOT_STARTED");
+		game.start();
+		assertThat(game.getStatus()).isEqualTo("STARTED");
+		
+		game.takeTurn(turn);
+		
+		
+		assertThat(game.getPlayerPosition(1, 5).getPlayerBoardPositionId()).isEqualTo("TomatoHome-1");
+		assertThat(game.getStatus()).isEqualTo("OVER");
+		PlayerView playerView1 = new PlayerView(game,1);
+		PlayerView playerView2 = new PlayerView(game, 2);
+		assertThat(playerView1.getPlayerMessage()).isEqualTo("You win!");
+		assertThat(playerView2.getPlayerMessage()).isEqualTo("Player 1 wins!");		
+	}
+
 }

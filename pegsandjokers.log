@@ -1,0 +1,24 @@
+791  [main] INFO  c.d.p.PegsandjokersApplication - Starting PegsandjokersApplication on DESKTOP-0N8SHIO with PID 528 (C:\Users\danie\OneDrive\projects\pegsandjokers\target\classes started by danie in C:\Users\danie\OneDrive\projects\pegsandjokers)
+795  [main] INFO  c.d.p.PegsandjokersApplication - No active profile set, falling back to default profiles: default
+2408 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+2417 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2417 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2418 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.33]
+2555 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2555 [main] INFO  o.s.web.context.ContextLoader - Root WebApplicationContext: initialization completed in 1682 ms
+2833 [main] INFO  o.s.s.c.ThreadPoolTaskExecutor - Initializing ExecutorService 'applicationTaskExecutor'
+2920 [main] INFO  o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page: class path resource [static/index.html]
+3191 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+3230 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
+3236 [main] INFO  c.d.p.PegsandjokersApplication - Started PegsandjokersApplication in 2.824 seconds (JVM running for 4.06)
+3434 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+3434 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+3442 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 7 ms
+3472 [http-nio-8080-exec-2] INFO  c.d.p.GameRosterController - Receive find Roster request for gameID: 9967ca26-9325-4a20-8159-d151243d9ed6
+5608 [http-nio-8080-exec-4] INFO  c.d.p.GameRosterController - Receive find Roster request for gameID: 9967ca26-9325-4a20-8159-d151243d9ed6
+10607 [http-nio-8080-exec-6] INFO  c.d.p.GameRosterController - Receive find Roster request for gameID: 9967ca26-9325-4a20-8159-d151243d9ed6
+15614 [http-nio-8080-exec-2] INFO  c.d.p.GameRosterController - Receive find Roster request for gameID: 9967ca26-9325-4a20-8159-d151243d9ed6
+20606 [http-nio-8080-exec-4] INFO  c.d.p.GameRosterController - Receive find Roster request for gameID: 9967ca26-9325-4a20-8159-d151243d9ed6
+25607 [http-nio-8080-exec-7] INFO  c.d.p.GameRosterController - Receive find Roster request for gameID: 9967ca26-9325-4a20-8159-d151243d9ed6
+27295 [RMI TCP Connection(7)-127.0.0.1] INFO  o.s.b.a.SpringApplicationAdminMXBeanRegistrar$SpringApplicationAdmin - Application shutdown requested.
+27312 [RMI TCP Connection(7)-127.0.0.1] INFO  o.s.s.c.ThreadPoolTaskExecutor - Shutting down ExecutorService 'applicationTaskExecutor'
